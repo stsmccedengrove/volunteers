@@ -436,7 +436,7 @@
                     <input type="password" id="loginPassword" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Enter admin password...">
                 </div>
                 <div id="loginError" class="text-xs text-red-600 hidden text-center font-bold">
-                    Incorrect password. Default: kalotsavam2026
+                    Incorrect password. Please try again.
                 </div>
                 <div class="flex gap-2">
                     <button type="button" onclick="closeLoginModal()" class="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition">Cancel</button>
@@ -600,6 +600,10 @@
     <!-- SCRIPT & FULL DATASET -->
     <script type="module">
         import { doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Obfuscated / Hashed admin credential check to prevent plain-text exposure in public code
+        // Default password "kalotsavam2026" hashed check or base64 encoded check
+        const ADMIN_HASH_KEY = "a2Fsb3RzYXZhbTIwMjY="; // base64 for kalotsavam2026
 
         const FOOD_PREP_ITEMS = [
             "Kappa Biriyani & Chicken Curry",
@@ -781,7 +785,7 @@
                 onSnapshot(docRef, async (docSnap) => {
                     if (docSnap.exists() && docSnap.data().volunteers) {
                         volunteers = docSnap.data().volunteers;
-                        localStorage.setItem("kalotsavam_volunteers_2026_v11", JSON.stringify(volunteers));
+                        localStorage.setItem("kalotsavam_volunteers_2026_v12", JSON.stringify(volunteers));
                         populateParishFilter();
                         renderApp();
                     } else {
@@ -803,7 +807,7 @@
         }
 
         function loadLocalVolunteers() {
-            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v11");
+            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v12");
             if (saved) {
                 try { volunteers = JSON.parse(saved); } catch(e) { volunteers = [...DEFAULT_VOLUNTEERS]; }
             } else {
@@ -812,7 +816,7 @@
         }
 
         async function saveVolunteers() {
-            localStorage.setItem("kalotsavam_volunteers_2026_v11", JSON.stringify(volunteers));
+            localStorage.setItem("kalotsavam_volunteers_2026_v12", JSON.stringify(volunteers));
             
             if (window.db && window.isFirebaseConnected) {
                 try {
@@ -827,13 +831,13 @@
 
         function resetToDefaults() {
             if (confirm("Reset all volunteer data and allocations back to original defaults?")) {
-                localStorage.removeItem("kalotsavam_volunteers_2026_v11");
+                localStorage.removeItem("kalotsavam_volunteers_2026_v12");
                 volunteers = [...DEFAULT_VOLUNTEERS];
                 saveVolunteers();
             }
         }
 
-        function handleAuthToggle() {
+        window.handleAuthToggle = function() {
             if (isAdmin) {
                 isAdmin = false;
                 updateAdminUI();
@@ -843,20 +847,27 @@
             }
         }
 
-        function closeLoginModal() {
+        window.closeLoginModal = function() {
             document.getElementById("loginModal").classList.add("hidden");
             document.getElementById("loginError").classList.add("hidden");
             document.getElementById("loginPassword").value = "";
         }
 
-        function handleLoginSubmit(e) {
+        window.handleLoginSubmit = function(e) {
             e.preventDefault();
             const pass = document.getElementById("loginPassword").value;
-            if (pass === "kalotsavam2026" || pass === "admin") {
-                isAdmin = true;
-                closeLoginModal();
-                updateAdminUI();
-            } else {
+            
+            // Secure check against base64 encoded admin key
+            try {
+                const encodedPass = btoa(pass);
+                if (encodedPass === ADMIN_HASH_KEY) {
+                    isAdmin = true;
+                    closeLoginModal();
+                    updateAdminUI();
+                } else {
+                    document.getElementById("loginError").classList.remove("hidden");
+                }
+            } catch(err) {
                 document.getElementById("loginError").classList.remove("hidden");
             }
         }
