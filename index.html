@@ -17,49 +17,15 @@
         import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // =========================================================================
-        // <!-- Firebase SDK v10 CDN -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // =========================================================================
-        // FIREBASE CONFIGURATION 
-        // Instructions: Paste your Firebase project credentials here from your 
-        // Firebase Console -> Project Settings -> General -> Your Apps -> Web App
+        // FIREBASE CONFIGURATION (Connected to kalotsavam-volunteer)
         // =========================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBMH7rW2R7VpwWkiH-aa4DNbUKEcZL_u20",
             authDomain: "kalotsavam-volunteer.firebaseapp.com",
-            projectId: "1:59359975874:web:7e27604d6f8988ee6d5e5b",
+            projectId: "kalotsavam-volunteer",
             storageBucket: "kalotsavam-volunteer.firebasestorage.app",
             messagingSenderId: "59359975874",
-            appId: "kalotsavam-volunteer"
-        };
-
-        let db = null;
-        let isFirebaseConnected = false;
-
-        try {
-            if (firebaseConfig.projectId && firebaseConfig.projectId !== "YOUR_PROJECT_ID") {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                isFirebaseConnected = true;
-                window.db = db;
-                window.isFirebaseConnected = true;
-                console.log("Firebase Firestore connected successfully!");
-            }
-        } catch (e) {
-            console.warn("Firebase not configured or failed to initialize. Using local storage fallback.", e);
-        }
-    </script>
-        // =========================================================================
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            appId: "1:59359975874:web:7e27604d6f8988ee6d5e5b"
         };
 
         let db = null;
@@ -120,12 +86,12 @@
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <div class="flex items-center space-x-2 sm:space-x-4">
-                    <!-- Main Logo (IMG_0159.png) -->
+                    <!-- Main Logo -->
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-xl p-1 shadow-lg flex items-center justify-center border-2 border-gold-400 shrink-0 overflow-hidden">
                         <img src="./IMG_0159.png" alt="Kalotsavam Logo" class="w-full h-full object-contain">
                     </div>
 
-                    <!-- Second Logo (IMG_0160.png) -->
+                    <!-- Second Logo -->
                     <div class="hidden md:flex w-11 h-11 bg-white rounded-xl p-1 shadow border border-gold-500/50 items-center justify-center shrink-0 overflow-hidden">
                         <img src="./IMG_0160.png" alt="Eparchy Logo" class="w-full h-full object-contain">
                     </div>
@@ -635,9 +601,8 @@
     <script type="module">
         import { doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Obfuscated / Hashed admin credential check to prevent plain-text exposure in public code
-        // Default password "kalotsavam2026" hashed check or base64 encoded check
-        const ADMIN_HASH_KEY = "a2Fsb3RzYXZhbTIwMjY="; // base64 for kalotsavam2026
+        // Obfuscated admin hash key ("kalotsavam2026")
+        const ADMIN_HASH_KEY = "a2Fsb3RzYXZhbTIwMjY=";
 
         const FOOD_PREP_ITEMS = [
             "Kappa Biriyani & Chicken Curry",
@@ -669,7 +634,7 @@
             "Safeguarding"
         ];
 
-        // Verified complete dataset containing all 121 volunteers from CSMEGB_Kalotsavam_Volunteers_2026-5.csv
+        // Verified complete dataset containing all 121 volunteers
         const DEFAULT_VOLUNTEERS = [
             {"id": 1, "name": "John Joseph", "phone": "7701089837", "parish": "St.Sebastian", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Kappa Biriyani & Chicken Curry", "Appam & Chicken Stew", "Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Food Committee Lead"},
             {"id": 2, "name": "Shiju Thettayil Vakkachan", "phone": "7918393444", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani", "Kappa Biriyani & Chicken Curry"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
@@ -788,10 +753,10 @@
             {"id": 115, "name": "Linson", "phone": "", "parish": "St.Thomas", "primaryDuty": "Food Packing", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 116, "name": "Rex Philip", "phone": "", "parish": "St.Thomas", "primaryDuty": "Food Sale", "secondaryDuty": "", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Food Sale Support"},
             {"id": 117, "name": "Jibin Thomas", "phone": "", "parish": "St.Marys", "primaryDuty": "Transportation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Transportation Support"},
-            {"id": 1792683923202, "name": "Binu Jacob", "phone": "", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Pasta Tikka"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 1792684532598, "name": "Sam Joy Junnel", "phone": "", "parish": "Divine Mercy", "primaryDuty": "Cash Counter", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 1792684620835, "name": "Jackson Joseph", "phone": "", "parish": "St.Antonys", "primaryDuty": "Cash Counter", "secondaryDuty": "Kitchen Rearrangement", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 1792686398746, "name": "Jolly Shaji", "phone": "", "parish": "St.Antonys", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""}
+            {"id": 118, "name": "Binu Jacob", "phone": "", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Pasta Tikka"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
+            {"id": 119, "name": "Sam Joy Junnel", "phone": "", "parish": "Divine Mercy", "primaryDuty": "Cash Counter", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
+            {"id": 120, "name": "Jackson Joseph", "phone": "", "parish": "St.Antonys", "primaryDuty": "Cash Counter", "secondaryDuty": "Kitchen Rearrangement", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
+            {"id": 121, "name": "Jolly Shaji", "phone": "", "parish": "St.Antonys", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""}
         ];
 
         let volunteers = [];
@@ -815,7 +780,6 @@
 
                 const docRef = doc(window.db, "kalotsavam_2026", "roster");
                 
-                // Real-time listener
                 onSnapshot(docRef, async (docSnap) => {
                     if (docSnap.exists() && docSnap.data().volunteers) {
                         volunteers = docSnap.data().volunteers;
@@ -823,7 +787,6 @@
                         populateParishFilter();
                         renderApp();
                     } else {
-                        // Initialize Firestore with default volunteers if empty
                         volunteers = [...DEFAULT_VOLUNTEERS];
                         await setDoc(docRef, { volunteers: volunteers });
                         populateParishFilter();
@@ -890,8 +853,6 @@
         window.handleLoginSubmit = function(e) {
             e.preventDefault();
             const pass = document.getElementById("loginPassword").value;
-            
-            // Secure check against base64 encoded admin key
             try {
                 const encodedPass = btoa(pass);
                 if (encodedPass === ADMIN_HASH_KEY) {
@@ -1391,7 +1352,6 @@
             }
         }
 
-        // VOLUNTEER USER PROFILE MODAL & CO-WORKER TEAM VIEW
         window.openUserModal = function(id) {
             const v = volunteers.find(vol => vol.id === id);
             if (!v) return;
@@ -1411,11 +1371,9 @@
             document.getElementById("uModalAttendance").innerHTML = v.checkedIn ? `<span class="text-emerald-600"><i class="fa-solid fa-circle-check"></i> Checked In</span>` : `<span class="text-slate-400"><i class="fa-solid fa-circle-dot"></i> Not Checked In</span>`;
             document.getElementById("uModalCoupon").innerHTML = v.couponClaimed ? `<span class="text-amber-600"><i class="fa-solid fa-ticket"></i> Coupon Issued</span>` : `<span class="text-slate-400"><i class="fa-solid fa-ticket"></i> Pending</span>`;
 
-            // Build Duty Teams Container (Who is working along with them)
             const dutyTeamsContainer = document.getElementById("uModalDutyTeams");
             let html = "";
 
-            // Primary Duty Team
             if (v.primaryDuty) {
                 const primaryCoworkers = volunteers.filter(m => m.id !== v.id && (m.primaryDuty === v.primaryDuty || m.secondaryDuty === v.primaryDuty));
                 html += `
@@ -1443,7 +1401,6 @@
                 `;
             }
 
-            // Secondary Duty Team
             if (v.secondaryDuty) {
                 const secondaryCoworkers = volunteers.filter(m => m.id !== v.id && (m.primaryDuty === v.secondaryDuty || m.secondaryDuty === v.secondaryDuty));
                 html += `
@@ -1471,7 +1428,6 @@
                 `;
             }
 
-            // Stage / Green Room / Food Teams
             if (v.stages && v.stages.length > 0) {
                 html += `
                     <div class="bg-blue-50/70 border border-blue-200 p-3 rounded-xl text-xs space-y-1">
