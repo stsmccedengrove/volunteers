@@ -125,7 +125,7 @@
             <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
                     <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Total Volunteers</p>
-                    <p id="statTotal" class="text-2xl font-black text-slate-800 mt-0.5">117</p>
+                    <p id="statTotal" class="text-2xl font-black text-slate-800 mt-0.5">120</p>
                 </div>
                 <div class="w-10 h-10 rounded-xl bg-rose-50 text-brand-700 flex items-center justify-center text-lg">
                     <i class="fa-solid fa-users"></i>
@@ -180,7 +180,7 @@
         <div class="border-b border-slate-200 bg-white rounded-xl shadow-sm px-2 pt-2">
             <nav class="flex space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar pb-2">
                 <button onclick="switchTab('all')" id="tab-all" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg whitespace-nowrap transition bg-brand-50 text-brand-700 border border-brand-200/60">
-                    <i class="fa-solid fa-list mr-1.5"></i> All Volunteers (<span id="count-all">117</span>)
+                    <i class="fa-solid fa-list mr-1.5"></i> All Volunteers (<span id="count-all">120</span>)
                 </button>
                 <button onclick="switchTab('stages')" id="tab-stages" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
                     <i class="fa-solid fa-masks-theater mr-1.5 text-blue-600"></i> Stages & Green Rooms
@@ -324,7 +324,7 @@
         <div id="content-foodprep" class="tab-content hidden space-y-6">
             <div class="bg-purple-50/80 border border-purple-200 p-4 rounded-xl text-xs sm:text-sm text-purple-900">
                 <p class="font-bold"><i class="fa-solid fa-utensils mr-1.5 text-purple-600"></i> Food Preparation & Menu Breakdowns</p>
-                <p class="text-purple-800 text-xs mt-0.5">Click on any food item card to view, update volunteer assignments, or add existing/new people to that menu item.</p>
+                <p class="text-purple-800 text-xs mt-0.5">Click on any food item card to view, update team members, or assign/set a Food Team Leader for each category.</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="foodPrepCategoriesGrid"></div>
@@ -450,10 +450,10 @@
                         <select id="formLeaderRole" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold">
                             <option value="">Standard Volunteer</option>
                             <option value="Category Leader">Category Leader (General)</option>
-                            <option value="Stage Arrangement Leader">Stage Arrangement Leader</option>
-                            <option value="Green Room Leader">Green Room Leader</option>
                             <option value="Food Preparation Leader">Food Preparation Leader</option>
                             <option value="Food Service Leader">Food Service Leader</option>
+                            <option value="Stage Arrangement Leader">Stage Arrangement Leader</option>
+                            <option value="Green Room Leader">Green Room Leader</option>
                             <option value="Parking Leader">Parking Leader</option>
                         </select>
                     </div>
@@ -592,7 +592,7 @@
             "Safeguarding"
         ];
 
-        // Verified complete dataset containing all 117 volunteers from CSMEGB_Kalotsavam_Volunteers_2026-3.csv
+        // Verified complete dataset containing all 120 volunteers from CSMEGB_Kalotsavam_Volunteers_2026-4.csv
         const DEFAULT_VOLUNTEERS = [
             {"id": 1, "name": "John Joseph", "phone": "7701089837", "parish": "St.Sebastian", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Kappa Biriyani & Chicken Curry", "Appam & Chicken Stew", "Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Food Committee Lead"},
             {"id": 2, "name": "Shiju Thettayil Vakkachan", "phone": "7918393444", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani", "Kappa Biriyani & Chicken Curry"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
@@ -699,7 +699,7 @@
             {"id": 103, "name": "Sheby", "phone": "7393900287", "parish": "St.Xavier", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 104, "name": "Lissy Paul", "phone": "7951858312", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 105, "name": "Shiju K Paul", "phone": "7350342392", "parish": "St.Sebastian", "primaryDuty": "Venue Arrangement", "secondaryDuty": "Stage Squad", "leaderRole": "", "stages": [11, 12], "greenRooms": [], "foodItems": [], "shift": "Fri & Sat", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 106, "name": "Jessica Vadhyanath", "phone": "7949407736", "parish": "St.Alphonsa", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
+            {"id": 106, "name": "Jessica Vadhyanath", "phone": "7949407736", "parish": "St.Alphonsa", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Water, Fizzy Drinks & Packet Snacks"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 107, "name": "Christy Francis", "phone": "+91 9538366840", "parish": "St.Joseph", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 108, "name": "Santhosh Kachappilly", "phone": "7747248525", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "From 11 AM", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 109, "name": "Danny George", "phone": "7305642067", "parish": "St.Mary", "primaryDuty": "Venue Arrangement", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Fri & Sat", "checkedIn": false, "couponClaimed": false, "notes": ""},
@@ -708,9 +708,12 @@
             {"id": 112, "name": "Mathew Thomas", "phone": "7910000997", "parish": "St.Alphonsa", "primaryDuty": "Venue Arrangement", "secondaryDuty": "General Rearrangement", "leaderRole": "Category Leader", "stages": [1, 2], "greenRooms": [], "foodItems": [], "shift": "Fri & Sat", "checkedIn": false, "couponClaimed": false, "notes": "Family Unit Leader - St Alphonsa"},
             {"id": 113, "name": "Shinto Thomas", "phone": "7555230670", "parish": "St.Augustine", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 114, "name": "Manuel", "phone": "7471804154", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Family Unit Leader - Lourdes Matha"},
-            {"id": 115, "name": "Additional Volunteer 1", "phone": "", "parish": "Bristol", "primaryDuty": "Food Packing", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Food Packing Support"},
-            {"id": 116, "name": "Additional Volunteer 2", "phone": "", "parish": "Bristol", "primaryDuty": "Food Sale", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Food Sale Support"},
-            {"id": 117, "name": "Additional Volunteer 3", "phone": "", "parish": "Bristol", "primaryDuty": "Transportation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Transportation Support"}
+            {"id": 115, "name": "Linson", "phone": "", "parish": "St.Thomas", "primaryDuty": "Food Packing", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
+            {"id": 116, "name": "Rex Philip", "phone": "", "parish": "St.Thomas", "primaryDuty": "Food Sale", "secondaryDuty": "", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Food Sale Support"},
+            {"id": 117, "name": "Jibin Thomas", "phone": "", "parish": "St.Marys", "primaryDuty": "Transportation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Transportation Support"},
+            {"id": 1792683923202, "name": "Binu Jacob", "phone": "", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Pasta Tikka"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
+            {"id": 1792684532598, "name": "Sam Joy Junnel", "phone": "", "parish": "Divine Mercy", "primaryDuty": "Cash Counter", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
+            {"id": 1792684620835, "name": "Jackson Joseph", "phone": "", "parish": "St.Antonys", "primaryDuty": "Cash Counter", "secondaryDuty": "Kitchen Rearrangement", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""}
         ];
 
         let volunteers = [];
@@ -727,7 +730,7 @@
         });
 
         function loadVolunteers() {
-            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v7");
+            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v8");
             if (saved) {
                 try { volunteers = JSON.parse(saved); } catch(e) { volunteers = [...DEFAULT_VOLUNTEERS]; }
             } else {
@@ -736,13 +739,13 @@
         }
 
         function saveVolunteers() {
-            localStorage.setItem("kalotsavam_volunteers_2026_v7", JSON.stringify(volunteers));
+            localStorage.setItem("kalotsavam_volunteers_2026_v8", JSON.stringify(volunteers));
             renderApp();
         }
 
         function resetToDefaults() {
             if (confirm("Reset all volunteer data and allocations back to original defaults?")) {
-                localStorage.removeItem("kalotsavam_volunteers_2026_v7");
+                localStorage.removeItem("kalotsavam_volunteers_2026_v8");
                 volunteers = [...DEFAULT_VOLUNTEERS];
                 renderApp();
             }
@@ -1103,7 +1106,7 @@
             let html = "";
             FOOD_PREP_ITEMS.forEach(item => {
                 const assigned = volunteers.filter(v => v.foodItems && v.foodItems.includes(item));
-                const leader = assigned.find(v => v.leaderRole);
+                const leader = assigned.find(v => v.leaderRole && v.leaderRole !== "");
 
                 html += `
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3">
@@ -1111,19 +1114,38 @@
                             <h4 class="font-black text-slate-900 text-sm flex items-center gap-2">
                                 <i class="fa-solid fa-bowl-food text-purple-600"></i> ${item}
                             </h4>
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-1.5">
                                 <span class="text-xs bg-purple-100 text-purple-900 font-bold px-2 py-0.5 rounded-full">${assigned.length} Team</span>
-                                <button onclick="openAddModalForFoodItem('${item.replace(/'/g, "\\'")}')" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold px-2 py-1 rounded shadow transition" title="Add person to this menu item"><i class="fa-solid fa-user-plus"></i></button>
+                                <button onclick="openAddModalForFoodItem('${item.replace(/'/g, "\\'")}')" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold px-2 py-1 rounded shadow transition" title="Add or assign person to menu category"><i class="fa-solid fa-user-plus"></i></button>
                             </div>
                         </div>
+
+                        <!-- Team Leader Section -->
                         <div class="space-y-2 flex-1">
-                            ${leader ? `<div class="bg-amber-50 border border-amber-200 p-2 rounded-lg text-xs flex items-center justify-between"><div class="flex items-center gap-2"><i class="fa-solid fa-crown text-amber-600"></i> <div><span class="font-black text-slate-900">${leader.name}</span> <span class="text-[10px] text-amber-800 font-bold block">(${leader.leaderRole})</span></div></div><button onclick="openEditModal(${leader.id})" class="text-xs bg-amber-500 text-slate-900 font-bold px-2 py-1 rounded admin-col ${!isAdmin ? 'hidden' : ''}">Edit</button></div>` : ''}
+                            ${leader ? `
+                                <div class="bg-amber-50 border border-amber-200 p-2 rounded-lg text-xs flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-crown text-amber-600 text-sm"></i>
+                                        <div>
+                                            <span class="font-black text-slate-900">${leader.name}</span>
+                                            <span class="text-[10px] text-amber-800 font-extrabold block">Leader: ${leader.leaderRole}</span>
+                                        </div>
+                                    </div>
+                                    <button onclick="openEditModal(${leader.id})" class="text-[10px] bg-amber-500 hover:bg-amber-400 text-slate-900 font-black px-2 py-1 rounded admin-col ${!isAdmin ? 'hidden' : ''}">Edit Leader</button>
+                                </div>
+                            ` : `
+                                <div class="bg-slate-50 border border-dashed border-slate-300 p-2 rounded-lg text-xs flex items-center justify-between">
+                                    <span class="text-slate-500 italic text-[11px]"><i class="fa-solid fa-crown text-slate-400 mr-1"></i> No Food Leader designated</span>
+                                    <button onclick="setFoodCategoryLeader('${item.replace(/'/g, "\\'")}')" class="text-[10px] bg-brand-700 hover:bg-brand-800 text-white font-bold px-2 py-1 rounded admin-col ${!isAdmin ? 'hidden' : ''}">+ Assign Leader</button>
+                                </div>
+                            `}
+
                             <div class="text-xs space-y-1 max-h-36 overflow-y-auto pr-1">
                                 ${assigned.map(v => `
                                     <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100 text-slate-800 font-medium">
                                         <div>
                                             <button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900">${v.name}</button>
-                                            <span class="text-[10px] text-slate-500 font-semibold block">${v.parish}</span>
+                                            <span class="text-[10px] text-slate-500 font-semibold block">${v.parish} ${v.leaderRole ? '• ' + v.leaderRole : ''}</span>
                                         </div>
                                         <div class="flex items-center gap-1">
                                             <button onclick="openEditModal(${v.id})" class="text-slate-600 hover:text-brand-700 p-1 admin-col ${!isAdmin ? 'hidden' : ''}" title="Update / Edit"><i class="fa-solid fa-pen"></i></button>
@@ -1136,6 +1158,31 @@
                 `;
             });
             container.innerHTML = html;
+        }
+
+        function setFoodCategoryLeader(foodItem) {
+            if (!isAdmin) {
+                alert("Please click 'Admin Login' at the top right to unlock editing rights.");
+                return;
+            }
+            const assigned = volunteers.filter(v => v.foodItems && v.foodItems.includes(foodItem));
+            if (assigned.length === 0) {
+                alert(`Please add or assign volunteers to "${foodItem}" first before setting a leader.`);
+                openAddModalForFoodItem(foodItem);
+                return;
+            }
+
+            const volNames = assigned.map((v, index) => `${index + 1}. ${v.name} (${v.parish})`).join("\n");
+            const choice = prompt(`Select Food Leader for "${foodItem}":\n\nEnter the number of the volunteer:\n${volNames}`);
+            if (choice) {
+                const idx = parseInt(choice) - 1;
+                if (!isNaN(idx) && assigned[idx]) {
+                    assigned[idx].leaderRole = "Food Preparation Leader";
+                    saveVolunteers();
+                } else {
+                    alert("Invalid selection.");
+                }
+            }
         }
 
         // VOLUNTEER USER PROFILE MODAL & TEAM VIEW
