@@ -11,6 +11,35 @@
     <!-- Google Fonts (Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDK v10 CDN -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // =========================================================================
+        // FIREBASE CONFIGURATION (Connected to kalotsavam-volunteer)
+        // =========================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMH7rW2R7VpwWkiH-aa4DNbUKEcZL_u20",
+            authDomain: "kalotsavam-volunteer.firebaseapp.com",
+            projectId: "kalotsavam-volunteer",
+            storageBucket: "kalotsavam-volunteer.firebasestorage.app",
+            messagingSenderId: "59359975874",
+            appId: "1:59359975874:web:7e27604d6f8988ee6d5e5b"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            window.db = db;
+            window.isFirebaseConnected = true;
+            console.log("Firebase Firestore connected successfully!");
+        } catch (e) {
+            console.warn("Firebase initialization warning:", e);
+            window.isFirebaseConnected = false;
+        }
+    </script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -65,7 +94,7 @@
                     <div>
                         <div class="flex items-center gap-2">
                             <h1 class="font-black text-sm sm:text-lg leading-tight tracking-wide text-gold-400 uppercase">CSMEGB Kalotsavam 2026</h1>
-                            <span id="syncStatusBadge" class="bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block">Live System Ready</span>
+                            <span id="syncStatusBadge" class="bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block">Connecting to Remote DB...</span>
                         </div>
                         <p class="text-[11px] sm:text-xs text-rose-100/90 font-medium">Syro-Malabar Eparchy of Great Britain • Host Region Bristol-Cardiff</p>
                     </div>
@@ -557,10 +586,11 @@
         </div>
     </div>
 
-    <!-- MAIN SCRIPT -->
-    <script>
-        // Obfuscated admin hash key ("kalotsavam2026")
-        const ADMIN_HASH_KEY = "a2Fsb3RzYXZhbTIwMjY=";
+    <!-- MAIN APP SCRIPT WITH FIREBASE FIRESTORE SYNC -->
+    <script type="module">
+        import { doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const ADMIN_HASH_KEY = "a2Fsb3RzYXZhbTIwMjY="; // "kalotsavam2026"
 
         const FOOD_PREP_ITEMS = [
             "Kappa Biriyani & Chicken Curry",
@@ -592,7 +622,6 @@
             "Safeguarding"
         ];
 
-        // Verified complete dataset containing all 121 volunteers
         const DEFAULT_VOLUNTEERS = [
             {"id": 1, "name": "John Joseph", "phone": "7701089837", "parish": "St.Sebastian", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Kappa Biriyani & Chicken Curry", "Appam & Chicken Stew", "Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Food Committee Lead"},
             {"id": 2, "name": "Shiju Thettayil Vakkachan", "phone": "7918393444", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani", "Kappa Biriyani & Chicken Curry"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
@@ -723,8 +752,40 @@
         let activeUserId = null;
         let selectedCategory = 'Venue Arrangement';
 
-        // Load data from localStorage or fallback to DEFAULT_VOLUNTEERS
-        function loadVolunteers() {
+        // Initialize Firebase Firestore sync & real-time snapshot listener
+        async function initSync() {
+            const syncBadge = document.getElementById("syncStatusBadge");
+            if (window.db && window.isFirebaseConnected) {
+                syncBadge.textContent = "Live Firebase Cloud Sync Active";
+                syncBadge.className = "bg-emerald-500/30 border border-emerald-400 text-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block";
+
+                const docRef = doc(window.db, "kalotsavam_2026", "roster");
+                
+                // Real-time listener: updates automatically when any device makes changes
+                onSnapshot(docRef, async (docSnap) => {
+                    if (docSnap.exists() && docSnap.data().volunteers) {
+                        volunteers = docSnap.data().volunteers;
+                        localStorage.setItem("kalotsavam_volunteers_2026_v12", JSON.stringify(volunteers));
+                        populateParishFilter();
+                        window.renderApp();
+                    } else {
+                        volunteers = [...DEFAULT_VOLUNTEERS];
+                        await setDoc(docRef, { volunteers: volunteers });
+                        populateParishFilter();
+                        window.renderApp();
+                    }
+                }, (error) => {
+                    console.warn("Firestore listener fallback to local storage:", error);
+                    loadLocalVolunteers();
+                });
+            } else {
+                syncBadge.textContent = "Offline / Local Storage Mode";
+                syncBadge.className = "bg-amber-500/20 border border-amber-400/40 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block";
+                loadLocalVolunteers();
+            }
+        }
+
+        function loadLocalVolunteers() {
             const saved = localStorage.getItem("kalotsavam_volunteers_2026_v12");
             if (saved) {
                 try {
@@ -735,10 +796,22 @@
             } else {
                 volunteers = [...DEFAULT_VOLUNTEERS];
             }
+            populateParishFilter();
+            window.renderApp();
         }
 
-        function saveVolunteers() {
+        // Save changes to both LocalStorage and remote Firebase Firestore
+        async function saveVolunteers() {
             localStorage.setItem("kalotsavam_volunteers_2026_v12", JSON.stringify(volunteers));
+            
+            if (window.db && window.isFirebaseConnected) {
+                try {
+                    const docRef = doc(window.db, "kalotsavam_2026", "roster");
+                    await setDoc(docRef, { volunteers: volunteers });
+                } catch(e) {
+                    console.error("Error saving to remote Firestore:", e);
+                }
+            }
             window.renderApp();
         }
 
@@ -877,7 +950,6 @@
                 const leaderRole = (v.leaderRole || "").toLowerCase();
                 const foodItemsStr = (v.foodItems || []).join(" ").toLowerCase();
 
-                // 1. Search matching
                 const matchesSearch = !search || 
                     name.includes(search) || 
                     phone.includes(search) || 
@@ -886,18 +958,15 @@
                     secondaryDuty.includes(search) ||
                     leaderRole.includes(search);
 
-                // 2. Duty Category matching (inclusive .includes() match)
                 const matchesDuty = !duty || 
                     primaryDuty.includes(duty) || 
                     secondaryDuty.includes(duty) ||
                     foodItemsStr.includes(duty);
 
-                // 3. Parish matching
                 const matchesParish = !targetParish || 
                     vParish === targetParish || 
                     vParish.includes(targetParish);
 
-                // 4. Status matching
                 let matchesStatus = true;
                 if (status === 'leadersOnly') matchesStatus = !!v.leaderRole;
                 else if (status === 'checkedIn') matchesStatus = v.checkedIn;
@@ -1612,12 +1681,10 @@
             a.click();
         };
 
-        // Initialize on page load
+        // Initialize Firebase synchronization on startup
         document.addEventListener("DOMContentLoaded", () => {
-            loadVolunteers();
-            populateParishFilter();
+            initSync();
             renderCategoryButtons();
-            window.renderApp();
         });
     </script>
 </body>
