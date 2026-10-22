@@ -10,6 +10,41 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts (Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK v10 CDN -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // =========================================================================
+        // FIREBASE CONFIGURATION (Paste your Firebase project credentials here)
+        // =========================================================================
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        let db = null;
+        let isFirebaseConnected = false;
+
+        try {
+            if (firebaseConfig.projectId && firebaseConfig.projectId !== "YOUR_PROJECT_ID") {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                isFirebaseConnected = true;
+                window.db = db;
+                window.isFirebaseConnected = true;
+                console.log("Firebase Firestore connected successfully!");
+            }
+        } catch (e) {
+            console.warn("Firebase not configured or failed to initialize. Using local storage fallback.", e);
+        }
+    </script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -64,7 +99,7 @@
                     <div>
                         <div class="flex items-center gap-2">
                             <h1 class="font-black text-sm sm:text-lg leading-tight tracking-wide text-gold-400 uppercase">CSMEGB Kalotsavam 2026</h1>
-                            <span class="bg-gold-500/20 border border-gold-400/40 text-gold-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden lg:inline-block">Regional Operations</span>
+                            <span id="syncStatusBadge" class="bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block">Offline / Local Mode</span>
                         </div>
                         <p class="text-[11px] sm:text-xs text-rose-100/90 font-medium">Syro-Malabar Eparchy of Great Britain • Host Region Bristol-Cardiff</p>
                     </div>
@@ -563,7 +598,9 @@
     </div>
 
     <!-- SCRIPT & FULL DATASET -->
-    <script>
+    <script type="module">
+        import { doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
         const FOOD_PREP_ITEMS = [
             "Kappa Biriyani & Chicken Curry",
             "Appam & Chicken Stew",
@@ -726,14 +763,47 @@
         let selectedCategory = 'Venue Arrangement';
 
         document.addEventListener("DOMContentLoaded", () => {
-            loadVolunteers();
+            initDataStorage();
             populateParishFilter();
             renderCategoryButtons();
             renderApp();
         });
 
-        function loadVolunteers() {
-            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v10");
+        async function initDataStorage() {
+            const syncBadge = document.getElementById("syncStatusBadge");
+            if (window.db && window.isFirebaseConnected) {
+                syncBadge.textContent = "Live Firebase Sync Active";
+                syncBadge.className = "bg-emerald-500/30 border border-emerald-400 text-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block";
+
+                const docRef = doc(window.db, "kalotsavam_2026", "roster");
+                
+                // Real-time listener
+                onSnapshot(docRef, async (docSnap) => {
+                    if (docSnap.exists() && docSnap.data().volunteers) {
+                        volunteers = docSnap.data().volunteers;
+                        localStorage.setItem("kalotsavam_volunteers_2026_v11", JSON.stringify(volunteers));
+                        populateParishFilter();
+                        renderApp();
+                    } else {
+                        // Initialize Firestore with default volunteers if empty
+                        volunteers = [...DEFAULT_VOLUNTEERS];
+                        await setDoc(docRef, { volunteers: volunteers });
+                        populateParishFilter();
+                        renderApp();
+                    }
+                }, (error) => {
+                    console.error("Firestore sync error:", error);
+                    loadLocalVolunteers();
+                });
+            } else {
+                syncBadge.textContent = "Offline / Local Mode";
+                syncBadge.className = "bg-amber-500/20 border border-amber-400/40 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block";
+                loadLocalVolunteers();
+            }
+        }
+
+        function loadLocalVolunteers() {
+            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v11");
             if (saved) {
                 try { volunteers = JSON.parse(saved); } catch(e) { volunteers = [...DEFAULT_VOLUNTEERS]; }
             } else {
@@ -741,16 +811,25 @@
             }
         }
 
-        function saveVolunteers() {
-            localStorage.setItem("kalotsavam_volunteers_2026_v10", JSON.stringify(volunteers));
+        async function saveVolunteers() {
+            localStorage.setItem("kalotsavam_volunteers_2026_v11", JSON.stringify(volunteers));
+            
+            if (window.db && window.isFirebaseConnected) {
+                try {
+                    const docRef = doc(window.db, "kalotsavam_2026", "roster");
+                    await setDoc(docRef, { volunteers: volunteers });
+                } catch(e) {
+                    console.error("Error saving to Firestore:", e);
+                }
+            }
             renderApp();
         }
 
         function resetToDefaults() {
             if (confirm("Reset all volunteer data and allocations back to original defaults?")) {
-                localStorage.removeItem("kalotsavam_volunteers_2026_v10");
+                localStorage.removeItem("kalotsavam_volunteers_2026_v11");
                 volunteers = [...DEFAULT_VOLUNTEERS];
-                renderApp();
+                saveVolunteers();
             }
         }
 
@@ -806,7 +885,7 @@
             renderApp();
         }
 
-        function switchTab(tabId) {
+        window.switchTab = function(tabId) {
             currentTab = tabId;
             document.querySelectorAll(".tab-btn").forEach(btn => {
                 btn.className = "tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition";
@@ -830,6 +909,7 @@
 
         function populateParishFilter() {
             const select = document.getElementById("parishFilter");
+            if (!select) return;
             const parishes = [...new Set(volunteers.map(v => v.parish))].filter(p => p).sort();
             select.innerHTML = `<option value="">All Parishes / Units (${parishes.length})</option>`;
             parishes.forEach(p => {
@@ -847,7 +927,7 @@
             select.innerHTML = html;
         }
 
-        function onSelectExistingVolunteer(idStr) {
+        window.onSelectExistingVolunteer = function(idStr) {
             if (!idStr) return;
             const id = parseInt(idStr);
             openEditModal(id);
@@ -1061,7 +1141,7 @@
             grContainer.innerHTML = grHtml;
         }
 
-        function assignVolunteerToStage(stageNum) {
+        window.assignVolunteerToStage = function(stageNum) {
             if (!isAdmin) {
                 alert("Please click 'Admin Login' at the top right to unlock editing rights.");
                 return;
@@ -1076,7 +1156,7 @@
             }, 100);
         }
 
-        function removeVolunteerFromStage(volId, stageNum) {
+        window.removeVolunteerFromStage = function(volId, stageNum) {
             if (!isAdmin) return;
             const v = volunteers.find(vol => vol.id === volId);
             if (v && v.stages) {
@@ -1085,7 +1165,7 @@
             }
         }
 
-        function assignVolunteerToGreenRoom(grNum) {
+        window.assignVolunteerToGreenRoom = function(grNum) {
             if (!isAdmin) {
                 alert("Please click 'Admin Login' at the top right to unlock editing rights.");
                 return;
@@ -1100,7 +1180,7 @@
             }, 100);
         }
 
-        function removeVolunteerFromGreenRoom(volId, grNum) {
+        window.removeVolunteerFromGreenRoom = function(volId, grNum) {
             if (!isAdmin) return;
             const v = volunteers.find(vol => vol.id === volId);
             if (v && v.greenRooms) {
@@ -1111,6 +1191,7 @@
 
         function renderCategoryButtons() {
             const container = document.getElementById("categoryButtonsContainer");
+            if (!container) return;
             container.innerHTML = ALL_CATEGORIES.map(cat => {
                 const count = volunteers.filter(v => v.primaryDuty === cat || v.secondaryDuty === cat).length;
                 const isActive = selectedCategory === cat;
@@ -1123,7 +1204,7 @@
             }).join("");
         }
 
-        function selectCategory(cat) {
+        window.selectCategory = function(cat) {
             selectedCategory = cat;
             document.getElementById("addCatBtnName").textContent = cat;
             renderCategoryButtons();
@@ -1182,6 +1263,7 @@
 
         function renderFoodPrepBreakdowns() {
             const container = document.getElementById("foodPrepCategoriesGrid");
+            if (!container) return;
             let html = "";
             FOOD_PREP_ITEMS.forEach(item => {
                 const assigned = volunteers.filter(v => v.foodItems && v.foodItems.includes(item));
@@ -1239,7 +1321,7 @@
             container.innerHTML = html;
         }
 
-        function setFoodCategoryLeader(foodItem) {
+        window.setFoodCategoryLeader = function(foodItem) {
             if (!isAdmin) {
                 alert("Please click 'Admin Login' at the top right to unlock editing rights.");
                 return;
@@ -1265,7 +1347,7 @@
         }
 
         // VOLUNTEER USER PROFILE MODAL & CO-WORKER TEAM VIEW
-        function openUserModal(id) {
+        window.openUserModal = function(id) {
             const v = volunteers.find(vol => vol.id === id);
             if (!v) return;
             activeUserId = id;
@@ -1383,12 +1465,12 @@
             document.getElementById("userModal").classList.remove("hidden");
         }
 
-        function closeUserModal() {
+        window.closeUserModal = function() {
             document.getElementById("userModal").classList.add("hidden");
             activeUserId = null;
         }
 
-        function saveUserComment() {
+        window.saveUserComment = function() {
             if (!activeUserId) return;
             const v = volunteers.find(vol => vol.id === activeUserId);
             if (v) {
@@ -1398,19 +1480,19 @@
             }
         }
 
-        function toggleAttendance(id) {
+        window.toggleAttendance = function(id) {
             if (!isAdmin) return;
             const v = volunteers.find(vol => vol.id === id);
             if (v) { v.checkedIn = !v.checkedIn; saveVolunteers(); }
         }
 
-        function toggleCoupon(id) {
+        window.toggleCoupon = function(id) {
             if (!isAdmin) return;
             const v = volunteers.find(vol => vol.id === id);
             if (v) { v.couponClaimed = !v.couponClaimed; saveVolunteers(); }
         }
 
-        function deleteVolunteer(id) {
+        window.deleteVolunteer = function(id) {
             if (!isAdmin) return;
             if (confirm("Are you sure you want to delete this volunteer?")) {
                 volunteers = volunteers.filter(v => v.id !== id);
@@ -1418,7 +1500,7 @@
             }
         }
 
-        function openAddModal() {
+        window.openAddModal = function() {
             if (!isAdmin) return;
             populateExistingVolunteerDropdown();
             document.getElementById("modalTitle").textContent = "Add or Assign Volunteer";
@@ -1442,7 +1524,7 @@
             document.getElementById("volunteerModal").classList.remove("hidden");
         }
 
-        function openAddModalForCategory(category) {
+        window.openAddModalForCategory = function(category) {
             if (!isAdmin) {
                 alert("Please click 'Admin Login' at the top right to unlock editing and adding rights.");
                 return;
@@ -1451,7 +1533,7 @@
             document.getElementById("formPrimaryDuty").value = category;
         }
 
-        function openAddModalForFoodItem(foodItem) {
+        window.openAddModalForFoodItem = function(foodItem) {
             if (!isAdmin) {
                 alert("Please click 'Admin Login' at the top right to unlock editing and adding rights.");
                 return;
@@ -1466,7 +1548,7 @@
             }, 100);
         }
 
-        function openEditModal(id) {
+        window.openEditModal = function(id) {
             if (!isAdmin) return;
             populateExistingVolunteerDropdown();
             const v = volunteers.find(vol => vol.id === id);
@@ -1495,6 +1577,7 @@
 
         function renderStageCheckboxes(selectedStages) {
             const container = document.getElementById("stageCheckboxes");
+            if (!container) return;
             let html = "";
             for (let i = 1; i <= 12; i++) {
                 const checked = selectedStages.includes(i) ? "checked" : "";
@@ -1505,6 +1588,7 @@
 
         function renderGreenRoomCheckboxes(selectedGRs) {
             const container = document.getElementById("greenRoomCheckboxes");
+            if (!container) return;
             let html = "";
             for (let i = 1; i <= 12; i++) {
                 const checked = selectedGRs.includes(i) ? "checked" : "";
@@ -1515,6 +1599,7 @@
 
         function renderFoodPrepCheckboxes(selectedFood) {
             const container = document.getElementById("foodPrepCheckboxes");
+            if (!container) return;
             let html = "";
             FOOD_PREP_ITEMS.forEach(item => {
                 const checked = selectedFood.includes(item) ? "checked" : "";
@@ -1523,11 +1608,11 @@
             container.innerHTML = html;
         }
 
-        function closeVolunteerModal() {
+        window.closeVolunteerModal = function() {
             document.getElementById("volunteerModal").classList.add("hidden");
         }
 
-        function handleVolunteerFormSubmit(e) {
+        window.handleVolunteerFormSubmit = function(e) {
             e.preventDefault();
             if (!isAdmin) return;
 
@@ -1565,7 +1650,7 @@
             closeVolunteerModal();
         }
 
-        function exportCSV() {
+        window.exportCSV = function() {
             let csv = "ID,Full Name,Phone,Parish,Primary Duty,Secondary Duty,Leadership Role,Stages Assigned,Green Rooms Assigned,Food Items Assigned,Shift,Attendance,Food Coupon,Notes\n";
             volunteers.forEach(v => {
                 const stages = (v.stages || []).join("; ");
