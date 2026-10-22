@@ -125,7 +125,7 @@
             <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
                     <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Total Volunteers</p>
-                    <p id="statTotal" class="text-2xl font-black text-slate-800 mt-0.5">120</p>
+                    <p id="statTotal" class="text-2xl font-black text-slate-800 mt-0.5">121</p>
                 </div>
                 <div class="w-10 h-10 rounded-xl bg-rose-50 text-brand-700 flex items-center justify-center text-lg">
                     <i class="fa-solid fa-users"></i>
@@ -180,7 +180,7 @@
         <div class="border-b border-slate-200 bg-white rounded-xl shadow-sm px-2 pt-2">
             <nav class="flex space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar pb-2">
                 <button onclick="switchTab('all')" id="tab-all" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg whitespace-nowrap transition bg-brand-50 text-brand-700 border border-brand-200/60">
-                    <i class="fa-solid fa-list mr-1.5"></i> All Volunteers (<span id="count-all">120</span>)
+                    <i class="fa-solid fa-list mr-1.5"></i> All Volunteers (<span id="count-all">121</span>)
                 </button>
                 <button onclick="switchTab('stages')" id="tab-stages" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
                     <i class="fa-solid fa-masks-theater mr-1.5 text-blue-600"></i> Stages & Green Rooms
@@ -272,10 +272,10 @@
 
         <!-- TAB CONTENT 2: STAGES & GREEN ROOMS -->
         <div id="content-stages" class="tab-content hidden space-y-6">
-            <div class="bg-blue-50/70 border border-blue-200 p-4 rounded-xl text-xs sm:text-sm text-blue-900 flex justify-between items-center">
+            <div class="bg-blue-50/70 border border-blue-200 p-4 rounded-xl text-xs sm:text-sm text-blue-900 flex justify-between items-center flex-wrap gap-2">
                 <div>
-                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1.5 text-blue-600"></i> Stage & Green Room Management (Stage 1 to 12 & Green Room 1 to 12)</p>
-                    <p class="text-blue-700 text-xs mt-0.5">Click any volunteer's name to view profile, notes, and team members.</p>
+                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1.5 text-blue-600"></i> Stage & Green Room Operations (Stage 1 to 12 & Green Room 1 to 12)</p>
+                    <p class="text-blue-700 text-xs mt-0.5">Use the <b>"+ Assign"</b> button on any stage or green room card to assign existing or new volunteers directly.</p>
                 </div>
             </div>
 
@@ -592,7 +592,7 @@
             "Safeguarding"
         ];
 
-        // Verified complete dataset containing all 120 volunteers from CSMEGB_Kalotsavam_Volunteers_2026-4.csv
+        // Verified complete dataset containing all 121 volunteers from CSMEGB_Kalotsavam_Volunteers_2026-5.csv
         const DEFAULT_VOLUNTEERS = [
             {"id": 1, "name": "John Joseph", "phone": "7701089837", "parish": "St.Sebastian", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Kappa Biriyani & Chicken Curry", "Appam & Chicken Stew", "Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Food Committee Lead"},
             {"id": 2, "name": "Shiju Thettayil Vakkachan", "phone": "7918393444", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani", "Kappa Biriyani & Chicken Curry"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
@@ -706,14 +706,15 @@
             {"id": 110, "name": "Anns Manuel", "phone": "7443911575", "parish": "Lourdes Matha", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Appam & Chicken Stew"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 111, "name": "Linta Joseph", "phone": "7884078293", "parish": "St.Patric", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 112, "name": "Mathew Thomas", "phone": "7910000997", "parish": "St.Alphonsa", "primaryDuty": "Venue Arrangement", "secondaryDuty": "General Rearrangement", "leaderRole": "Category Leader", "stages": [1, 2], "greenRooms": [], "foodItems": [], "shift": "Fri & Sat", "checkedIn": false, "couponClaimed": false, "notes": "Family Unit Leader - St Alphonsa"},
-            {"id": 113, "name": "Shinto Thomas", "phone": "7555230670", "parish": "St.Augustine", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
+            {"id": 113, "name": "Shinto Thomas", "phone": "7555230670", "parish": "St.Augustine", "primaryDuty": "Food Preparation", "secondaryDuty": "Safeguarding", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Appam & Chicken Stew", "Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 114, "name": "Manuel", "phone": "7471804154", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Family Unit Leader - Lourdes Matha"},
             {"id": 115, "name": "Linson", "phone": "", "parish": "St.Thomas", "primaryDuty": "Food Packing", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 116, "name": "Rex Philip", "phone": "", "parish": "St.Thomas", "primaryDuty": "Food Sale", "secondaryDuty": "", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Food Sale Support"},
             {"id": 117, "name": "Jibin Thomas", "phone": "", "parish": "St.Marys", "primaryDuty": "Transportation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Transportation Support"},
             {"id": 1792683923202, "name": "Binu Jacob", "phone": "", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Pasta Tikka"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
             {"id": 1792684532598, "name": "Sam Joy Junnel", "phone": "", "parish": "Divine Mercy", "primaryDuty": "Cash Counter", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 1792684620835, "name": "Jackson Joseph", "phone": "", "parish": "St.Antonys", "primaryDuty": "Cash Counter", "secondaryDuty": "Kitchen Rearrangement", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""}
+            {"id": 1792684620835, "name": "Jackson Joseph", "phone": "", "parish": "St.Antonys", "primaryDuty": "Cash Counter", "secondaryDuty": "Kitchen Rearrangement", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
+            {"id": 1792686398746, "name": "Jolly Shaji", "phone": "", "parish": "St.Antonys", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""}
         ];
 
         let volunteers = [];
@@ -730,7 +731,7 @@
         });
 
         function loadVolunteers() {
-            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v8");
+            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v9");
             if (saved) {
                 try { volunteers = JSON.parse(saved); } catch(e) { volunteers = [...DEFAULT_VOLUNTEERS]; }
             } else {
@@ -739,13 +740,13 @@
         }
 
         function saveVolunteers() {
-            localStorage.setItem("kalotsavam_volunteers_2026_v8", JSON.stringify(volunteers));
+            localStorage.setItem("kalotsavam_volunteers_2026_v9", JSON.stringify(volunteers));
             renderApp();
         }
 
         function resetToDefaults() {
             if (confirm("Reset all volunteer data and allocations back to original defaults?")) {
-                localStorage.removeItem("kalotsavam_volunteers_2026_v8");
+                localStorage.removeItem("kalotsavam_volunteers_2026_v9");
                 volunteers = [...DEFAULT_VOLUNTEERS];
                 renderApp();
             }
@@ -982,7 +983,7 @@
             let stageHtml = "";
             for (let i = 1; i <= 12; i++) {
                 const assigned = volunteers.filter(v => v.stages && v.stages.includes(i));
-                const leader = assigned.find(v => v.leaderRole.includes("Stage") || v.leaderRole === "Category Leader");
+                const leader = assigned.find(v => (v.leaderRole && v.leaderRole.includes("Stage")) || v.leaderRole === "Category Leader");
 
                 stageHtml += `
                     <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-2">
@@ -991,12 +992,26 @@
                                 <span class="w-7 h-7 rounded-lg bg-blue-600 text-white font-extrabold text-xs flex items-center justify-center">${i}</span>
                                 <h4 class="font-extrabold text-slate-900 text-sm">Stage ${i}</h4>
                             </div>
-                            <span class="text-xs bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">${assigned.length} Allocated</span>
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">${assigned.length} Allocated</span>
+                                <button onclick="assignVolunteerToStage(${i})" class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-black px-2 py-0.5 rounded-lg transition admin-col ${!isAdmin ? 'hidden' : ''}" title="Add/Assign Volunteer to Stage ${i}">+ Assign</button>
+                            </div>
                         </div>
                         <div class="space-y-1.5 my-1 flex-1">
-                            ${leader ? `<div class="bg-amber-50 border border-amber-200 p-1.5 rounded-lg text-xs flex items-center gap-1.5"><i class="fa-solid fa-crown text-amber-600"></i> <div><span class="font-extrabold text-slate-900">${leader.name}</span> <span class="text-[10px] text-amber-700 font-bold block">(Stage Arrangement Leader)</span></div></div>` : ''}
-                            <div class="text-xs space-y-1 max-h-28 overflow-y-auto pr-1">
-                                ${assigned.map(v => `<div class="flex justify-between items-center bg-slate-50 p-1.5 rounded border border-slate-100 text-slate-800 font-medium"><button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900">${v.name}</button> <span class="text-[10px] text-slate-400">${v.parish}</span></div>`).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
+                            ${leader ? `<div class="bg-amber-50 border border-amber-200 p-1.5 rounded-lg text-xs flex items-center gap-1.5"><i class="fa-solid fa-crown text-amber-600"></i> <div><span class="font-extrabold text-slate-900">${leader.name}</span> <span class="text-[10px] text-amber-700 font-bold block">(Stage Leader)</span></div></div>` : ''}
+                            <div class="text-xs space-y-1 max-h-32 overflow-y-auto pr-1">
+                                ${assigned.map(v => `
+                                    <div class="flex justify-between items-center bg-slate-50 p-1.5 rounded border border-slate-100 text-slate-800 font-medium">
+                                        <div>
+                                            <button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900 text-left block">${v.name}</button>
+                                            <span class="text-[10px] text-slate-400 block">${v.parish}</span>
+                                        </div>
+                                        <div class="flex items-center gap-1 admin-col ${!isAdmin ? 'hidden' : ''}">
+                                            <button onclick="openEditModal(${v.id})" class="text-slate-500 hover:text-brand-700 p-1" title="Edit Volunteer Duties"><i class="fa-solid fa-pen text-[11px]"></i></button>
+                                            <button onclick="removeVolunteerFromStage(${v.id}, ${i})" class="text-rose-500 hover:text-rose-700 p-1" title="Remove from Stage ${i}"><i class="fa-solid fa-xmark text-xs"></i></button>
+                                        </div>
+                                    </div>
+                                `).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
                             </div>
                         </div>
                     </div>
@@ -1007,7 +1022,7 @@
             let grHtml = "";
             for (let i = 1; i <= 12; i++) {
                 const assigned = volunteers.filter(v => v.greenRooms && v.greenRooms.includes(i));
-                const leader = assigned.find(v => v.leaderRole.includes("Green Room") || v.leaderRole === "Category Leader");
+                const leader = assigned.find(v => (v.leaderRole && v.leaderRole.includes("Green Room")) || v.leaderRole === "Category Leader");
 
                 grHtml += `
                     <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-2">
@@ -1016,18 +1031,80 @@
                                 <span class="w-7 h-7 rounded-lg bg-purple-600 text-white font-extrabold text-xs flex items-center justify-center">${i}</span>
                                 <h4 class="font-extrabold text-slate-900 text-sm">Green Room ${i}</h4>
                             </div>
-                            <span class="text-xs bg-purple-50 text-purple-700 font-bold px-2 py-0.5 rounded-full">${assigned.length} Allocated</span>
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs bg-purple-50 text-purple-700 font-bold px-2 py-0.5 rounded-full">${assigned.length} Allocated</span>
+                                <button onclick="assignVolunteerToGreenRoom(${i})" class="text-xs bg-purple-600 hover:bg-purple-700 text-white font-black px-2 py-0.5 rounded-lg transition admin-col ${!isAdmin ? 'hidden' : ''}" title="Add/Assign Volunteer to Green Room ${i}">+ Assign</button>
+                            </div>
                         </div>
                         <div class="space-y-1.5 my-1 flex-1">
                             ${leader ? `<div class="bg-amber-50 border border-amber-200 p-1.5 rounded-lg text-xs flex items-center gap-1.5"><i class="fa-solid fa-crown text-amber-600"></i> <div><span class="font-extrabold text-slate-900">${leader.name}</span> <span class="text-[10px] text-amber-700 font-bold block">(Green Room Leader)</span></div></div>` : ''}
-                            <div class="text-xs space-y-1 max-h-28 overflow-y-auto pr-1">
-                                ${assigned.map(v => `<div class="flex justify-between items-center bg-slate-50 p-1.5 rounded border border-slate-100 text-slate-800 font-medium"><button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900">${v.name}</button> <span class="text-[10px] text-slate-400">${v.parish}</span></div>`).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
+                            <div class="text-xs space-y-1 max-h-32 overflow-y-auto pr-1">
+                                ${assigned.map(v => `
+                                    <div class="flex justify-between items-center bg-slate-50 p-1.5 rounded border border-slate-100 text-slate-800 font-medium">
+                                        <div>
+                                            <button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900 text-left block">${v.name}</button>
+                                            <span class="text-[10px] text-slate-400 block">${v.parish}</span>
+                                        </div>
+                                        <div class="flex items-center gap-1 admin-col ${!isAdmin ? 'hidden' : ''}">
+                                            <button onclick="openEditModal(${v.id})" class="text-slate-500 hover:text-brand-700 p-1" title="Edit Volunteer Duties"><i class="fa-solid fa-pen text-[11px]"></i></button>
+                                            <button onclick="removeVolunteerFromGreenRoom(${v.id}, ${i})" class="text-rose-500 hover:text-rose-700 p-1" title="Remove from Green Room ${i}"><i class="fa-solid fa-xmark text-xs"></i></button>
+                                        </div>
+                                    </div>
+                                `).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
                             </div>
                         </div>
                     </div>
                 `;
             }
             grContainer.innerHTML = grHtml;
+        }
+
+        function assignVolunteerToStage(stageNum) {
+            if (!isAdmin) {
+                alert("Please click 'Admin Login' at the top right to unlock editing rights.");
+                return;
+            }
+            openAddModal();
+            document.getElementById("formPrimaryDuty").value = "Stage Squad";
+            setTimeout(() => {
+                const checkboxes = document.querySelectorAll('input[name="modalStage"]');
+                checkboxes.forEach(cb => {
+                    if (parseInt(cb.value) === stageNum) cb.checked = true;
+                });
+            }, 100);
+        }
+
+        function removeVolunteerFromStage(volId, stageNum) {
+            if (!isAdmin) return;
+            const v = volunteers.find(vol => vol.id === volId);
+            if (v && v.stages) {
+                v.stages = v.stages.filter(s => s !== stageNum);
+                saveVolunteers();
+            }
+        }
+
+        function assignVolunteerToGreenRoom(grNum) {
+            if (!isAdmin) {
+                alert("Please click 'Admin Login' at the top right to unlock editing rights.");
+                return;
+            }
+            openAddModal();
+            document.getElementById("formPrimaryDuty").value = "Stage Squad";
+            setTimeout(() => {
+                const checkboxes = document.querySelectorAll('input[name="modalGR"]');
+                checkboxes.forEach(cb => {
+                    if (parseInt(cb.value) === grNum) cb.checked = true;
+                });
+            }, 100);
+        }
+
+        function removeVolunteerFromGreenRoom(volId, grNum) {
+            if (!isAdmin) return;
+            const v = volunteers.find(vol => vol.id === volId);
+            if (v && v.greenRooms) {
+                v.greenRooms = v.greenRooms.filter(g => g !== grNum);
+                saveVolunteers();
+            }
         }
 
         function renderCategoryButtons() {
