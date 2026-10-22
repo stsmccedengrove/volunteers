@@ -940,42 +940,48 @@
         }
 
         function getFilteredVolunteers() {
+            function getFilteredVolunteers() {
             const searchInputEl = document.getElementById("searchInput");
             const dutyFilterEl = document.getElementById("dutyFilter");
             const parishFilterEl = document.getElementById("parishFilter");
             const statusFilterEl = document.getElementById("statusFilter");
 
             const search = searchInputEl ? searchInputEl.value.trim().toLowerCase() : "";
-            const duty = dutyFilterEl ? dutyFilterEl.value.trim() : "";
-            const parish = parishFilterEl ? parishFilterEl.value.trim() : "";
+            const duty = dutyFilterEl ? dutyFilterEl.value.trim().toLowerCase() : "";
+            const parish = parishFilterEl ? parishFilterEl.value.trim().toLowerCase() : "";
             const status = statusFilterEl ? statusFilterEl.value : "";
 
             return volunteers.filter(v => {
                 const name = (v.name || "").toLowerCase();
                 const phone = (v.phone || "").toString();
-                const vParish = (v.parish || "").toLowerCase();
+                const vParish = (v.parish || "").toLowerCase().replace(/['\s]/g, "");
+                const targetParish = parish.replace(/['\s]/g, "");
+
                 const primaryDuty = (v.primaryDuty || "").toLowerCase();
                 const secondaryDuty = (v.secondaryDuty || "").toLowerCase();
                 const leaderRole = (v.leaderRole || "").toLowerCase();
+                const foodItemsStr = (v.foodItems || []).join(" ").toLowerCase();
 
-                // Robust Search matching
+                // 1. Search filter
                 const matchesSearch = !search || 
                     name.includes(search) || 
                     phone.includes(search) || 
                     vParish.includes(search) ||
                     primaryDuty.includes(search) ||
-                    secondaryDuty.includes(search) ||
-                    leaderRole.includes(search);
+                    secondaryDuty.includes(search);
 
-                // Robust Duty matching (case-insensitive & trimmed)
+                // 2. Duty Category filter (inclusive .includes() match)
                 const matchesDuty = !duty || 
-                    primaryDuty === duty.toLowerCase() || 
-                    secondaryDuty === duty.toLowerCase();
+                    primaryDuty.includes(duty) || 
+                    secondaryDuty.includes(duty) ||
+                    foodItemsStr.includes(duty);
 
-                // Robust Parish matching (case-insensitive & trimmed)
-                const matchesParish = !parish || 
-                    vParish === parish.toLowerCase();
+                // 3. Parish / Unit filter (normalized to ignore apostrophes/spaces)
+                const matchesParish = !targetParish || 
+                    vParish === targetParish || 
+                    vParish.includes(targetParish);
 
+                // 4. Status / Attendance filter
                 let matchesStatus = true;
                 if (status === 'leadersOnly') matchesStatus = !!v.leaderRole;
                 else if (status === 'checkedIn') matchesStatus = v.checkedIn;
