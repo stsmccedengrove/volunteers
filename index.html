@@ -11,40 +11,6 @@
     <!-- Google Fonts (Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK v10 CDN -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // =========================================================================
-        // FIREBASE CONFIGURATION (Connected to kalotsavam-volunteer)
-        // =========================================================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyBMH7rW2R7VpwWkiH-aa4DNbUKEcZL_u20",
-            authDomain: "kalotsavam-volunteer.firebaseapp.com",
-            projectId: "kalotsavam-volunteer",
-            storageBucket: "kalotsavam-volunteer.firebasestorage.app",
-            messagingSenderId: "59359975874",
-            appId: "1:59359975874:web:7e27604d6f8988ee6d5e5b"
-        };
-
-        let db = null;
-        let isFirebaseConnected = false;
-
-        try {
-            if (firebaseConfig.projectId && firebaseConfig.projectId !== "YOUR_PROJECT_ID") {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                isFirebaseConnected = true;
-                window.db = db;
-                window.isFirebaseConnected = true;
-                console.log("Firebase Firestore connected successfully!");
-            }
-        } catch (e) {
-            console.warn("Firebase not configured or failed to initialize. Using local storage fallback.", e);
-        }
-    </script>
-
     <script>
         tailwind.config = {
             theme: {
@@ -88,18 +54,18 @@
                 <div class="flex items-center space-x-2 sm:space-x-4">
                     <!-- Main Logo -->
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-xl p-1 shadow-lg flex items-center justify-center border-2 border-gold-400 shrink-0 overflow-hidden">
-                        <img src="./IMG_0159.png" alt="Kalotsavam Logo" class="w-full h-full object-contain">
+                        <img src="./IMG_0159.png" alt="Kalotsavam Logo" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/100x100?text=CSMEGB'">
                     </div>
 
                     <!-- Second Logo -->
                     <div class="hidden md:flex w-11 h-11 bg-white rounded-xl p-1 shadow border border-gold-500/50 items-center justify-center shrink-0 overflow-hidden">
-                        <img src="./IMG_0160.png" alt="Eparchy Logo" class="w-full h-full object-contain">
+                        <img src="./IMG_0160.png" alt="Eparchy Logo" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/100x100?text=Eparchy'">
                     </div>
 
                     <div>
                         <div class="flex items-center gap-2">
                             <h1 class="font-black text-sm sm:text-lg leading-tight tracking-wide text-gold-400 uppercase">CSMEGB Kalotsavam 2026</h1>
-                            <span id="syncStatusBadge" class="bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block">Offline / Local Mode</span>
+                            <span id="syncStatusBadge" class="bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block">Live System Ready</span>
                         </div>
                         <p class="text-[11px] sm:text-xs text-rose-100/90 font-medium">Syro-Malabar Eparchy of Great Britain • Host Region Bristol-Cardiff</p>
                     </div>
@@ -284,7 +250,7 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                                <th class="p-3.5">Volunteer Details (Click name to view duty team)</th>
+                                <th class="p-3.5">Volunteer Details (Click name for duty team)</th>
                                 <th class="p-3.5">Parish / Unit</th>
                                 <th class="p-3.5">Assigned Duties & Leadership</th>
                                 <th class="p-3.5">Stage / Food Items</th>
@@ -310,7 +276,7 @@
             <div class="bg-blue-50/70 border border-blue-200 p-4 rounded-xl text-xs sm:text-sm text-blue-900 flex justify-between items-center flex-wrap gap-2">
                 <div>
                     <p class="font-bold"><i class="fa-solid fa-circle-info mr-1.5 text-blue-600"></i> Stage & Green Room Operations (Stage 1 to 12 & Green Room 1 to 12)</p>
-                    <p class="text-blue-700 text-xs mt-0.5">Click any volunteer's name or use <b>"+ Assign"</b> to manage their assignments directly.</p>
+                    <p class="text-blue-700 text-xs mt-0.5">Click any volunteer's name or use <b>"+ Assign"</b> to manage assignments directly.</p>
                 </div>
             </div>
 
@@ -341,10 +307,8 @@
                 </button>
             </div>
 
-            <!-- Category Buttons Grid -->
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5" id="categoryButtonsContainer"></div>
 
-            <!-- Selected Category Members View -->
             <div id="selectedCategoryView" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
                 <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                     <h3 id="selectedCategoryTitle" class="text-lg font-black text-slate-900">Select a Category Above</h3>
@@ -359,7 +323,7 @@
         <div id="content-foodprep" class="tab-content hidden space-y-6">
             <div class="bg-purple-50/80 border border-purple-200 p-4 rounded-xl text-xs sm:text-sm text-purple-900">
                 <p class="font-bold"><i class="fa-solid fa-utensils mr-1.5 text-purple-600"></i> Food Preparation & Menu Breakdowns</p>
-                <p class="text-purple-800 text-xs mt-0.5">Click on any food item card to view, update team members, or assign/set a Food Team Leader for each category.</p>
+                <p class="text-purple-800 text-xs mt-0.5">Click on any food item card to view, update team members, or set a Food Team Leader.</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="foodPrepCategoriesGrid"></div>
@@ -388,7 +352,6 @@
             </div>
 
             <div class="py-4 space-y-4">
-                <!-- Status Bar -->
                 <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
                     <div>
                         <span class="text-slate-500 block font-semibold">Attendance</span>
@@ -400,7 +363,6 @@
                     </div>
                 </div>
 
-                <!-- DUTY TEAM MEMBERS LIST (Who is working along with them) -->
                 <div class="space-y-3">
                     <h4 class="text-xs font-black text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-users text-brand-700"></i> What I Am Doing & Who Is Working With Me
@@ -408,7 +370,6 @@
                     <div id="uModalDutyTeams" class="space-y-3"></div>
                 </div>
 
-                <!-- Add Public Volunteer Comment -->
                 <div class="pt-3 border-t border-slate-100 space-y-2">
                     <label class="block text-xs font-bold text-slate-700">Add / Update Volunteer Comments or Notes</label>
                     <textarea id="uModalCommentInput" rows="2" placeholder="e.g. Arriving at 9:30 AM, or willing to help with food packing..." class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
@@ -456,7 +417,6 @@
             <form id="volunteerForm" onsubmit="handleVolunteerFormSubmit(event)" class="space-y-4">
                 <input type="hidden" id="formVolId">
                 
-                <!-- SELECT EXISTING VOLUNTEER DROPDOWN -->
                 <div id="existingSelectContainer" class="bg-amber-50/80 p-3 rounded-xl border border-amber-200">
                     <label class="block text-xs font-black text-amber-900 mb-1">
                         <i class="fa-solid fa-user-check text-amber-600 mr-1"></i> Select Existing Volunteer to Assign or Edit:
@@ -498,7 +458,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Primary Duty Category (Dropdown)</label>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Primary Duty Category</label>
                         <select id="formPrimaryDuty" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold bg-white">
                             <option value="Venue Arrangement">Venue Arrangement</option>
                             <option value="Food Preparation">Food Preparation</option>
@@ -518,7 +478,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Secondary / Additional Duty (Dropdown)</label>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Secondary / Additional Duty</label>
                         <select id="formSecondaryDuty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold bg-white">
                             <option value="">None</option>
                             <option value="Venue Arrangement">Venue Arrangement</option>
@@ -597,10 +557,8 @@
         </div>
     </div>
 
-    <!-- SCRIPT & FULL DATASET -->
-    <script type="module">
-        import { doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+    <!-- MAIN SCRIPT -->
+    <script>
         // Obfuscated admin hash key ("kalotsavam2026")
         const ADMIN_HASH_KEY = "a2Fsb3RzYXZhbTIwMjY=";
 
@@ -765,74 +723,32 @@
         let activeUserId = null;
         let selectedCategory = 'Venue Arrangement';
 
-        document.addEventListener("DOMContentLoaded", () => {
-            initDataStorage();
-            populateParishFilter();
-            renderCategoryButtons();
-            renderApp();
-        });
-
-        async function initDataStorage() {
-            const syncBadge = document.getElementById("syncStatusBadge");
-            if (window.db && window.isFirebaseConnected) {
-                syncBadge.textContent = "Live Firebase Sync Active";
-                syncBadge.className = "bg-emerald-500/30 border border-emerald-400 text-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block";
-
-                const docRef = doc(window.db, "kalotsavam_2026", "roster");
-                
-                onSnapshot(docRef, async (docSnap) => {
-                    if (docSnap.exists() && docSnap.data().volunteers) {
-                        volunteers = docSnap.data().volunteers;
-                        localStorage.setItem("kalotsavam_volunteers_2026_v12", JSON.stringify(volunteers));
-                        populateParishFilter();
-                        renderApp();
-                    } else {
-                        volunteers = [...DEFAULT_VOLUNTEERS];
-                        await setDoc(docRef, { volunteers: volunteers });
-                        populateParishFilter();
-                        renderApp();
-                    }
-                }, (error) => {
-                    console.error("Firestore sync error:", error);
-                    loadLocalVolunteers();
-                });
-            } else {
-                syncBadge.textContent = "Offline / Local Mode";
-                syncBadge.className = "bg-amber-500/20 border border-amber-400/40 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block";
-                loadLocalVolunteers();
-            }
-        }
-
-        function loadLocalVolunteers() {
+        // Load data from localStorage or fallback to DEFAULT_VOLUNTEERS
+        function loadVolunteers() {
             const saved = localStorage.getItem("kalotsavam_volunteers_2026_v12");
             if (saved) {
-                try { volunteers = JSON.parse(saved); } catch(e) { volunteers = [...DEFAULT_VOLUNTEERS]; }
+                try {
+                    volunteers = JSON.parse(saved);
+                } catch(e) {
+                    volunteers = [...DEFAULT_VOLUNTEERS];
+                }
             } else {
                 volunteers = [...DEFAULT_VOLUNTEERS];
             }
         }
 
-        async function saveVolunteers() {
+        function saveVolunteers() {
             localStorage.setItem("kalotsavam_volunteers_2026_v12", JSON.stringify(volunteers));
-            
-            if (window.db && window.isFirebaseConnected) {
-                try {
-                    const docRef = doc(window.db, "kalotsavam_2026", "roster");
-                    await setDoc(docRef, { volunteers: volunteers });
-                } catch(e) {
-                    console.error("Error saving to Firestore:", e);
-                }
-            }
-            renderApp();
+            window.renderApp();
         }
 
-        function resetToDefaults() {
+        window.resetToDefaults = function() {
             if (confirm("Reset all volunteer data and allocations back to original defaults?")) {
                 localStorage.removeItem("kalotsavam_volunteers_2026_v12");
                 volunteers = [...DEFAULT_VOLUNTEERS];
                 saveVolunteers();
             }
-        }
+        };
 
         window.handleAuthToggle = function() {
             if (isAdmin) {
@@ -842,20 +758,19 @@
                 document.getElementById("loginModal").classList.remove("hidden");
                 document.getElementById("loginPassword").focus();
             }
-        }
+        };
 
         window.closeLoginModal = function() {
             document.getElementById("loginModal").classList.add("hidden");
             document.getElementById("loginError").classList.add("hidden");
             document.getElementById("loginPassword").value = "";
-        }
+        };
 
         window.handleLoginSubmit = function(e) {
             e.preventDefault();
             const pass = document.getElementById("loginPassword").value;
             try {
-                const encodedPass = btoa(pass);
-                if (encodedPass === ADMIN_HASH_KEY) {
+                if (btoa(pass) === ADMIN_HASH_KEY) {
                     isAdmin = true;
                     closeLoginModal();
                     updateAdminUI();
@@ -865,7 +780,7 @@
             } catch(err) {
                 document.getElementById("loginError").classList.remove("hidden");
             }
-        }
+        };
 
         function updateAdminUI() {
             const badge = document.getElementById("adminBadge");
@@ -888,7 +803,7 @@
                 addBtn.classList.add("hidden");
                 document.querySelectorAll(".admin-col").forEach(el => el.classList.add("hidden"));
             }
-            renderApp();
+            window.renderApp();
         }
 
         window.switchTab = function(tabId) {
@@ -910,8 +825,8 @@
             if (tabId === 'all') filterSec.classList.remove("hidden");
             else filterSec.classList.add("hidden");
 
-            renderApp();
-        }
+            window.renderApp();
+        };
 
         function populateParishFilter() {
             const select = document.getElementById("parishFilter");
@@ -925,6 +840,7 @@
 
         function populateExistingVolunteerDropdown() {
             const select = document.getElementById("formSelectExisting");
+            if (!select) return;
             const sorted = [...volunteers].sort((a,b) => a.name.localeCompare(b.name));
             let html = `<option value="">-- Choose an Existing Volunteer from Roster --</option>`;
             sorted.forEach(v => {
@@ -937,10 +853,9 @@
             if (!idStr) return;
             const id = parseInt(idStr);
             openEditModal(id);
-        }
+        };
 
-        function getFilteredVolunteers() {
-            function getFilteredVolunteers() {
+        window.getFilteredVolunteers = function() {
             const searchInputEl = document.getElementById("searchInput");
             const dutyFilterEl = document.getElementById("dutyFilter");
             const parishFilterEl = document.getElementById("parishFilter");
@@ -962,26 +877,27 @@
                 const leaderRole = (v.leaderRole || "").toLowerCase();
                 const foodItemsStr = (v.foodItems || []).join(" ").toLowerCase();
 
-                // 1. Search filter
+                // 1. Search matching
                 const matchesSearch = !search || 
                     name.includes(search) || 
                     phone.includes(search) || 
                     vParish.includes(search) ||
                     primaryDuty.includes(search) ||
-                    secondaryDuty.includes(search);
+                    secondaryDuty.includes(search) ||
+                    leaderRole.includes(search);
 
-                // 2. Duty Category filter (inclusive .includes() match)
+                // 2. Duty Category matching (inclusive .includes() match)
                 const matchesDuty = !duty || 
                     primaryDuty.includes(duty) || 
                     secondaryDuty.includes(duty) ||
                     foodItemsStr.includes(duty);
 
-                // 3. Parish / Unit filter (normalized to ignore apostrophes/spaces)
+                // 3. Parish matching
                 const matchesParish = !targetParish || 
                     vParish === targetParish || 
                     vParish.includes(targetParish);
 
-                // 4. Status / Attendance filter
+                // 4. Status matching
                 let matchesStatus = true;
                 if (status === 'leadersOnly') matchesStatus = !!v.leaderRole;
                 else if (status === 'checkedIn') matchesStatus = v.checkedIn;
@@ -991,9 +907,9 @@
 
                 return matchesSearch && matchesDuty && matchesParish && matchesStatus;
             });
-        }
+        };
 
-        function renderApp() {
+        window.renderApp = function() {
             updateDashboardStats();
 
             if (currentTab === 'all') renderAllTable();
@@ -1004,7 +920,7 @@
             if (isAdmin) {
                 document.querySelectorAll(".admin-col").forEach(el => el.classList.remove("hidden"));
             }
-        }
+        };
 
         function updateDashboardStats() {
             document.getElementById("statTotal").textContent = volunteers.length;
@@ -1017,20 +933,22 @@
 
             document.getElementById("statCoupons").textContent = volunteers.filter(v => v.couponClaimed).length;
             document.getElementById("statStageAlloc").textContent = volunteers.filter(v => (v.stages && v.stages.length > 0) || (v.greenRooms && v.greenRooms.length > 0)).length;
-            document.getElementById("statFoodPrep").textContent = volunteers.filter(v => v.primaryDuty.includes("Food") || v.secondaryDuty.includes("Food")).length;
+            document.getElementById("statFoodPrep").textContent = volunteers.filter(v => v.primaryDuty.includes("Food") || (v.secondaryDuty && v.secondaryDuty.includes("Food"))).length;
         }
 
         function renderAllTable() {
-            const list = getFilteredVolunteers();
+            const list = window.getFilteredVolunteers();
             const tbody = document.getElementById("volunteerTableBody");
             const empty = document.getElementById("emptyState");
 
+            if (!tbody) return;
+
             if (list.length === 0) {
                 tbody.innerHTML = "";
-                empty.classList.remove("hidden");
+                if (empty) empty.classList.remove("hidden");
                 return;
             }
-            empty.classList.add("hidden");
+            if (empty) empty.classList.add("hidden");
 
             tbody.innerHTML = list.map(v => {
                 const stageBadges = (v.stages || []).map(s => `<span class="bg-blue-100 text-blue-800 text-[10px] font-extrabold px-1.5 py-0.5 rounded">Stage ${s}</span>`).join(" ");
@@ -1093,6 +1011,8 @@
             const stagesContainer = document.getElementById("stagesGrid");
             const grContainer = document.getElementById("greenRoomsGrid");
 
+            if (!stagesContainer || !grContainer) return;
+
             let stageHtml = "";
             for (let i = 1; i <= 12; i++) {
                 const assigned = volunteers.filter(v => v.stages && v.stages.includes(i));
@@ -1107,7 +1027,7 @@
                             </div>
                             <div class="flex items-center gap-1">
                                 <span class="text-xs bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">${assigned.length} Allocated</span>
-                                <button onclick="assignVolunteerToStage(${i})" class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-black px-2 py-0.5 rounded-lg transition admin-col ${!isAdmin ? 'hidden' : ''}" title="Add/Assign Volunteer to Stage ${i}">+ Assign</button>
+                                <button onclick="assignVolunteerToStage(${i})" class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-black px-2 py-0.5 rounded-lg transition admin-col ${!isAdmin ? 'hidden' : ''}">+ Assign</button>
                             </div>
                         </div>
                         <div class="space-y-1.5 my-1 flex-1">
@@ -1120,8 +1040,8 @@
                                             <span class="text-[10px] text-slate-400 block">${v.parish}</span>
                                         </div>
                                         <div class="flex items-center gap-1 admin-col ${!isAdmin ? 'hidden' : ''}">
-                                            <button onclick="openEditModal(${v.id})" class="text-slate-500 hover:text-brand-700 p-1" title="Edit Volunteer Duties"><i class="fa-solid fa-pen text-[11px]"></i></button>
-                                            <button onclick="removeVolunteerFromStage(${v.id}, ${i})" class="text-rose-500 hover:text-rose-700 p-1" title="Remove from Stage ${i}"><i class="fa-solid fa-xmark text-xs"></i></button>
+                                            <button onclick="openEditModal(${v.id})" class="text-slate-500 hover:text-brand-700 p-1"><i class="fa-solid fa-pen text-[11px]"></i></button>
+                                            <button onclick="removeVolunteerFromStage(${v.id}, ${i})" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-xmark text-xs"></i></button>
                                         </div>
                                     </div>
                                 `).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
@@ -1146,7 +1066,7 @@
                             </div>
                             <div class="flex items-center gap-1">
                                 <span class="text-xs bg-purple-50 text-purple-700 font-bold px-2 py-0.5 rounded-full">${assigned.length} Allocated</span>
-                                <button onclick="assignVolunteerToGreenRoom(${i})" class="text-xs bg-purple-600 hover:bg-purple-700 text-white font-black px-2 py-0.5 rounded-lg transition admin-col ${!isAdmin ? 'hidden' : ''}" title="Add/Assign Volunteer to Green Room ${i}">+ Assign</button>
+                                <button onclick="assignVolunteerToGreenRoom(${i})" class="text-xs bg-purple-600 hover:bg-purple-700 text-white font-black px-2 py-0.5 rounded-lg transition admin-col ${!isAdmin ? 'hidden' : ''}">+ Assign</button>
                             </div>
                         </div>
                         <div class="space-y-1.5 my-1 flex-1">
@@ -1159,8 +1079,8 @@
                                             <span class="text-[10px] text-slate-400 block">${v.parish}</span>
                                         </div>
                                         <div class="flex items-center gap-1 admin-col ${!isAdmin ? 'hidden' : ''}">
-                                            <button onclick="openEditModal(${v.id})" class="text-slate-500 hover:text-brand-700 p-1" title="Edit Volunteer Duties"><i class="fa-solid fa-pen text-[11px]"></i></button>
-                                            <button onclick="removeVolunteerFromGreenRoom(${v.id}, ${i})" class="text-rose-500 hover:text-rose-700 p-1" title="Remove from Green Room ${i}"><i class="fa-solid fa-xmark text-xs"></i></button>
+                                            <button onclick="openEditModal(${v.id})" class="text-slate-500 hover:text-brand-700 p-1"><i class="fa-solid fa-pen text-[11px]"></i></button>
+                                            <button onclick="removeVolunteerFromGreenRoom(${v.id}, ${i})" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-xmark text-xs"></i></button>
                                         </div>
                                     </div>
                                 `).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
@@ -1185,7 +1105,7 @@
                     if (parseInt(cb.value) === stageNum) cb.checked = true;
                 });
             }, 100);
-        }
+        };
 
         window.removeVolunteerFromStage = function(volId, stageNum) {
             if (!isAdmin) return;
@@ -1194,7 +1114,7 @@
                 v.stages = v.stages.filter(s => s !== stageNum);
                 saveVolunteers();
             }
-        }
+        };
 
         window.assignVolunteerToGreenRoom = function(grNum) {
             if (!isAdmin) {
@@ -1209,7 +1129,7 @@
                     if (parseInt(cb.value) === grNum) cb.checked = true;
                 });
             }, 100);
-        }
+        };
 
         window.removeVolunteerFromGreenRoom = function(volId, grNum) {
             if (!isAdmin) return;
@@ -1218,7 +1138,7 @@
                 v.greenRooms = v.greenRooms.filter(g => g !== grNum);
                 saveVolunteers();
             }
-        }
+        };
 
         function renderCategoryButtons() {
             const container = document.getElementById("categoryButtonsContainer");
@@ -1240,7 +1160,7 @@
             document.getElementById("addCatBtnName").textContent = cat;
             renderCategoryButtons();
             renderCategoryViewContent();
-        }
+        };
 
         function renderCategoryView() {
             document.getElementById("addCatBtnName").textContent = selectedCategory;
@@ -1268,7 +1188,7 @@
                         </div>
                         <div class="flex items-center gap-1.5">
                             <button onclick="openUserModal(${leader.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-3 py-1.5 rounded-lg shadow-sm">View</button>
-                            <button onclick="openEditModal(${leader.id})" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-2.5 py-1.5 rounded-lg shadow-sm admin-col ${!isAdmin ? 'hidden' : ''}" title="Edit Volunteer"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="openEditModal(${leader.id})" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-2.5 py-1.5 rounded-lg shadow-sm admin-col ${!isAdmin ? 'hidden' : ''}"><i class="fa-solid fa-pen"></i></button>
                         </div>
                     </div>
                 `;
@@ -1286,7 +1206,7 @@
                     </div>
                     <div class="flex items-center gap-1.5">
                         <span class="text-[10px] bg-white border border-slate-200 px-2 py-1 rounded font-semibold text-slate-700">${v.shift || 'Full Day'}</span>
-                        <button onclick="openEditModal(${v.id})" class="text-brand-700 hover:text-brand-900 p-1 admin-col ${!isAdmin ? 'hidden' : ''}" title="Edit Volunteer"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="openEditModal(${v.id})" class="text-brand-700 hover:text-brand-900 p-1 admin-col ${!isAdmin ? 'hidden' : ''}"><i class="fa-solid fa-pen-to-square"></i></button>
                     </div>
                 </div>
             `).join("") || '<p class="text-slate-400 text-xs italic col-span-3 text-center py-4">No volunteers in this category.</p>';
@@ -1308,11 +1228,10 @@
                             </h4>
                             <div class="flex items-center gap-1.5">
                                 <span class="text-xs bg-purple-100 text-purple-900 font-bold px-2 py-0.5 rounded-full">${assigned.length} Team</span>
-                                <button onclick="openAddModalForFoodItem('${item.replace(/'/g, "\\'")}')" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold px-2 py-1 rounded shadow transition" title="Add or assign person to menu category"><i class="fa-solid fa-user-plus"></i></button>
+                                <button onclick="openAddModalForFoodItem('${item.replace(/'/g, "\\'")}')" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold px-2 py-1 rounded shadow transition"><i class="fa-solid fa-user-plus"></i></button>
                             </div>
                         </div>
 
-                        <!-- Team Leader Section -->
                         <div class="space-y-2 flex-1">
                             ${leader ? `
                                 <div class="bg-amber-50 border border-amber-200 p-2 rounded-lg text-xs flex items-center justify-between">
@@ -1340,7 +1259,7 @@
                                             <span class="text-[10px] text-slate-500 font-semibold block">${v.parish} ${v.leaderRole ? '• ' + v.leaderRole : ''}</span>
                                         </div>
                                         <div class="flex items-center gap-1">
-                                            <button onclick="openEditModal(${v.id})" class="text-slate-600 hover:text-brand-700 p-1 admin-col ${!isAdmin ? 'hidden' : ''}" title="Update / Edit"><i class="fa-solid fa-pen"></i></button>
+                                            <button onclick="openEditModal(${v.id})" class="text-slate-600 hover:text-brand-700 p-1 admin-col ${!isAdmin ? 'hidden' : ''}"><i class="fa-solid fa-pen"></i></button>
                                         </div>
                                     </div>
                                 `).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers designated yet.</p>'}
@@ -1375,7 +1294,7 @@
                     alert("Invalid selection.");
                 }
             }
-        }
+        };
 
         window.openUserModal = function(id) {
             const v = volunteers.find(vol => vol.id === id);
@@ -1409,12 +1328,12 @@
                             </span>
                             <span class="text-[10px] bg-brand-100 text-brand-900 font-extrabold px-2 py-0.5 rounded-full">${primaryCoworkers.length + 1} Teammates</span>
                         </div>
-                        <p class="text-[11px] text-slate-600 font-medium">You are assigned to <b>${v.primaryDuty}</b> (Shift: ${v.shift || 'Full Day'}). Here are the team members working alongside you:</p>
+                        <p class="text-[11px] text-slate-600 font-medium">You are assigned to <b>${v.primaryDuty}</b> (Shift: ${v.shift || 'Full Day'}). Here are team members working alongside you:</p>
                         <div class="bg-white rounded-lg border border-brand-100 p-2 space-y-1.5 max-h-40 overflow-y-auto">
                             ${primaryCoworkers.map(m => `
                                 <div class="flex justify-between items-center text-xs py-1 px-1.5 hover:bg-slate-50 rounded">
                                     <div class="flex items-center gap-1.5">
-                                        ${m.leaderRole ? '<i class="fa-solid fa-crown text-amber-500 text-[10px]" title="Leader"></i>' : '<i class="fa-solid fa-user text-slate-400 text-[10px]"></i>'}
+                                        ${m.leaderRole ? '<i class="fa-solid fa-crown text-amber-500 text-[10px]"></i>' : '<i class="fa-solid fa-user text-slate-400 text-[10px]"></i>'}
                                         <span class="font-bold text-slate-900">${m.name}</span>
                                         <span class="text-[10px] text-slate-500">(${m.parish})</span>
                                     </div>
@@ -1489,12 +1408,12 @@
             dutyTeamsContainer.innerHTML = html;
             document.getElementById("uModalCommentInput").value = v.notes || "";
             document.getElementById("userModal").classList.remove("hidden");
-        }
+        };
 
         window.closeUserModal = function() {
             document.getElementById("userModal").classList.add("hidden");
             activeUserId = null;
-        }
+        };
 
         window.saveUserComment = function() {
             if (!activeUserId) return;
@@ -1504,19 +1423,19 @@
                 saveVolunteers();
                 closeUserModal();
             }
-        }
+        };
 
         window.toggleAttendance = function(id) {
             if (!isAdmin) return;
             const v = volunteers.find(vol => vol.id === id);
             if (v) { v.checkedIn = !v.checkedIn; saveVolunteers(); }
-        }
+        };
 
         window.toggleCoupon = function(id) {
             if (!isAdmin) return;
             const v = volunteers.find(vol => vol.id === id);
             if (v) { v.couponClaimed = !v.couponClaimed; saveVolunteers(); }
-        }
+        };
 
         window.deleteVolunteer = function(id) {
             if (!isAdmin) return;
@@ -1524,7 +1443,7 @@
                 volunteers = volunteers.filter(v => v.id !== id);
                 saveVolunteers();
             }
-        }
+        };
 
         window.openAddModal = function() {
             if (!isAdmin) return;
@@ -1548,7 +1467,7 @@
             renderFoodPrepCheckboxes([]);
 
             document.getElementById("volunteerModal").classList.remove("hidden");
-        }
+        };
 
         window.openAddModalForCategory = function(category) {
             if (!isAdmin) {
@@ -1557,7 +1476,7 @@
             }
             openAddModal();
             document.getElementById("formPrimaryDuty").value = category;
-        }
+        };
 
         window.openAddModalForFoodItem = function(foodItem) {
             if (!isAdmin) {
@@ -1572,7 +1491,7 @@
                     if (cb.value === foodItem) cb.checked = true;
                 });
             }, 100);
-        }
+        };
 
         window.openEditModal = function(id) {
             if (!isAdmin) return;
@@ -1599,7 +1518,7 @@
             renderFoodPrepCheckboxes(v.foodItems || []);
 
             document.getElementById("volunteerModal").classList.remove("hidden");
-        }
+        };
 
         function renderStageCheckboxes(selectedStages) {
             const container = document.getElementById("stageCheckboxes");
@@ -1636,7 +1555,7 @@
 
         window.closeVolunteerModal = function() {
             document.getElementById("volunteerModal").classList.add("hidden");
-        }
+        };
 
         window.handleVolunteerFormSubmit = function(e) {
             e.preventDefault();
@@ -1674,7 +1593,7 @@
             saveVolunteers();
             populateParishFilter();
             closeVolunteerModal();
-        }
+        };
 
         window.exportCSV = function() {
             let csv = "ID,Full Name,Phone,Parish,Primary Duty,Secondary Duty,Leadership Role,Stages Assigned,Green Rooms Assigned,Food Items Assigned,Shift,Attendance,Food Coupon,Notes\n";
@@ -1691,7 +1610,15 @@
             a.setAttribute("href", url);
             a.setAttribute("download", `CSMEGB_Kalotsavam_Volunteers_2026.csv`);
             a.click();
-        }
+        };
+
+        // Initialize on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            loadVolunteers();
+            populateParishFilter();
+            renderCategoryButtons();
+            window.renderApp();
+        });
     </script>
 </body>
 </html>
