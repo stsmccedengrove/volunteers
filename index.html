@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSMEGB Bible Kalotsavam 2026 - Volunteer Roster</title>
+    <title>CSMEGB Bible Kalotsavam 2026 - Volunteer Roster & Management</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts (Inter) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -19,13 +19,19 @@
                     },
                     colors: {
                         brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#e11d48',
+                            600: '#be123c',
+                            700: '#9f1239',
+                            800: '#881337',
+                            900: '#4c0519',
+                        },
+                        gold: {
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            700: '#a16207',
                         }
                     }
                 }
@@ -41,28 +47,28 @@
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
     <!-- TOP HEADER -->
-    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30">
+    <header class="bg-gradient-to-r from-brand-900 via-brand-800 to-slate-900 text-white shadow-xl sticky top-0 z-30 border-b border-gold-500/30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Branding -->
                 <div class="flex items-center space-x-3">
-                    <div class="bg-brand-600 p-2 rounded-lg text-white">
+                    <div class="bg-gold-500 text-brand-900 p-2 rounded-xl font-bold shadow-md">
                         <i class="fa-solid fa-book-bible text-xl"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-base sm:text-lg leading-tight">Kalotsavam 2026</h1>
-                        <p class="text-xs text-slate-400 hidden sm:block">CSMEGB Regional Volunteer Roster</p>
+                        <h1 class="font-extrabold text-base sm:text-lg leading-tight tracking-wide text-gold-400">CSMEGB Kalotsavam 2026</h1>
+                        <p class="text-xs text-rose-100 hidden sm:block">Volunteer Roster & Operations Portal</p>
                     </div>
                 </div>
 
                 <!-- Admin Status / Auth Toggle -->
                 <div class="flex items-center space-x-2">
-                    <div id="adminBadge" class="hidden sm:flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                        <i class="fa-solid fa-lock text-xs mr-1.5"></i> Read-Only Mode
+                    <div id="adminBadge" class="flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800/80 text-amber-300 border border-amber-500/30">
+                        <i class="fa-solid fa-lock text-xs mr-1.5 text-amber-400"></i> Read-Only Mode
                     </div>
                     
-                    <button id="authBtn" onclick="handleAuthToggle()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition border border-slate-700 flex items-center gap-1.5">
-                        <i class="fa-solid fa-key text-amber-400"></i>
+                    <button id="authBtn" onclick="handleAuthToggle()" class="bg-gold-500 hover:bg-gold-400 text-brand-900 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shadow-md">
+                        <i class="fa-solid fa-key text-brand-900"></i>
                         <span id="authBtnText">Admin Login</span>
                     </button>
                 </div>
@@ -73,25 +79,25 @@
     <!-- MAIN CONTAINER -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-        <!-- HEADER BANNER / NOTICE -->
-        <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-brand-900 text-white rounded-2xl p-4 sm:p-6 shadow-lg relative overflow-hidden">
+        <!-- HEADER BANNER -->
+        <div class="bg-gradient-to-r from-brand-900 via-rose-950 to-slate-900 text-white rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden border border-gold-500/20">
             <div class="relative z-10">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <span class="inline-block bg-brand-500/20 text-brand-300 text-xs font-semibold px-2.5 py-1 rounded-md border border-brand-500/30 mb-2">
+                        <span class="inline-block bg-gold-500/20 text-gold-300 text-xs font-bold px-2.5 py-1 rounded-md border border-gold-500/30 mb-2">
                             CSMEGB Regional Bible Kalotsavam 2026
                         </span>
-                        <h2 class="text-xl sm:text-2xl font-bold">Bristol-Cardiff Region Host Event</h2>
-                        <p class="text-slate-300 text-xs sm:text-sm mt-1 flex flex-wrap gap-x-4 gap-y-1">
-                            <span><i class="fa-regular fa-calendar-check mr-1 text-brand-400"></i> Sat 31st Oct 2026</span>
-                            <span><i class="fa-solid fa-location-dot mr-1 text-brand-400"></i> St. Bernadette High Secondary School</span>
+                        <h2 class="text-xl sm:text-2xl font-black text-white">Bristol-Cardiff Host Regional Volunteers</h2>
+                        <p class="text-rose-100 text-xs sm:text-sm mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                            <span><i class="fa-regular fa-calendar-check mr-1 text-gold-400"></i> Fri 30th & Sat 31st Oct 2026</span>
+                            <span><i class="fa-solid fa-location-dot mr-1 text-gold-400"></i> St. Bernadette High Secondary School</span>
                         </p>
                     </div>
                     <div class="flex gap-2">
                         <button onclick="exportCSV()" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-csv text-brand-400"></i> Export CSV
+                            <i class="fa-solid fa-file-csv text-gold-400"></i> Export CSV
                         </button>
-                        <button id="addVolunteerBtn" onclick="openAddModal()" class="hidden bg-brand-600 hover:bg-brand-500 text-white text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5">
+                        <button id="addVolunteerBtn" onclick="openAddModal()" class="hidden bg-gold-500 hover:bg-gold-400 text-brand-900 text-xs px-3 py-2 rounded-lg font-bold transition flex items-center gap-1.5 shadow">
                             <i class="fa-solid fa-user-plus"></i> Add Volunteer
                         </button>
                     </div>
@@ -106,7 +112,7 @@
                     <p class="text-xs text-slate-500 font-medium">Total Roster</p>
                     <p id="statTotal" class="text-2xl font-bold text-slate-800 mt-0.5">114</p>
                 </div>
-                <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
+                <div class="w-10 h-10 rounded-lg bg-rose-50 text-brand-600 flex items-center justify-center text-lg">
                     <i class="fa-solid fa-users"></i>
                 </div>
             </div>
@@ -148,14 +154,11 @@
         <!-- NAVIGATION TABS -->
         <div class="border-b border-slate-200 bg-white rounded-xl shadow-sm px-2 pt-2">
             <nav class="flex space-x-2 overflow-x-auto no-scrollbar pb-2" aria-label="Tabs">
-                <button onclick="switchTab('all')" id="tab-all" class="tab-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg whitespace-nowrap transition bg-brand-50 text-brand-700">
-                    <i class="fa-solid fa-list mr-1.5"></i> All Volunteers (<span id="count-all">0</span>)
+                <button onclick="switchTab('all')" id="tab-all" class="tab-btn px-4 py-2 text-xs sm:text-sm font-bold rounded-lg whitespace-nowrap transition bg-brand-50 text-brand-700">
+                    <i class="fa-solid fa-list mr-1.5"></i> All Volunteers (<span id="count-all">114</span>)
                 </button>
                 <button onclick="switchTab('teams')" id="tab-teams" class="tab-btn px-4 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
                     <i class="fa-solid fa-sitemap mr-1.5"></i> Duty Teams
-                </button>
-                <button onclick="switchTab('special')" id="tab-special" class="tab-btn px-4 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
-                    <i class="fa-solid fa-star mr-1.5"></i> Special Sub-Teams
                 </button>
                 <button onclick="switchTab('venue')" id="tab-venue" class="tab-btn px-4 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
                     <i class="fa-solid fa-square-parking mr-1.5"></i> Venue & Parking Guide
@@ -163,7 +166,7 @@
             </nav>
         </div>
 
-        <!-- SEARCH AND FILTER BAR (Visible for list tabs) -->
+        <!-- SEARCH AND FILTER BAR -->
         <div id="filterSection" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                 <!-- Search Input -->
@@ -176,27 +179,26 @@
                 <div>
                     <select id="dutyFilter" onchange="renderApp()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700">
                         <option value="">All Duty Categories</option>
-                        <option value="Venue Prep">Venue Prep</option>
-                        <option value="Food Prep">Food Prep</option>
-                        <option value="Food Service & Cash Desk">Food Service & Cash Desk</option>
-                        <option value="Parking & Traffic Management">Parking & Traffic Management</option>
-                        <option value="Registration Desk">Registration Desk</option>
-                        <option value="Judges Support & Refreshments">Judges Support & Refreshments</option>
-                        <option value="Cleaning & Maintenance">Cleaning & Maintenance</option>
-                        <option value="Safeguarding & First Aid">Safeguarding & First Aid</option>
-                        <option value="Stage & Sound Assistance">Stage & Sound Assistance</option>
-                        <option value="Venue Pack-Up Squad">Venue Pack-Up Squad</option>
+                        <option value="Venue Arrangement">Venue Arrangement (Fri)</option>
+                        <option value="Food Preparation">Food Preparation (Fri/Sat)</option>
+                        <option value="Food Service">Food Service & Cash Desk</option>
+                        <option value="Cleaning Supervision">Cleaning Supervision</option>
+                        <option value="Venue Re-arrangement / Pack-up">Pack-up Squad</option>
+                        <option value="Parking Team">Parking Team</option>
+                        <option value="Judges Support">Judges Support</option>
+                        <option value="Registration">Registration & Tag Team</option>
+                        <option value="Safeguarding">Safeguarding & Health Safety</option>
                     </select>
                 </div>
 
                 <!-- Parish Filter -->
                 <div>
                     <select id="parishFilter" onchange="renderApp()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700">
-                        <option value="">All Parishes / Regions</option>
+                        <option value="">All Parishes / Units</option>
                     </select>
                 </div>
 
-                <!-- Attendance / Coupon Status Filter -->
+                <!-- Status Filter -->
                 <div>
                     <select id="statusFilter" onchange="renderApp()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700">
                         <option value="">All Statuses</option>
@@ -217,9 +219,9 @@
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                 <th class="p-3.5">Volunteer</th>
-                                <th class="p-3.5">Parish</th>
-                                <th class="p-3.5">Duties (Primary & Secondary)</th>
-                                <th class="p-3.5">Shift Window</th>
+                                <th class="p-3.5">Parish / Unit</th>
+                                <th class="p-3.5">Assigned Duties</th>
+                                <th class="p-3.5">Comments / Availability</th>
                                 <th class="p-3.5 text-center">Attendance</th>
                                 <th class="p-3.5 text-center">Food Coupon</th>
                                 <th class="p-3.5 text-right admin-col hidden">Actions</th>
@@ -244,56 +246,6 @@
             </div>
         </div>
 
-        <!-- TAB CONTENT: SPECIAL SUB-TEAMS -->
-        <div id="content-special" class="tab-content hidden space-y-6">
-            <!-- PARKING TEAM HIGHLIGHT -->
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex items-center space-x-3 mb-4 border-b border-slate-100 pb-3">
-                    <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-square-parking"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-base">Parking & Traffic Management Team</h3>
-                        <p class="text-xs text-slate-500">7:00 AM - 10:30 AM Peak Coverage</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="specialParkingList"></div>
-            </div>
-
-            <!-- JUDGES SUPPORT HIGHLIGHT -->
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex items-center space-x-3 mb-4 border-b border-slate-100 pb-3">
-                    <div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-gavel"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-base">Judges Support & Hospitality</h3>
-                        <p class="text-xs text-slate-500">Continuous Support & Food Delivery</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="specialJudgesList"></div>
-            </div>
-
-            <!-- VENUE PACK-UP SQUAD (30 MEMBERS) -->
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-lg">
-                            <i class="fa-solid fa-boxes-packing"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-slate-800 text-base">Venue Pack-Up Squad (30 Members)</h3>
-                            <p class="text-xs text-slate-500">14 Direct Assigned + 16 All-Day / Flexible Volunteers</p>
-                        </div>
-                    </div>
-                    <span class="bg-indigo-50 text-indigo-700 font-semibold text-xs px-2.5 py-1 rounded-full border border-indigo-200">
-                        17:30 PM Onwards
-                    </span>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="specialPackUpList"></div>
-            </div>
-        </div>
-
         <!-- TAB CONTENT: VENUE & PARKING GUIDELINES -->
         <div id="content-venue" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
@@ -303,13 +255,13 @@
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
                         <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                            <span class="font-semibold text-slate-900 block text-base mb-1">Main Event Venue</span>
+                            <span class="font-bold text-slate-900 block text-base mb-1">Main Event Venue</span>
                             <p class="text-slate-700 font-medium">St. Bernadette Catholic Secondary School</p>
                             <p class="text-slate-500">Fossedale Ave, Whitchurch, Bristol BS14 9LS</p>
-                            <p class="mt-2 text-xs text-brand-700 font-semibold"><i class="fa-solid fa-bus text-xs mr-1"></i> Coach Drop-off Point: New Fosseway Road</p>
+                            <p class="mt-2 text-xs text-brand-700 font-semibold"><i class="fa-solid fa-bus text-xs mr-1"></i> Coach Alight / Drop-off: New Fosseway Road</p>
                         </div>
                         <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
-                            <span class="font-semibold text-amber-900 block text-base mb-1">Off-Site Volunteer & Delegate Parking</span>
+                            <span class="font-bold text-amber-900 block text-base mb-1">Off-Site Volunteer & Delegate Parking</span>
                             <p class="text-amber-800 font-medium">Church of Jesus Christ of Latter-day Saints</p>
                             <p class="text-amber-700">721 Wells Road, Bristol BS14 9HU</p>
                             <p class="mt-2 text-xs text-amber-800 font-semibold"><i class="fa-solid fa-walking text-xs mr-1"></i> Short 3-minute walk to St. Bernadette School entrance</p>
@@ -319,33 +271,13 @@
 
                 <div>
                     <h3 class="text-lg font-bold text-slate-900 border-b border-slate-200 pb-2 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-clipboard-list text-brand-600"></i> Volunteer Shift Timings
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
-                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                            <p class="font-semibold text-slate-800">Morning Shift</p>
-                            <p class="text-slate-500">07:00 AM – 11:30 AM</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                            <p class="font-semibold text-slate-800">Afternoon Shift</p>
-                            <p class="text-slate-500">11:30 AM – 16:00 PM</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
-                            <p class="font-semibold text-slate-800">Pack-Up / Evening</p>
-                            <p class="text-slate-500">16:00 PM – 19:00 PM</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-lg font-bold text-slate-900 border-b border-slate-200 pb-2 mb-3 flex items-center gap-2">
                         <i class="fa-solid fa-shield-halved text-brand-600"></i> General Instructions for Volunteers
                     </h3>
                     <ul class="list-disc list-inside space-y-2 text-xs sm:text-sm text-slate-600">
-                        <li>Please report to the Registration Desk 15 minutes prior to your assigned shift.</li>
-                        <li>Wear your Volunteer High-Vis Badge at all times on site.</li>
-                        <li>Collect your official Food Coupon upon morning check-in.</li>
-                        <li>In case of emergency or duty conflict, contact the Regional Coordination Team immediately.</li>
+                        <li>Please report to the Registration Desk prior to your assigned duty time.</li>
+                        <li>Wear your Volunteer Badge/High-Vis tag at all times.</li>
+                        <li>Food Coupons are issued upon check-in for full-day shift volunteers.</li>
+                        <li>Contact the Regional Coordination Team for any immediate duty swaps or emergency coverage.</li>
                     </ul>
                 </div>
             </div>
@@ -355,8 +287,8 @@
 
     <!-- FOOTER -->
     <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-center text-xs mt-auto">
-        <p>© 2026 CSMEGB Regional Bible Kalotsavam - Volunteer Roster & Management System</p>
-        <p class="mt-1 text-slate-500">Bristol-Cardiff Region Host Committee</p>
+        <p>© 2026 CSMEGB Regional Bible Kalotsavam - Volunteer Operations Portal</p>
+        <p class="mt-1 text-slate-500">Bristol-Cardiff Regional Host Committee</p>
     </footer>
 
     <!-- MODAL: ADMIN LOGIN -->
@@ -367,7 +299,7 @@
                     <i class="fa-solid fa-lock"></i>
                 </div>
                 <h3 class="text-lg font-bold text-slate-900">Admin Authentication</h3>
-                <p class="text-xs text-slate-500 mt-1">Enter admin password to unlock management features.</p>
+                <p class="text-xs text-slate-500 mt-1">Enter admin password to unlock management privileges.</p>
             </div>
             <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
                 <div>
@@ -399,49 +331,26 @@
                     <input type="text" id="formName" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Parish / Region</label>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Parish / Unit</label>
                     <input type="text" id="formParish" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Primary Duty</label>
-                        <select id="formPrimaryDuty" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                            <option value="Venue Prep">Venue Prep</option>
-                            <option value="Food Prep">Food Prep</option>
-                            <option value="Food Service & Cash Desk">Food Service & Cash Desk</option>
-                            <option value="Parking & Traffic Management">Parking & Traffic Management</option>
-                            <option value="Registration Desk">Registration Desk</option>
-                            <option value="Judges Support & Refreshments">Judges Support & Refreshments</option>
-                            <option value="Cleaning & Maintenance">Cleaning & Maintenance</option>
-                            <option value="Safeguarding & First Aid">Safeguarding & First Aid</option>
-                            <option value="Stage & Sound Assistance">Stage & Sound Assistance</option>
-                            <option value="Venue Pack-Up Squad">Venue Pack-Up Squad</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Secondary Duty (Optional)</label>
-                        <select id="formSecondaryDuty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                            <option value="">-- None --</option>
-                            <option value="Venue Prep">Venue Prep</option>
-                            <option value="Food Prep">Food Prep</option>
-                            <option value="Food Service & Cash Desk">Food Service & Cash Desk</option>
-                            <option value="Parking & Traffic Management">Parking & Traffic Management</option>
-                            <option value="Registration Desk">Registration Desk</option>
-                            <option value="Judges Support & Refreshments">Judges Support & Refreshments</option>
-                            <option value="Cleaning & Maintenance">Cleaning & Maintenance</option>
-                            <option value="Safeguarding & First Aid">Safeguarding & First Aid</option>
-                            <option value="Stage & Sound Assistance">Stage & Sound Assistance</option>
-                            <option value="Venue Pack-Up Squad">Venue Pack-Up Squad</option>
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Shift Time Window</label>
-                    <input type="text" id="formShift" placeholder="e.g. 07:00 AM - 11:30 AM" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
                     <input type="tel" id="formPhone" placeholder="07xxxxxxxxx" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Primary Duty</label>
+                        <input type="text" id="formPrimaryDuty" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="e.g. Food Preparation...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Secondary Duty</label>
+                        <input type="text" id="formSecondaryDuty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Optional...">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Comments / Availability Notes</label>
+                    <textarea id="formComment" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
                 </div>
 
                 <div class="pt-2 flex justify-end space-x-2">
@@ -452,125 +361,132 @@
         </div>
     </div>
 
-    <!-- MAIN JAVASCRIPT APP LOGIC -->
+    <!-- JAVASCRIPT APP LOGIC -->
     <script>
-        // PRE-LOADED DATASET OF 114 VOLUNTEERS
+        // EXACT DATASET OF 114 VOLUNTEERS PRE-LOADED
         const initialVolunteers = [
-            // PARKING & TRAFFIC
-            { id: 1, name: "Antony Joseph", parish: "Bristol", primaryDuty: "Parking & Traffic Management", secondaryDuty: "Venue Pack-Up Squad", shift: "07:00 AM - 10:30 AM", phone: "07700900001", checkedIn: false, couponClaimed: false },
-            { id: 2, name: "Mathew Varghese", parish: "Bristol", primaryDuty: "Parking & Traffic Management", secondaryDuty: "Venue Pack-Up Squad", shift: "07:00 AM - 10:30 AM", phone: "07700900002", checkedIn: false, couponClaimed: false },
-            { id: 3, name: "George Thomas", parish: "Cardiff", primaryDuty: "Parking & Traffic Management", secondaryDuty: "", shift: "07:00 AM - 10:30 AM", phone: "07700900003", checkedIn: false, couponClaimed: false },
-            { id: 4, name: "Sebastian John", parish: "Gloucester", primaryDuty: "Parking & Traffic Management", secondaryDuty: "", shift: "07:00 AM - 10:30 AM", phone: "07700900004", checkedIn: false, couponClaimed: false },
-            { id: 5, name: "Thomas Kutty", parish: "Swindon", primaryDuty: "Parking & Traffic Management", secondaryDuty: "Venue Pack-Up Squad", shift: "07:00 AM - 10:30 AM", phone: "07700900005", checkedIn: false, couponClaimed: false },
-            { id: 6, name: "Joju Kurian", parish: "Bristol", primaryDuty: "Parking & Traffic Management", secondaryDuty: "", shift: "07:00 AM - 10:30 AM", phone: "07700900006", checkedIn: false, couponClaimed: false },
-            { id: 7, name: "Alex Paul", parish: "Bath", primaryDuty: "Parking & Traffic Management", secondaryDuty: "", shift: "07:00 AM - 10:30 AM", phone: "07700900007", checkedIn: false, couponClaimed: false },
-            { id: 8, name: "Biju Jacob", parish: "Cardiff", primaryDuty: "Parking & Traffic Management", secondaryDuty: "Venue Pack-Up Squad", shift: "07:00 AM - 10:30 AM", phone: "07700900008", checkedIn: false, couponClaimed: false },
-
-            // VENUE PREP
-            { id: 9, name: "Francis Xavier", parish: "Bristol", primaryDuty: "Venue Prep", secondaryDuty: "Venue Pack-Up Squad", shift: "06:30 AM - 09:00 AM", phone: "07700900009", checkedIn: false, couponClaimed: false },
-            { id: 10, name: "James Lukose", parish: "Bristol", primaryDuty: "Venue Prep", secondaryDuty: "Cleaning & Maintenance", shift: "06:30 AM - 09:00 AM", phone: "07700900010", checkedIn: false, couponClaimed: false },
-            { id: 11, name: "Philip Augustine", parish: "Cardiff", primaryDuty: "Venue Prep", secondaryDuty: "Venue Pack-Up Squad", shift: "06:30 AM - 09:00 AM", phone: "07700900011", checkedIn: false, couponClaimed: false },
-            { id: 12, name: "Dominic Savio", parish: "Swindon", primaryDuty: "Venue Prep", secondaryDuty: "", shift: "06:30 AM - 09:00 AM", phone: "07700900012", checkedIn: false, couponClaimed: false },
-            { id: 13, name: "Sabu Kuriakose", parish: "Gloucester", primaryDuty: "Venue Prep", secondaryDuty: "Venue Pack-Up Squad", shift: "06:30 AM - 09:00 AM", phone: "07700900013", checkedIn: false, couponClaimed: false },
-            { id: 14, name: "Stephen Devassy", parish: "Bristol", primaryDuty: "Venue Prep", secondaryDuty: "", shift: "06:30 AM - 09:00 AM", phone: "07700900014", checkedIn: false, couponClaimed: false },
-
-            // FOOD PREP & KITCHEN
-            { id: 15, name: "Marykutty Joseph", parish: "Bristol", primaryDuty: "Food Prep", secondaryDuty: "", shift: "07:00 AM - 12:00 PM", phone: "07700900015", checkedIn: false, couponClaimed: false },
-            { id: 16, name: "Annamma Thomas", parish: "Bristol", primaryDuty: "Food Prep", secondaryDuty: "", shift: "07:00 AM - 12:00 PM", phone: "07700900016", checkedIn: false, couponClaimed: false },
-            { id: 17, name: "Clara Sebastian", parish: "Cardiff", primaryDuty: "Food Prep", secondaryDuty: "", shift: "07:00 AM - 12:00 PM", phone: "07700900017", checkedIn: false, couponClaimed: false },
-            { id: 18, name: "Rosamma Mathew", parish: "Swindon", primaryDuty: "Food Prep", secondaryDuty: "", shift: "07:00 AM - 12:00 PM", phone: "07700900018", checkedIn: false, couponClaimed: false },
-            { id: 19, name: "Grace Philip", parish: "Bath", primaryDuty: "Food Prep", secondaryDuty: "", shift: "07:00 AM - 12:00 PM", phone: "07700900019", checkedIn: false, couponClaimed: false },
-            { id: 20, name: "Philomena Varghese", parish: "Gloucester", primaryDuty: "Food Prep", secondaryDuty: "", shift: "07:00 AM - 12:00 PM", phone: "07700900020", checkedIn: false, couponClaimed: false },
-            { id: 21, name: "Celine George", parish: "Bristol", primaryDuty: "Food Prep", secondaryDuty: "", shift: "07:00 AM - 12:00 PM", phone: "07700900021", checkedIn: false, couponClaimed: false },
-            { id: 22, name: "Teresa John", parish: "Cardiff", primaryDuty: "Food Prep", secondaryDuty: "", shift: "07:00 AM - 12:00 PM", phone: "07700900022", checkedIn: false, couponClaimed: false },
-
-            // FOOD SERVICE & CASH DESK
-            { id: 23, name: "Joseph Antony", parish: "Bristol", primaryDuty: "Food Service & Cash Desk", secondaryDuty: "Venue Pack-Up Squad", shift: "11:30 AM - 15:30 PM", phone: "07700900023", checkedIn: false, couponClaimed: false },
-            { id: 24, name: "Paul Chacko", parish: "Bristol", primaryDuty: "Food Service & Cash Desk", secondaryDuty: "Venue Pack-Up Squad", shift: "11:30 AM - 15:30 PM", phone: "07700900024", checkedIn: false, couponClaimed: false },
-            { id: 25, name: "Saji Emmanuel", parish: "Cardiff", primaryDuty: "Food Service & Cash Desk", secondaryDuty: "", shift: "11:30 AM - 15:30 PM", phone: "07700900025", checkedIn: false, couponClaimed: false },
-            { id: 26, name: "Rony Abraham", parish: "Swindon", primaryDuty: "Food Service & Cash Desk", secondaryDuty: "", shift: "11:30 AM - 15:30 PM", phone: "07700900026", checkedIn: false, couponClaimed: false },
-            { id: 27, name: "Joby Kuruvilla", parish: "Gloucester", primaryDuty: "Food Service & Cash Desk", secondaryDuty: "Venue Pack-Up Squad", shift: "11:30 AM - 15:30 PM", phone: "07700900027", checkedIn: false, couponClaimed: false },
-            { id: 28, name: "Mercy Francis", parish: "Bristol", primaryDuty: "Food Service & Cash Desk", secondaryDuty: "", shift: "11:30 AM - 15:30 PM", phone: "07700900028", checkedIn: false, couponClaimed: false },
-            { id: 29, name: "Daisy James", parish: "Bristol", primaryDuty: "Food Service & Cash Desk", secondaryDuty: "", shift: "11:30 AM - 15:30 PM", phone: "07700900029", checkedIn: false, couponClaimed: false },
-            { id: 30, name: "Lilly Stephen", parish: "Cardiff", primaryDuty: "Food Service & Cash Desk", secondaryDuty: "", shift: "11:30 AM - 15:30 PM", phone: "07700900030", checkedIn: false, couponClaimed: false },
-
-            // JUDGES SUPPORT & REFRESHMENTS
-            { id: 31, name: "Sister Maria CSN", parish: "Bristol", primaryDuty: "Judges Support & Refreshments", secondaryDuty: "", shift: "08:00 AM - 16:00 PM", phone: "07700900031", checkedIn: false, couponClaimed: false },
-            { id: 32, name: "Rita Dominic", parish: "Bristol", primaryDuty: "Judges Support & Refreshments", secondaryDuty: "", shift: "08:00 AM - 16:00 PM", phone: "07700900032", checkedIn: false, couponClaimed: false },
-            { id: 33, name: "Ancy Sabu", parish: "Cardiff", primaryDuty: "Judges Support & Refreshments", secondaryDuty: "", shift: "08:00 AM - 16:00 PM", phone: "07700900033", checkedIn: false, couponClaimed: false },
-            { id: 34, name: "Kochurani Alex", parish: "Swindon", primaryDuty: "Judges Support & Refreshments", secondaryDuty: "", shift: "08:00 AM - 16:00 PM", phone: "07700900034", checkedIn: false, couponClaimed: false },
-
-            // REGISTRATION DESK
-            { id: 35, name: "Sherly Thomas", parish: "Bristol", primaryDuty: "Registration Desk", secondaryDuty: "", shift: "07:30 AM - 12:00 PM", phone: "07700900035", checkedIn: false, couponClaimed: false },
-            { id: 36, name: "Bindu Joju", parish: "Bristol", primaryDuty: "Registration Desk", secondaryDuty: "", shift: "07:30 AM - 12:00 PM", phone: "07700900036", checkedIn: false, couponClaimed: false },
-            { id: 37, name: "Mini Biju", parish: "Cardiff", primaryDuty: "Registration Desk", secondaryDuty: "", shift: "07:30 AM - 12:00 PM", phone: "07700900037", checkedIn: false, couponClaimed: false },
-            { id: 38, name: "Sophy Mathew", parish: "Gloucester", primaryDuty: "Registration Desk", secondaryDuty: "", shift: "07:30 AM - 12:00 PM", phone: "07700900038", checkedIn: false, couponClaimed: false },
-
-            // SAFEGUARDING & FIRST AID
-            { id: 39, name: "Dr. Roy John", parish: "Bristol", primaryDuty: "Safeguarding & First Aid", secondaryDuty: "", shift: "08:00 AM - 17:00 PM", phone: "07700900039", checkedIn: false, couponClaimed: false },
-            { id: 40, name: "Nurse Beena Paul", parish: "Cardiff", primaryDuty: "Safeguarding & First Aid", secondaryDuty: "", shift: "08:00 AM - 17:00 PM", phone: "07700900040", checkedIn: false, couponClaimed: false },
-            { id: 41, name: "Shaji Peter", parish: "Swindon", primaryDuty: "Safeguarding & First Aid", secondaryDuty: "", shift: "08:00 AM - 17:00 PM", phone: "07700900041", checkedIn: false, couponClaimed: false },
-
-            // STAGE & SOUND ASSISTANCE
-            { id: 42, name: "Kevin Joseph", parish: "Bristol", primaryDuty: "Stage & Sound Assistance", secondaryDuty: "Venue Pack-Up Squad", shift: "08:00 AM - 17:00 PM", phone: "07700900042", checkedIn: false, couponClaimed: false },
-            { id: 43, name: "Justin Varghese", parish: "Bristol", primaryDuty: "Stage & Sound Assistance", secondaryDuty: "Venue Pack-Up Squad", shift: "08:00 AM - 17:00 PM", phone: "07700900043", checkedIn: false, couponClaimed: false },
-            { id: 44, name: "Alwin Thomas", parish: "Cardiff", primaryDuty: "Stage & Sound Assistance", secondaryDuty: "Venue Pack-Up Squad", shift: "08:00 AM - 17:00 PM", phone: "07700900044", checkedIn: false, couponClaimed: false },
-
-            // CLEANING & MAINTENANCE
-            { id: 45, name: "Sujan George", parish: "Bristol", primaryDuty: "Cleaning & Maintenance", secondaryDuty: "Venue Pack-Up Squad", shift: "10:00 AM - 16:00 PM", phone: "07700900045", checkedIn: false, couponClaimed: false },
-            { id: 46, name: "Tomy Sebastian", parish: "Cardiff", primaryDuty: "Cleaning & Maintenance", secondaryDuty: "Venue Pack-Up Squad", shift: "10:00 AM - 16:00 PM", phone: "07700900046", checkedIn: false, couponClaimed: false },
-
-            // VENUE PACK-UP SQUAD DIRECT ASSIGNED (14 DIRECT)
-            { id: 47, name: "Manoj Kuriakose", parish: "Bristol", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900047", checkedIn: false, couponClaimed: false },
-            { id: 48, name: "Lijo Augustine", parish: "Bristol", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900048", checkedIn: false, couponClaimed: false },
-            { id: 49, name: "Robin Devassy", parish: "Cardiff", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900049", checkedIn: false, couponClaimed: false },
-            { id: 50, name: "Subin Chacko", parish: "Swindon", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900050", checkedIn: false, couponClaimed: false },
-            { id: 51, name: "Sanju Emmanuel", parish: "Gloucester", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900051", checkedIn: false, couponClaimed: false },
-            { id: 52, name: "Bibin Abraham", parish: "Bath", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900052", checkedIn: false, couponClaimed: false },
-            { id: 53, name: "Jibin Kuruvilla", parish: "Bristol", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900053", checkedIn: false, couponClaimed: false },
-            { id: 54, name: "Ranjith Paul", parish: "Cardiff", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900054", checkedIn: false, couponClaimed: false },
-            { id: 55, name: "Deepak Jacob", parish: "Swindon", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900055", checkedIn: false, couponClaimed: false },
-            { id: 56, name: "Nebu Lukose", parish: "Bristol", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900056", checkedIn: false, couponClaimed: false },
-            { id: 57, name: "Prince Philip", parish: "Cardiff", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900057", checkedIn: false, couponClaimed: false },
-            { id: 58, name: "Shine Stephen", parish: "Gloucester", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900058", checkedIn: false, couponClaimed: false },
-            { id: 59, name: "Tony Sabu", parish: "Bristol", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900059", checkedIn: false, couponClaimed: false },
-            { id: 60, name: "Vipin Peter", parish: "Bath", primaryDuty: "Venue Pack-Up Squad", secondaryDuty: "", shift: "16:00 PM - 19:00 PM", phone: "07700900060", checkedIn: false, couponClaimed: false }
+            { id: 1, name: "Shiju Thettayil Vakkachan", parish: "St.Mary", phone: "07918393444", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "I am available all day", checkedIn: false, couponClaimed: false },
+            { id: 2, name: "John Joseph", parish: "St.Sebastian", phone: "07701089837", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "Na", checkedIn: false, couponClaimed: false },
+            { id: 3, name: "Mathew Thomas", parish: "St.Alphonsa", phone: "07910000997", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "No", checkedIn: false, couponClaimed: false },
+            { id: 4, name: "Deepumon", parish: "St.Sebastian", phone: "07879728191", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "I am available after 5 PM Saturday", checkedIn: false, couponClaimed: false },
+            { id: 5, name: "Rojis George", parish: "St.Thomas", phone: "07423138030", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Cleaning Supervision (Saturday, 31st October-Full Day)", comment: "No", checkedIn: false, couponClaimed: false },
+            { id: 6, name: "Joshy", parish: "St.Micheal", phone: "07301355229", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "", comment: "Yes", checkedIn: false, couponClaimed: false },
+            { id: 7, name: "Rohith Shiju", parish: "St.Mary", phone: "07881144662", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "I am available whole day and I can take care of the payment stuff if thats alright .", checkedIn: false, couponClaimed: false },
+            { id: 8, name: "SajiGeorge", parish: "St.Thomas", phone: "07481849707", primaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", secondaryDuty: "", comment: "Iwill be there whole day", checkedIn: false, couponClaimed: false },
+            { id: 9, name: "Sibi Mathew", parish: "St.Xavier", phone: "07412348702", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "Will try to help out with other arrangements if time allows.", checkedIn: false, couponClaimed: false },
+            { id: 10, name: "Joel Arikkat", parish: "St.Vincent", phone: "07414726699", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "Can do half day for food service in 31st October", checkedIn: false, couponClaimed: false },
+            { id: 11, name: "saji mathew", parish: "Lourdes Matha", phone: "07737413793", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "Jolly also available on Saturday", checkedIn: false, couponClaimed: false },
+            { id: 12, name: "Roy Joseph", parish: "St.Patric", phone: "0788853279", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Tea and coffee making", checkedIn: false, couponClaimed: false },
+            { id: 13, name: "Roshan Rapheal", parish: "St.Mary", phone: "07442903850", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "Whole day available", checkedIn: false, couponClaimed: false },
+            { id: 14, name: "Shaji Sebastian", parish: "Lourdes Matha", phone: "07766873953", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Nil", checkedIn: false, couponClaimed: false },
+            { id: 15, name: "Albin Shibu", parish: "St.Theresa", phone: "07423241394", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: ".", checkedIn: false, couponClaimed: false },
+            { id: 16, name: "Linta Joseph", parish: "St.Patric", phone: "07884078293", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 17, name: "Roy Sebastian", parish: "Devine Mercy", phone: "07862701046", primaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", secondaryDuty: "Judges Support", comment: "Happy to help with judges", checkedIn: false, couponClaimed: false },
+            { id: 18, name: "Molly Roy", parish: "Devine Mercy", phone: "07817784384", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Judges Support", comment: "Happy to help with judges", checkedIn: false, couponClaimed: false },
+            { id: 19, name: "Manuel", parish: "Lourdes Matha", phone: "07471804154", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Food counter", checkedIn: false, couponClaimed: false },
+            { id: 20, name: "Sindhu Manuel", parish: "Lourdes Matha", phone: "07737812369", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "All day support", checkedIn: false, couponClaimed: false },
+            { id: 21, name: "Ligi Thomas", parish: "St.Alphonsa", phone: "07515635457", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 22, name: "Joseph Sunny", parish: "Lourdes Matha", phone: "07988111515", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "As a volunteer, helping in each section", checkedIn: false, couponClaimed: false },
+            { id: 23, name: "Vincent Thomas", parish: "Lourdes Matha", phone: "07939010065", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "Happy to do", checkedIn: false, couponClaimed: false },
+            { id: 24, name: "Rajumon Kuriakose", parish: "St.Alphonsa", phone: "07717665236", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "", comment: "Any administration or leadership support to the coordinators", checkedIn: false, couponClaimed: false },
+            { id: 25, name: "Tom Loyied", parish: "St.Theresa", phone: "07423468998", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Snacks preparation", checkedIn: false, couponClaimed: false },
+            { id: 26, name: "Siby Vincent", parish: "Lourdes Matha", phone: "07454746432", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Nil", checkedIn: false, couponClaimed: false },
+            { id: 27, name: "Shinu Jackson", parish: "St.Antony's", phone: "07577738490", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "I can head manage food sale.", checkedIn: false, couponClaimed: false },
+            { id: 28, name: "Jojy Thomas", parish: "St.Theresa", phone: "07774430991", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Snack preparation", checkedIn: false, couponClaimed: false },
+            { id: 29, name: "Jinsan Panakkal Raphel", parish: "St.Theresa", phone: "07570329270", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Nil", checkedIn: false, couponClaimed: false },
+            { id: 30, name: "Maboj mathew", parish: "St.Augustine", phone: "07727273766", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 31, name: "Manoj", parish: "St.Antony's", phone: "07481183830", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Athother day no availability", checkedIn: false, couponClaimed: false },
+            { id: 32, name: "Jinto joseph", parish: "St.Theresa", phone: "7767913488", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Snack preparation", checkedIn: false, couponClaimed: false },
+            { id: 33, name: "Mable Baby", parish: "St.Theresa", phone: "07423468998", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Food preparation", checkedIn: false, couponClaimed: false },
+            { id: 34, name: "Vargheese scaria", parish: "St.Sebastian", phone: "07909723108", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "Available 30&31", checkedIn: false, couponClaimed: false },
+            { id: 35, name: "Robin Varghese", parish: "St.Theresa", phone: "07436567745", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Snacks preparation", checkedIn: false, couponClaimed: false },
+            { id: 36, name: "Karol Thomas", parish: "Devine Mercy", phone: "07459317465", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 37, name: "Chacko varghese", parish: "St.Joseph", phone: "07920693900", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "No", checkedIn: false, couponClaimed: false },
+            { id: 38, name: "Manju Jose", parish: "St.Sebastian", phone: "7385298144", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Food preparation 30th Friday evening", checkedIn: false, couponClaimed: false },
+            { id: 39, name: "Joe joseph", parish: "St.Antony's", phone: "07776620574", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Oct 31 only", checkedIn: false, couponClaimed: false },
+            { id: 40, name: "George Tharakan", parish: "Devine Mercy", phone: "07811197278", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Available on 31st", checkedIn: false, couponClaimed: false },
+            { id: 41, name: "Shiny Sibi", parish: "St.Xavier", phone: "07402793726", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Friday 30th if time allows", checkedIn: false, couponClaimed: false },
+            { id: 42, name: "Anns Manuel", parish: "Lourdes Matha", phone: "07443911575", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 43, name: "Mathew Kurian", parish: "St.Antony's", phone: "07737963892", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "No", checkedIn: false, couponClaimed: false },
+            { id: 44, name: "Mathews Manuel", parish: "Lourdes Matha", phone: "07492572732", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 45, name: "Aleena Vincent", parish: "Lourdes Matha", phone: "07422530922", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "All day", checkedIn: false, couponClaimed: false },
+            { id: 46, name: "Beenamol Thomas", parish: "Lourdes Matha", phone: "07737506147", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 47, name: "Shelton Mathew", parish: "St.Theresa", phone: "07585067073", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "", comment: "Depends", checkedIn: false, couponClaimed: false },
+            { id: 48, name: "Jose Thomas", parish: "St.Sebastian", phone: "07721957438", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Friday evening", checkedIn: false, couponClaimed: false },
+            { id: 49, name: "Sanal Appukuttan", parish: "St.Jude", phone: "07429146972", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "SATURDAY MORNING UNTIL 3PM", checkedIn: false, couponClaimed: false },
+            { id: 50, name: "Edwin Sebastian", parish: "Lourdes Matha", phone: "07305827490", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 51, name: "Metty Thomas", parish: "St.Sebastian", phone: "07846136960", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "food preparation 30th", checkedIn: false, couponClaimed: false },
+            { id: 52, name: "Dolly James", parish: "St.Vincent", phone: "07737739637", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "Can be flexible where ever helps needs", checkedIn: false, couponClaimed: false },
+            { id: 53, name: "Roy Mathew", parish: "St.Jude", phone: "07448727488", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Parking Team", comment: "Parking", checkedIn: false, couponClaimed: false },
+            { id: 54, name: "Tajmon Maliyilchira Kuriakose", parish: "St.Jude", phone: "7768621570", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Parking Team", comment: "Parking", checkedIn: false, couponClaimed: false },
+            { id: 55, name: "GEORGEJOSEPH", parish: "St.Jude", phone: "07867909316", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Parking Team", comment: "Parking", checkedIn: false, couponClaimed: false },
+            { id: 56, name: "Thomas Mathew", parish: "St.Augustine", phone: "07878865278", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "", comment: "Available on Saturday", checkedIn: false, couponClaimed: false },
+            { id: 57, name: "Colins Jacob", parish: "St.Joseph", phone: "07385164774", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 58, name: "Abin manoj", parish: "St.Antony's", phone: "07481183830", primaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", secondaryDuty: "Cash Counter", comment: "Cash counter", checkedIn: false, couponClaimed: false },
+            { id: 59, name: "Jasmin Joseph", parish: "St.Jude", phone: "07909488384", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "", comment: "Available as required", checkedIn: false, couponClaimed: false },
+            { id: 60, name: "Tijo Antony", parish: "St.Jude", phone: "07721949500", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "Flexible", checkedIn: false, couponClaimed: false },
+            { id: 61, name: "Lalamma Thomas", parish: "St.Augustine", phone: "07757408496", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "Avilable on 31st ,happy to help with food Sale.", checkedIn: false, couponClaimed: false },
+            { id: 62, name: "Femi Joseph", parish: "St.Thomas", phone: "7482237458", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "", comment: "Happy to assist 30 and 31st, not for after cleaning. 31st.", checkedIn: false, couponClaimed: false },
+            { id: 63, name: "Siju", parish: "St.Thomas", phone: "07961815719", primaryDuty: "Cleaning Supervision (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Helping George for breakfast preparations", checkedIn: false, couponClaimed: false },
+            { id: 64, name: "Bijo", parish: "St.Micheal", phone: "07880435739", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "", comment: "Yes", checkedIn: false, couponClaimed: false },
+            { id: 65, name: "Shiny Aljo", parish: "Sacred Heart", phone: "07551708905", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "I’m Available", checkedIn: false, couponClaimed: false },
+            { id: 66, name: "Sebiyachan Poulo", parish: "St.Sebastian", phone: "07975617631", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "30th evening food preparation", checkedIn: false, couponClaimed: false },
+            { id: 67, name: "Joju George", parish: "St.Thomas", phone: "07450173184", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "", comment: "Happened to assist 31st morning till 4pm", checkedIn: false, couponClaimed: false },
+            { id: 68, name: "Mary Thomas", parish: "St.Alphonsa", phone: "0789446820", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 69, name: "Shinto Thomas", parish: "St.Augustine", phone: "07555230670", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "All day", checkedIn: false, couponClaimed: false },
+            { id: 70, name: "Neuby Varghese", parish: "St.Vincent", phone: "07767944813", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "Thanks", checkedIn: false, couponClaimed: false },
+            { id: 71, name: "Gimy Gracias", parish: "Divine Mercy", phone: "07539081234", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 72, name: "Harry Arikkat", parish: "St.Vincent", phone: "07505146260", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Cleaning Supervision (Saturday, 31st October-Full Day)", comment: "Have to prepare child for participating During the day.", checkedIn: false, couponClaimed: false },
+            { id: 73, name: "Jasmin George", parish: "St.Mary", phone: "07838904708", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Safeguarding & Safety", comment: "Safeguarding and health and safety", checkedIn: false, couponClaimed: false },
+            { id: 74, name: "Shibi Jose", parish: "St.Jude", phone: "07917466066", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Parking Team", comment: "Parking", checkedIn: false, couponClaimed: false },
+            { id: 75, name: "Jomy John", parish: "St.Antony's", phone: "07753821192", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Registration & Tag Team", comment: "Responsible to tag distribution to participants", checkedIn: false, couponClaimed: false },
+            { id: 76, name: "Shiny Sebastian", parish: "Sacred Heart", phone: "07551708905", primaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", secondaryDuty: "Registration Team", comment: "Part of registration", checkedIn: false, couponClaimed: false },
+            { id: 77, name: "Sebastian Lonappan", parish: "Lourdes Matha", phone: "07809294312", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 78, name: "Aravind Mohanan", parish: "St.Patric", phone: "07775733270", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Saturday from 12 pm", checkedIn: false, couponClaimed: false },
+            { id: 79, name: "Sinson George", parish: "St.Antony's", phone: "07435743681", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 80, name: "Shanty George", parish: "St.Antony's", phone: "07522821999", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "Available on Fridays and Saturdays until 2 pm.", checkedIn: false, couponClaimed: false },
+            { id: 81, name: "Sabu Mathew", parish: "St.Thomas", phone: "07466350670", primaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", secondaryDuty: "", comment: "General help", checkedIn: false, couponClaimed: false },
+            { id: 82, name: "Shaji Thomas", parish: "St.Antony's", phone: "0745986507", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "All in all", checkedIn: false, couponClaimed: false },
+            { id: 83, name: "George Sebastian", parish: "St.Antony's", phone: "07883093766", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "I happy to help with anything", checkedIn: false, couponClaimed: false },
+            { id: 84, name: "Shaji Varkey", parish: "St.Chavara", phone: "07532182639", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "Flexible", checkedIn: false, couponClaimed: false },
+            { id: 85, name: "George Nikolovoas", parish: "St.Jude", phone: "07899314358", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Parking Team", comment: "Car Parking Arrangement", checkedIn: false, couponClaimed: false },
+            { id: 86, name: "Noychen Augustine", parish: "St.Mary", phone: "07886894388", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "No", checkedIn: false, couponClaimed: false },
+            { id: 87, name: "Tom George", parish: "St.Jude", phone: "07861042288", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Parking Team Lead", comment: "Parking arrangements", checkedIn: false, couponClaimed: false },
+            { id: 88, name: "Prabhu plappallil james", parish: "St.Antony's", phone: "07394338272", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "Available as per requirement", checkedIn: false, couponClaimed: false },
+            { id: 89, name: "Dijo George", parish: "St.Jude", phone: "07733842801", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Parking Team", comment: "Parking Volunteer", checkedIn: false, couponClaimed: false },
+            { id: 90, name: "Anita Philip", parish: "St.Alphonsa", phone: "07809714895", primaryDuty: "Judges Support / Commission Lead", secondaryDuty: "", comment: "Bible Apostolate commission member- responsible for Judges.", checkedIn: false, couponClaimed: false },
+            { id: 91, name: "Jijo john", parish: "St.Thomas", phone: "07769421944", primaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 92, name: "Xavier Chakku", parish: "Sacred Heart", phone: "07467195775", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "Yes", checkedIn: false, couponClaimed: false },
+            { id: 93, name: "Bazil Kurian", parish: "St.Micheal", phone: "07727054519", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "As per your request", checkedIn: false, couponClaimed: false },
+            { id: 94, name: "Subi Shaji", parish: "St.Chavara", phone: "07541103663", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "Can help with other areas if required", checkedIn: false, couponClaimed: false },
+            { id: 95, name: "Jose Sebastian", parish: "St.Theresa", phone: "07721933195", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 96, name: "Mahesh M Babu", parish: "St.Theresa", phone: "07818993252", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "No", checkedIn: false, couponClaimed: false },
+            { id: 97, name: "Jessy Jose", parish: "St.Augustine", phone: "07379043128", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "All day", checkedIn: false, couponClaimed: false },
+            { id: 98, name: "Gigy John", parish: "St.Sebastian", phone: "07753894576", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Food preparation on 30th not available on 31st", checkedIn: false, couponClaimed: false },
+            { id: 99, name: "Jijo Augustine", parish: "St.Jude", phone: "07721988499", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Parking Team", comment: "Parking Assistant", checkedIn: false, couponClaimed: false },
+            { id: 100, name: "Sanjoy Thomas", parish: "St.Jude", phone: "07823947630", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "Parking Team", comment: "Parking", checkedIn: false, couponClaimed: false },
+            { id: 101, name: "Sheby", parish: "St.Xavier", phone: "07393900287", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Only available on Saturday", checkedIn: false, couponClaimed: false },
+            { id: 102, name: "Lissy Paul", parish: "Lourdes Matha", phone: "07951858312", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "I am available on 31st", checkedIn: false, couponClaimed: false },
+            { id: 103, name: "Shiju k paul", parish: "St.Sebastian", phone: "07350342392", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "No comment", checkedIn: false, couponClaimed: false },
+            { id: 104, name: "Tejal Sebastian", parish: "St.Xavier", phone: "0734582038", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 105, name: "Danny George", parish: "St.Mary", phone: "07305642067", primaryDuty: "Venue Arrangement (Friday, 30th October from 5:00 PM)", secondaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", comment: "That is all", checkedIn: false, couponClaimed: false },
+            { id: 106, name: "Mathew Jose", parish: "St.Jude", phone: "07901179011", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Parking Team", comment: "Parking", checkedIn: false, couponClaimed: false },
+            { id: 107, name: "Jai john (Renju)", parish: "St.Patric", phone: "07985402991", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 108, name: "Shibu George", parish: "St.Mary", phone: "07921228815", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "No", checkedIn: false, couponClaimed: false },
+            { id: 109, name: "TIJOMON GEORGE", parish: "St.Micheal", phone: "07824045695", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "Food Service (Saturday, 31st October-Full Day)", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 110, name: "Shibu K Joseph", parish: "St.Mary", phone: "07585355038", primaryDuty: "Food Preparation ( Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "Nil", checkedIn: false, couponClaimed: false },
+            { id: 111, name: "Jessica Vadhyanath", parish: "St.Alphonsa", phone: "07949407736", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 112, name: "Christy Francis", parish: "St.Joseph", phone: "+91 9538366840", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false },
+            { id: 113, name: "Santhosh kachappilly", parish: "Lourdes Matha", phone: "07747248525", primaryDuty: "Food Service (Saturday, 31st October-Full Day)", secondaryDuty: "", comment: "From 11.00am", checkedIn: false, couponClaimed: false },
+            { id: 114, name: "Tonsen Thomas", parish: "St.Cecily", phone: "07427691328", primaryDuty: "Venue Re-arrangement / Pack-up (Saturday, 31st October from 7:00 PM)", secondaryDuty: "", comment: "None", checkedIn: false, couponClaimed: false }
         ];
 
-        // Fill remaining dataset up to 114 members
-        for (let i = 61; i <= 114; i++) {
-            const parishes = ["Bristol", "Cardiff", "Swindon", "Gloucester", "Bath", "Newport"];
-            const duties = [
-                "Food Service & Cash Desk", 
-                "Registration Desk", 
-                "Cleaning & Maintenance", 
-                "Venue Prep", 
-                "Parking & Traffic Management",
-                "Venue Pack-Up Squad"
-            ];
-            const pDuty = duties[i % duties.length];
-            const sDuty = (i % 3 === 0 && pDuty !== "Venue Pack-Up Squad") ? "Venue Pack-Up Squad" : "";
-            
-            initialVolunteers.push({
-                id: i,
-                name: `Volunteer Member ${i}`,
-                parish: parishes[i % parishes.length],
-                primaryDuty: pDuty,
-                secondaryDuty: sDuty,
-                shift: pDuty === "Venue Pack-Up Squad" ? "16:00 PM - 19:00 PM" : "08:00 AM - 16:00 PM",
-                phone: `077009000${i.toString().padStart(2, '0')}`,
-                checkedIn: false,
-                couponClaimed: false
-            });
-        }
-
-        // STATE MANAGEMENT
+        // APP STATE
         let volunteers = [];
         let isAdmin = false;
         let activeTab = 'all';
         const DEFAULT_PASS = "kalotsavam2026";
 
-        // APP INITIALIZATION
         window.onload = function() {
             loadVolunteers();
             populateParishFilter();
@@ -578,7 +494,7 @@
         };
 
         function loadVolunteers() {
-            const saved = localStorage.getItem('kalotsavam_volunteers_2026');
+            const saved = localStorage.getItem('kalotsavam_volunteers_v2');
             if (saved) {
                 try {
                     volunteers = JSON.parse(saved);
@@ -592,18 +508,16 @@
         }
 
         function saveVolunteers() {
-            localStorage.setItem('kalotsavam_volunteers_2026', JSON.stringify(volunteers));
+            localStorage.setItem('kalotsavam_volunteers_v2', JSON.stringify(volunteers));
         }
 
-        // AUTHENTICATION MANAGEMENT
+        // AUTHENTICATION
         function handleAuthToggle() {
             if (isAdmin) {
-                // Logout / Lock Admin
                 isAdmin = false;
                 updateAuthUI();
                 renderApp();
             } else {
-                // Open Login Modal
                 document.getElementById('loginPassword').value = '';
                 document.getElementById('loginError').classList.add('hidden');
                 document.getElementById('loginModal').classList.remove('hidden');
@@ -617,9 +531,7 @@
         function handleLoginSubmit(e) {
             e.preventDefault();
             const pass = document.getElementById('loginPassword').value;
-            const customPass = localStorage.getItem('kalotsavam_admin_pass') || DEFAULT_PASS;
-
-            if (pass === customPass) {
+            if (pass === DEFAULT_PASS) {
                 isAdmin = true;
                 closeLoginModal();
                 updateAuthUI();
@@ -637,26 +549,25 @@
 
             if (isAdmin) {
                 btnText.textContent = "Lock Admin";
-                btn.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition flex items-center gap-1.5";
+                btn.className = "bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shadow";
                 badge.className = "flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
-                badge.innerHTML = `<i class="fa-solid fa-unlock text-xs mr-1.5"></i> Admin Unlocked`;
+                badge.innerHTML = `<i class="fa-solid fa-unlock text-xs mr-1.5 text-emerald-400"></i> Admin Active`;
                 addBtn.classList.remove('hidden');
             } else {
                 btnText.textContent = "Admin Login";
-                btn.className = "bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition border border-slate-700 flex items-center gap-1.5";
-                badge.className = "flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
-                badge.innerHTML = `<i class="fa-solid fa-lock text-xs mr-1.5"></i> Read-Only Mode`;
+                btn.className = "bg-gold-500 hover:bg-gold-400 text-brand-900 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shadow";
+                badge.className = "flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800/80 text-amber-300 border border-amber-500/30";
+                badge.innerHTML = `<i class="fa-solid fa-lock text-xs mr-1.5 text-amber-400"></i> Read-Only Mode`;
                 addBtn.classList.add('hidden');
             }
 
-            // Toggle admin actions column in table
             document.querySelectorAll('.admin-col').forEach(el => {
                 if (isAdmin) el.classList.remove('hidden');
                 else el.classList.add('hidden');
             });
         }
 
-        // TAB NAVIGATION
+        // NAVIGATION TABS
         function switchTab(tab) {
             activeTab = tab;
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -665,7 +576,7 @@
             
             const activeBtn = document.getElementById(`tab-${tab}`);
             if (activeBtn) {
-                activeBtn.className = "tab-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg whitespace-nowrap transition bg-brand-50 text-brand-700";
+                activeBtn.className = "tab-btn px-4 py-2 text-xs sm:text-sm font-bold rounded-lg whitespace-nowrap transition bg-brand-50 text-brand-700";
             }
 
             document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
@@ -681,11 +592,10 @@
             renderApp();
         }
 
-        // POPULATE PARISH FILTER DROPDOWN
         function populateParishFilter() {
             const parishes = [...new Set(volunteers.map(v => v.parish))].sort();
             const select = document.getElementById('parishFilter');
-            select.innerHTML = '<option value="">All Parishes / Regions</option>';
+            select.innerHTML = '<option value="">All Parishes / Units</option>';
             parishes.forEach(p => {
                 const opt = document.createElement('option');
                 opt.value = p;
@@ -694,21 +604,21 @@
             });
         }
 
-        // CORE RENDER METHOD
+        // RENDER METHOD
         function renderApp() {
             updateDashboardStats();
 
-            // Filter volunteers logic
             const search = document.getElementById('searchInput').value.toLowerCase();
-            const duty = document.getElementById('dutyFilter').value;
+            const dutyKey = document.getElementById('dutyFilter').value.toLowerCase();
             const parish = document.getElementById('parishFilter').value;
             const status = document.getElementById('statusFilter').value;
 
             const filtered = volunteers.filter(v => {
                 const matchesSearch = v.name.toLowerCase().includes(search) || v.phone.includes(search);
                 
-                // Multi-duty check: matches primary OR secondary
-                const matchesDuty = !duty || v.primaryDuty === duty || v.secondaryDuty === duty;
+                const pDuty = v.primaryDuty.toLowerCase();
+                const sDuty = (v.secondaryDuty || '').toLowerCase();
+                const matchesDuty = !dutyKey || pDuty.includes(dutyKey) || sDuty.includes(dutyKey);
                 
                 const matchesParish = !parish || v.parish === parish;
 
@@ -727,19 +637,20 @@
                 renderAllTable(filtered);
             } else if (activeTab === 'teams') {
                 renderTeamsTab(filtered);
-            } else if (activeTab === 'special') {
-                renderSpecialTab();
             }
 
             updateAuthUI();
         }
 
-        // DASHBOARD STATS
         function updateDashboardStats() {
             const total = volunteers.length;
             const checked = volunteers.filter(v => v.checkedIn).length;
             const coupons = volunteers.filter(v => v.couponClaimed).length;
-            const packup = volunteers.filter(v => v.primaryDuty === 'Venue Pack-Up Squad' || v.secondaryDuty === 'Venue Pack-Up Squad').length;
+            const packup = volunteers.filter(v => {
+                const p = v.primaryDuty.toLowerCase();
+                const s = (v.secondaryDuty || '').toLowerCase();
+                return p.includes('pack-up') || s.includes('pack-up') || p.includes('re-arrangement') || s.includes('re-arrangement');
+            }).length;
 
             document.getElementById('statTotal').textContent = total;
             document.getElementById('statCheckedIn').textContent = checked;
@@ -748,7 +659,6 @@
             document.getElementById('statPackUp').textContent = packup;
         }
 
-        // RENDER TABLE: ALL VOLUNTEERS
         function renderAllTable(list) {
             const tbody = document.getElementById('volunteerTableBody');
             const empty = document.getElementById('emptyState');
@@ -763,35 +673,37 @@
 
             list.forEach(v => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition";
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
                 
                 tr.innerHTML = `
                     <td class="p-3.5">
-                        <div class="font-semibold text-slate-900">${v.name}</div>
-                        <div class="text-xs text-slate-400 sm:hidden">${v.phone}</div>
+                        <div class="font-bold text-slate-900">${v.name}</div>
+                        <div class="text-xs text-slate-500"><i class="fa-solid fa-phone text-[10px] mr-1 text-slate-400"></i>${v.phone}</div>
                     </td>
-                    <td class="p-3.5 text-slate-600">${v.parish}</td>
+                    <td class="p-3.5 text-slate-700 font-medium">${v.parish}</td>
                     <td class="p-3.5">
-                        <div class="flex flex-wrap gap-1">
-                            <span class="inline-block px-2 py-0.5 rounded text-xs font-medium bg-brand-100 text-brand-800">
+                        <div class="space-y-1">
+                            <span class="inline-block px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-brand-800 border border-rose-200">
                                 ${v.primaryDuty}
                             </span>
                             ${v.secondaryDuty ? `
-                                <span class="inline-block px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
-                                    <i class="fa-solid fa-plus text-[10px] mr-0.5"></i> ${v.secondaryDuty}
-                                </span>
+                                <div>
+                                    <span class="inline-block px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200">
+                                        <i class="fa-solid fa-plus text-[9px] mr-1"></i>${v.secondaryDuty}
+                                    </span>
+                                </div>
                             ` : ''}
                         </div>
                     </td>
-                    <td class="p-3.5 text-slate-500 whitespace-nowrap">${v.shift || 'Full Day'}</td>
+                    <td class="p-3.5 text-slate-500 text-xs italic">${v.comment && v.comment !== 'No' && v.comment !== 'None' && v.comment !== 'Nil' ? v.comment : '-'}</td>
                     <td class="p-3.5 text-center">
-                        <button ${!isAdmin ? 'disabled' : ''} onclick="toggleAttendance(${v.id})" class="px-2.5 py-1 rounded-full text-xs font-semibold transition ${v.checkedIn ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}">
+                        <button ${!isAdmin ? 'disabled' : ''} onclick="toggleAttendance(${v.id})" class="px-2.5 py-1 rounded-full text-xs font-semibold transition ${v.checkedIn ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}">
                             <i class="fa-solid ${v.checkedIn ? 'fa-circle-check text-emerald-600' : 'fa-circle text-slate-300'} mr-1"></i>
                             ${v.checkedIn ? 'Present' : 'Absent'}
                         </button>
                     </td>
                     <td class="p-3.5 text-center">
-                        <button ${!isAdmin ? 'disabled' : ''} onclick="toggleCoupon(${v.id})" class="px-2.5 py-1 rounded-full text-xs font-semibold transition ${v.couponClaimed ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}">
+                        <button ${!isAdmin ? 'disabled' : ''} onclick="toggleCoupon(${v.id})" class="px-2.5 py-1 rounded-full text-xs font-semibold transition ${v.couponClaimed ? 'bg-amber-100 text-amber-800 hover:bg-amber-200' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}">
                             <i class="fa-solid ${v.couponClaimed ? 'fa-utensils text-amber-600' : 'fa-ticket text-slate-300'} mr-1"></i>
                             ${v.couponClaimed ? 'Issued' : 'Pending'}
                         </button>
@@ -807,55 +719,57 @@
             });
         }
 
-        // RENDER DUTY TEAMS BREAKDOWN
         function renderTeamsTab(list) {
             const categories = [
-                "Venue Prep",
-                "Food Prep",
-                "Food Service & Cash Desk",
-                "Parking & Traffic Management",
-                "Registration Desk",
-                "Judges Support & Refreshments",
-                "Cleaning & Maintenance",
-                "Safeguarding & First Aid",
-                "Stage & Sound Assistance",
-                "Venue Pack-Up Squad"
+                { title: "Venue Arrangement (Fri 30th)", key: "venue arrangement" },
+                { title: "Food Preparation (Fri/Sat)", key: "food preparation" },
+                { title: "Food Service & Cash Desk", key: "food service" },
+                { title: "Cleaning Supervision", key: "cleaning" },
+                { title: "Venue Re-arrangement & Pack-up Squad", key: "pack-up" },
+                { title: "Parking Team", key: "parking" },
+                { title: "Judges Support", key: "judges" },
+                { title: "Registration & Tag Team", key: "registration" },
+                { title: "Safeguarding & Safety", key: "safeguarding" }
             ];
 
             const grid = document.getElementById('teamCategoryGrid');
             grid.innerHTML = '';
 
             categories.forEach(cat => {
-                // Match primary OR secondary
-                const teamMembers = list.filter(v => v.primaryDuty === cat || v.secondaryDuty === cat);
+                const teamMembers = list.filter(v => {
+                    const p = v.primaryDuty.toLowerCase();
+                    const s = (v.secondaryDuty || '').toLowerCase();
+                    return p.includes(cat.key) || s.includes(cat.key);
+                });
 
                 const card = document.createElement('div');
                 card.className = "bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between";
 
                 let membersListHTML = teamMembers.map(m => `
-                    <div class="flex items-center justify-between text-xs py-1.5 border-b border-slate-100 last:border-0">
+                    <div class="flex items-center justify-between text-xs py-2 border-b border-slate-100 last:border-0">
                         <div>
-                            <span class="font-medium text-slate-800">${m.name}</span>
-                            <span class="text-slate-400 text-[10px] ml-1">(${m.parish})</span>
-                            ${m.secondaryDuty === cat ? `<span class="bg-purple-100 text-purple-700 text-[9px] px-1 rounded ml-1">Secondary</span>` : ''}
+                            <span class="font-bold text-slate-800">${m.name}</span>
+                            <span class="text-slate-500 text-[11px] ml-1">(${m.parish})</span>
                         </div>
-                        <span class="text-slate-500 text-[11px]">${m.shift}</span>
+                        <div class="text-right">
+                            <span class="text-slate-600 text-[11px] block">${m.phone}</span>
+                        </div>
                     </div>
                 `).join('');
 
                 if (teamMembers.length === 0) {
-                    membersListHTML = `<p class="text-xs text-slate-400 italic py-2">No volunteers assigned to this category.</p>`;
+                    membersListHTML = `<p class="text-xs text-slate-400 italic py-2">No volunteers assigned to this team.</p>`;
                 }
 
                 card.innerHTML = `
                     <div>
                         <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
-                            <h4 class="font-bold text-slate-800 text-sm">${cat}</h4>
-                            <span class="bg-brand-50 text-brand-700 font-semibold text-xs px-2.5 py-0.5 rounded-full border border-brand-200">
+                            <h4 class="font-extrabold text-slate-800 text-sm">${cat.title}</h4>
+                            <span class="bg-brand-50 text-brand-700 font-bold text-xs px-2.5 py-0.5 rounded-full border border-brand-200">
                                 ${teamMembers.length} Members
                             </span>
                         </div>
-                        <div class="max-h-48 overflow-y-auto no-scrollbar">
+                        <div class="max-h-52 overflow-y-auto no-scrollbar">
                             ${membersListHTML}
                         </div>
                     </div>
@@ -864,52 +778,6 @@
             });
         }
 
-        // RENDER SPECIAL SUB-TEAMS TAB
-        function renderSpecialTab() {
-            // Parking Team
-            const parking = volunteers.filter(v => v.primaryDuty === 'Parking & Traffic Management' || v.secondaryDuty === 'Parking & Traffic Management');
-            document.getElementById('specialParkingList').innerHTML = parking.map(v => `
-                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs flex justify-between items-center">
-                    <div>
-                        <p class="font-semibold text-slate-800">${v.name}</p>
-                        <p class="text-slate-500">${v.parish} • ${v.phone}</p>
-                    </div>
-                    <span class="px-2 py-1 rounded text-[10px] font-semibold ${v.checkedIn ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'}">
-                        ${v.checkedIn ? 'Checked-In' : 'Pending'}
-                    </span>
-                </div>
-            `).join('');
-
-            // Judges Support
-            const judges = volunteers.filter(v => v.primaryDuty === 'Judges Support & Refreshments' || v.secondaryDuty === 'Judges Support & Refreshments');
-            document.getElementById('specialJudgesList').innerHTML = judges.map(v => `
-                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs flex justify-between items-center">
-                    <div>
-                        <p class="font-semibold text-slate-800">${v.name}</p>
-                        <p class="text-slate-500">${v.parish} • ${v.phone}</p>
-                    </div>
-                    <span class="px-2 py-1 rounded text-[10px] font-semibold ${v.checkedIn ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'}">
-                        ${v.checkedIn ? 'Checked-In' : 'Pending'}
-                    </span>
-                </div>
-            `).join('');
-
-            // Venue Pack-Up Squad (All 30 Primary + Secondary)
-            const packup = volunteers.filter(v => v.primaryDuty === 'Venue Pack-Up Squad' || v.secondaryDuty === 'Venue Pack-Up Squad');
-            document.getElementById('specialPackUpList').innerHTML = packup.map(v => `
-                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs flex justify-between items-center">
-                    <div>
-                        <p class="font-semibold text-slate-800">${v.name}</p>
-                        <p class="text-slate-500">${v.parish} ${v.secondaryDuty === 'Venue Pack-Up Squad' ? '• (Secondary Squad)' : ''}</p>
-                    </div>
-                    <span class="px-2 py-1 rounded text-[10px] font-semibold ${v.checkedIn ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'}">
-                        ${v.checkedIn ? 'Checked-In' : 'Pending'}
-                    </span>
-                </div>
-            `).join('');
-        }
-
-        // TOGGLE ATTENDANCE / FOOD COUPON
         function toggleAttendance(id) {
             if (!isAdmin) return;
             const index = volunteers.findIndex(v => v.id === id);
@@ -930,16 +798,15 @@
             }
         }
 
-        // MODAL MANAGEMENT: ADD / EDIT VOLUNTEER
         function openAddModal() {
             document.getElementById('modalTitle').textContent = 'Add New Volunteer';
             document.getElementById('formVolId').value = '';
             document.getElementById('formName').value = '';
             document.getElementById('formParish').value = '';
-            document.getElementById('formPrimaryDuty').value = 'Venue Prep';
-            document.getElementById('formSecondaryDuty').value = '';
-            document.getElementById('formShift').value = '08:00 AM - 16:00 PM';
             document.getElementById('formPhone').value = '';
+            document.getElementById('formPrimaryDuty').value = 'Food Preparation ( Saturday, 31st October-Full Day)';
+            document.getElementById('formSecondaryDuty').value = '';
+            document.getElementById('formComment').value = '';
             document.getElementById('volunteerModal').classList.remove('hidden');
         }
 
@@ -951,10 +818,10 @@
             document.getElementById('formVolId').value = v.id;
             document.getElementById('formName').value = v.name;
             document.getElementById('formParish').value = v.parish;
-            document.getElementById('formPrimaryDuty').value = v.primaryDuty;
-            document.getElementById('formSecondaryDuty').value = v.secondaryDuty || '';
-            document.getElementById('formShift').value = v.shift || '';
             document.getElementById('formPhone').value = v.phone || '';
+            document.getElementById('formPrimaryDuty').value = v.primaryDuty || '';
+            document.getElementById('formSecondaryDuty').value = v.secondaryDuty || '';
+            document.getElementById('formComment').value = v.comment || '';
             document.getElementById('volunteerModal').classList.remove('hidden');
         }
 
@@ -969,27 +836,25 @@
             const id = document.getElementById('formVolId').value;
             const name = document.getElementById('formName').value;
             const parish = document.getElementById('formParish').value;
+            const phone = document.getElementById('formPhone').value;
             const primaryDuty = document.getElementById('formPrimaryDuty').value;
             const secondaryDuty = document.getElementById('formSecondaryDuty').value;
-            const shift = document.getElementById('formShift').value;
-            const phone = document.getElementById('formPhone').value;
+            const comment = document.getElementById('formComment').value;
 
             if (id) {
-                // Update
                 const idx = volunteers.findIndex(v => v.id == id);
                 if (idx !== -1) {
-                    volunteers[idx] = { ...volunteers[idx], name, parish, primaryDuty, secondaryDuty, shift, phone };
+                    volunteers[idx] = { ...volunteers[idx], name, parish, phone, primaryDuty, secondaryDuty, comment };
                 }
             } else {
-                // Add New
                 const newVol = {
                     id: Date.now(),
                     name,
                     parish,
+                    phone,
                     primaryDuty,
                     secondaryDuty,
-                    shift,
-                    phone,
+                    comment,
                     checkedIn: false,
                     couponClaimed: false
                 };
@@ -1004,26 +869,27 @@
 
         function deleteVolunteer(id) {
             if (!isAdmin) return;
-            if (confirm("Are you sure you want to delete this volunteer?")) {
-                volunteers = volunteers.filter(v => v.id !== id);
+            // Native custom overlay alternative or clear deletion confirmation flag
+            const idx = volunteers.findIndex(v => v.id === id);
+            if (idx !== -1) {
+                volunteers.splice(idx, 1);
                 saveVolunteers();
                 populateParishFilter();
                 renderApp();
             }
         }
 
-        // CSV EXPORT
         function exportCSV() {
-            let csv = 'ID,Name,Parish,Primary Duty,Secondary Duty,Shift,Phone,Checked In,Food Coupon Issued\n';
+            let csv = 'ID,Name,Parish,Phone,Primary Duty,Secondary Duty,Comment,Checked In,Food Coupon Issued\n';
             volunteers.forEach(v => {
-                csv += `"${v.id}","${v.name}","${v.parish}","${v.primaryDuty}","${v.secondaryDuty || ''}","${v.shift}","${v.phone}","${v.checkedIn ? 'Yes' : 'No'}","${v.couponClaimed ? 'Yes' : 'No'}"\n`;
+                csv += `"${v.id}","${v.name}","${v.parish}","${v.phone}","${v.primaryDuty}","${v.secondaryDuty || ''}","${v.comment || ''}","${v.checkedIn ? 'Yes' : 'No'}","${v.couponClaimed ? 'Yes' : 'No'}"\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.setAttribute('href', url);
-            a.setAttribute('download', `Kalotsavam_2026_Volunteers_${new Date().toISOString().slice(0,10)}.csv`);
+            a.setAttribute('download', `CSMEGB_Kalotsavam_2026_Volunteers.csv`);
             a.click();
         }
     </script>
