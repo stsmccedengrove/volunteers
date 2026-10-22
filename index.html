@@ -249,7 +249,7 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                                <th class="p-3.5">Volunteer Details (Click name to view profile & team)</th>
+                                <th class="p-3.5">Volunteer Details (Click name to view duty team)</th>
                                 <th class="p-3.5">Parish / Unit</th>
                                 <th class="p-3.5">Assigned Duties & Leadership</th>
                                 <th class="p-3.5">Stage / Food Items</th>
@@ -275,7 +275,7 @@
             <div class="bg-blue-50/70 border border-blue-200 p-4 rounded-xl text-xs sm:text-sm text-blue-900 flex justify-between items-center flex-wrap gap-2">
                 <div>
                     <p class="font-bold"><i class="fa-solid fa-circle-info mr-1.5 text-blue-600"></i> Stage & Green Room Operations (Stage 1 to 12 & Green Room 1 to 12)</p>
-                    <p class="text-blue-700 text-xs mt-0.5">Use the <b>"+ Assign"</b> button on any stage or green room card to assign existing or new volunteers directly.</p>
+                    <p class="text-blue-700 text-xs mt-0.5">Click any volunteer's name or use <b>"+ Assign"</b> to manage their assignments directly.</p>
                 </div>
             </div>
 
@@ -338,7 +338,7 @@
         <p class="mt-1 text-slate-500">Host Region: Bristol-Cardiff Operations Team</p>
     </footer>
 
-    <!-- MODAL: VOLUNTEER PROFILE & PUBLIC TEAM VIEW -->
+    <!-- MODAL: VOLUNTEER PROFILE & DUTY TEAM VIEW -->
     <div id="userModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-start border-b border-slate-100 pb-3">
@@ -365,10 +365,12 @@
                     </div>
                 </div>
 
-                <!-- Assigned Duties & Team View Toggle -->
-                <div class="space-y-2">
-                    <h4 class="text-xs font-black text-slate-500 uppercase tracking-wider">Your Duty Allocations & Teams</h4>
-                    <div id="uModalDuties" class="space-y-2"></div>
+                <!-- DUTY TEAM MEMBERS LIST (Who is working along with them) -->
+                <div class="space-y-3">
+                    <h4 class="text-xs font-black text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-users text-brand-700"></i> What I Am Doing & Who Is Working With Me
+                    </h4>
+                    <div id="uModalDutyTeams" class="space-y-3"></div>
                 </div>
 
                 <!-- Add Public Volunteer Comment -->
@@ -461,8 +463,8 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Primary Duty Category</label>
-                        <select id="formPrimaryDuty" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Primary Duty Category (Dropdown)</label>
+                        <select id="formPrimaryDuty" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold bg-white">
                             <option value="Venue Arrangement">Venue Arrangement</option>
                             <option value="Food Preparation">Food Preparation</option>
                             <option value="Food Packing">Food Packing</option>
@@ -481,8 +483,8 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Secondary / Additional Duty</label>
-                        <select id="formSecondaryDuty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Secondary / Additional Duty (Dropdown)</label>
+                        <select id="formSecondaryDuty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold bg-white">
                             <option value="">None</option>
                             <option value="Venue Arrangement">Venue Arrangement</option>
                             <option value="Food Preparation">Food Preparation</option>
@@ -731,7 +733,7 @@
         });
 
         function loadVolunteers() {
-            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v9");
+            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v10");
             if (saved) {
                 try { volunteers = JSON.parse(saved); } catch(e) { volunteers = [...DEFAULT_VOLUNTEERS]; }
             } else {
@@ -740,13 +742,13 @@
         }
 
         function saveVolunteers() {
-            localStorage.setItem("kalotsavam_volunteers_2026_v9", JSON.stringify(volunteers));
+            localStorage.setItem("kalotsavam_volunteers_2026_v10", JSON.stringify(volunteers));
             renderApp();
         }
 
         function resetToDefaults() {
             if (confirm("Reset all volunteer data and allocations back to original defaults?")) {
-                localStorage.removeItem("kalotsavam_volunteers_2026_v9");
+                localStorage.removeItem("kalotsavam_volunteers_2026_v10");
                 volunteers = [...DEFAULT_VOLUNTEERS];
                 renderApp();
             }
@@ -1262,7 +1264,7 @@
             }
         }
 
-        // VOLUNTEER USER PROFILE MODAL & TEAM VIEW
+        // VOLUNTEER USER PROFILE MODAL & CO-WORKER TEAM VIEW
         function openUserModal(id) {
             const v = volunteers.find(vol => vol.id === id);
             if (!v) return;
@@ -1282,50 +1284,103 @@
             document.getElementById("uModalAttendance").innerHTML = v.checkedIn ? `<span class="text-emerald-600"><i class="fa-solid fa-circle-check"></i> Checked In</span>` : `<span class="text-slate-400"><i class="fa-solid fa-circle-dot"></i> Not Checked In</span>`;
             document.getElementById("uModalCoupon").innerHTML = v.couponClaimed ? `<span class="text-amber-600"><i class="fa-solid fa-ticket"></i> Coupon Issued</span>` : `<span class="text-slate-400"><i class="fa-solid fa-ticket"></i> Pending</span>`;
 
-            // Build Duty List & Team View
-            const dutiesContainer = document.getElementById("uModalDuties");
-            let dHtml = "";
+            // Build Duty Teams Container (Who is working along with them)
+            const dutyTeamsContainer = document.getElementById("uModalDutyTeams");
+            let html = "";
 
             // Primary Duty Team
-            const primaryTeam = volunteers.filter(m => m.primaryDuty === v.primaryDuty || m.secondaryDuty === v.primaryDuty);
-            dHtml += `
-                <div class="bg-brand-50/60 border border-brand-200 p-3 rounded-xl space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="font-extrabold text-brand-900 text-xs"><i class="fa-solid fa-briefcase text-brand-700 mr-1"></i> Primary: ${v.primaryDuty}</span>
-                        <button onclick="toggleTeamList('pTeam')" class="text-[11px] bg-brand-700 text-white font-bold px-2 py-0.5 rounded hover:bg-brand-800 transition">View Team (${primaryTeam.length})</button>
-                    </div>
-                    <div id="pTeam" class="hidden pt-2 border-t border-brand-200/60 text-xs space-y-1 max-h-36 overflow-y-auto">
-                        <p class="font-extrabold text-slate-700 text-[11px] mb-1">Co-workers in ${v.primaryDuty}:</p>
-                        ${primaryTeam.map(m => `<div class="flex justify-between items-center bg-white p-1.5 rounded border border-brand-100">${m.leaderRole ? '<i class="fa-solid fa-crown text-amber-500 text-[10px]"></i> ' : ''}<span class="font-bold text-slate-800">${m.name}</span> <span class="text-[10px] text-slate-500">${m.parish}</span></div>`).join("")}
-                    </div>
-                </div>
-            `;
-
-            // Secondary Duty Team
-            if (v.secondaryDuty) {
-                const secTeam = volunteers.filter(m => m.primaryDuty === v.secondaryDuty || m.secondaryDuty === v.secondaryDuty);
-                dHtml += `
-                    <div class="bg-indigo-50/60 border border-indigo-200 p-3 rounded-xl space-y-2">
+            if (v.primaryDuty) {
+                const primaryCoworkers = volunteers.filter(m => m.id !== v.id && (m.primaryDuty === v.primaryDuty || m.secondaryDuty === v.primaryDuty));
+                html += `
+                    <div class="bg-brand-50/70 border border-brand-200 p-3.5 rounded-xl space-y-2">
                         <div class="flex justify-between items-center">
-                            <span class="font-extrabold text-indigo-900 text-xs"><i class="fa-solid fa-plus text-indigo-700 mr-1"></i> Secondary: ${v.secondaryDuty}</span>
-                            <button onclick="toggleTeamList('sTeam')" class="text-[11px] bg-indigo-700 text-white font-bold px-2 py-0.5 rounded hover:bg-indigo-800 transition">View Team (${secTeam.length})</button>
+                            <span class="font-black text-brand-900 text-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-briefcase text-brand-700"></i> Primary Duty: ${v.primaryDuty}
+                            </span>
+                            <span class="text-[10px] bg-brand-100 text-brand-900 font-extrabold px-2 py-0.5 rounded-full">${primaryCoworkers.length + 1} Teammates</span>
                         </div>
-                        <div id="sTeam" class="hidden pt-2 border-t border-indigo-200/60 text-xs space-y-1 max-h-36 overflow-y-auto">
-                            <p class="font-extrabold text-slate-700 text-[11px] mb-1">Co-workers in ${v.secondaryDuty}:</p>
-                            ${secTeam.map(m => `<div class="flex justify-between items-center bg-white p-1.5 rounded border border-indigo-100">${m.leaderRole ? '<i class="fa-solid fa-crown text-amber-500 text-[10px]"></i> ' : ''}<span class="font-bold text-slate-800">${m.name}</span> <span class="text-[10px] text-slate-500">${m.parish}</span></div>`).join("")}
+                        <p class="text-[11px] text-slate-600 font-medium">You are assigned to <b>${v.primaryDuty}</b> (Shift: ${v.shift || 'Full Day'}). Here are the team members working alongside you:</p>
+                        <div class="bg-white rounded-lg border border-brand-100 p-2 space-y-1.5 max-h-40 overflow-y-auto">
+                            ${primaryCoworkers.map(m => `
+                                <div class="flex justify-between items-center text-xs py-1 px-1.5 hover:bg-slate-50 rounded">
+                                    <div class="flex items-center gap-1.5">
+                                        ${m.leaderRole ? '<i class="fa-solid fa-crown text-amber-500 text-[10px]" title="Leader"></i>' : '<i class="fa-solid fa-user text-slate-400 text-[10px]"></i>'}
+                                        <span class="font-bold text-slate-900">${m.name}</span>
+                                        <span class="text-[10px] text-slate-500">(${m.parish})</span>
+                                    </div>
+                                    <span class="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-600 font-medium">${m.shift || 'Full Day'}</span>
+                                </div>
+                            `).join("") || '<p class="text-slate-400 text-[11px] italic">No other co-workers in this primary duty.</p>'}
                         </div>
                     </div>
                 `;
             }
 
-            dutiesContainer.innerHTML = dHtml;
+            // Secondary Duty Team
+            if (v.secondaryDuty) {
+                const secondaryCoworkers = volunteers.filter(m => m.id !== v.id && (m.primaryDuty === v.secondaryDuty || m.secondaryDuty === v.secondaryDuty));
+                html += `
+                    <div class="bg-indigo-50/70 border border-indigo-200 p-3.5 rounded-xl space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-black text-indigo-900 text-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-plus text-indigo-700"></i> Secondary Duty: ${v.secondaryDuty}
+                            </span>
+                            <span class="text-[10px] bg-indigo-100 text-indigo-900 font-extrabold px-2 py-0.5 rounded-full">${secondaryCoworkers.length + 1} Teammates</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 font-medium">You also support <b>${v.secondaryDuty}</b>. Here are your teammates for this duty:</p>
+                        <div class="bg-white rounded-lg border border-indigo-100 p-2 space-y-1.5 max-h-36 overflow-y-auto">
+                            ${secondaryCoworkers.map(m => `
+                                <div class="flex justify-between items-center text-xs py-1 px-1.5 hover:bg-slate-50 rounded">
+                                    <div class="flex items-center gap-1.5">
+                                        ${m.leaderRole ? '<i class="fa-solid fa-crown text-amber-500 text-[10px]"></i>' : '<i class="fa-solid fa-user text-slate-400 text-[10px]"></i>'}
+                                        <span class="font-bold text-slate-900">${m.name}</span>
+                                        <span class="text-[10px] text-slate-500">(${m.parish})</span>
+                                    </div>
+                                    <span class="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-600 font-medium">${m.shift || 'Full Day'}</span>
+                                </div>
+                            `).join("") || '<p class="text-slate-400 text-[11px] italic">No other co-workers in this secondary duty.</p>'}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Stage / Green Room / Food Teams
+            if (v.stages && v.stages.length > 0) {
+                html += `
+                    <div class="bg-blue-50/70 border border-blue-200 p-3 rounded-xl text-xs space-y-1">
+                        <span class="font-black text-blue-900 block"><i class="fa-solid fa-masks-theater text-blue-600 mr-1"></i> Assigned Stages:</span>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            ${v.stages.map(s => `<span class="bg-blue-600 text-white font-extrabold px-2 py-0.5 rounded text-[11px]">Stage ${s}</span>`).join(" ")}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (v.greenRooms && v.greenRooms.length > 0) {
+                html += `
+                    <div class="bg-purple-50/70 border border-purple-200 p-3 rounded-xl text-xs space-y-1">
+                        <span class="font-black text-purple-900 block"><i class="fa-solid fa-door-closed text-purple-600 mr-1"></i> Assigned Green Rooms:</span>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            ${v.greenRooms.map(g => `<span class="bg-purple-600 text-white font-extrabold px-2 py-0.5 rounded text-[11px]">Green Room ${g}</span>`).join(" ")}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (v.foodItems && v.foodItems.length > 0) {
+                html += `
+                    <div class="bg-amber-50/70 border border-amber-200 p-3 rounded-xl text-xs space-y-1">
+                        <span class="font-black text-amber-900 block"><i class="fa-solid fa-utensils text-amber-600 mr-1"></i> Assigned Food Preparation & Sales Items:</span>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            ${v.foodItems.map(f => `<span class="bg-amber-600 text-white font-extrabold px-2 py-0.5 rounded text-[11px]">${f}</span>`).join(" ")}
+                        </div>
+                    </div>
+                `;
+            }
+
+            dutyTeamsContainer.innerHTML = html;
             document.getElementById("uModalCommentInput").value = v.notes || "";
             document.getElementById("userModal").classList.remove("hidden");
-        }
-
-        function toggleTeamList(elementId) {
-            const el = document.getElementById(elementId);
-            if (el) el.classList.toggle("hidden");
         }
 
         function closeUserModal() {
