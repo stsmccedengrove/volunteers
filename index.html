@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSMEGB Kalotsavam 2026 - Volunteer Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        maroon: {
+                            50: '#fdf2f2',
+                            100: '#fde8e8',
+                            600: '#9b1c1c',
+                            700: '#800020',
+                            800: '#6b001a',
+                            900: '#4a0012',
+                        },
+                        gold: {
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            700: '#a16207',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar & Print Utilities */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; color: black !important; }
+            .card-shadow { box-shadow: none !important; border: 1px solid #ddd !important; }
+        }
+        .print-only { display: none; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col font-sans">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-maroon-700 text-white shadow-lg sticky top-0 z-40 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Branding -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-gold-500 flex items-center justify-center text-maroon-900 font-extrabold text-xl shadow-inner">
+                        ✝
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-base sm:text-lg leading-tight tracking-wide">CSMEGB Kalotsavam 2026</h1>
+                        <p class="text-xs text-gold-400">Bristol-Cardiff Region • 31 Oct 2026</p>
+                    </div>
+                </div>
+
+                <!-- Global Actions / Mode Badges -->
+                <div class="flex items-center space-x-2">
+                    <button id="adminToggleBtn" onclick="toggleAdminMode()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-maroon-800 hover:bg-maroon-900 border border-gold-500/50 text-gold-400 flex items-center space-x-1.5 transition">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        <span id="adminStatusText">Admin Mode: OFF</span>
+                    </button>
+                    <button onclick="window.print()" class="hidden md:flex px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/10 hover:bg-white/20 text-white items-center space-x-1 transition">
+                        <i data-lucide="printer" class="w-4 h-4"></i>
+                        <span>Print</span>
+                    </button>
+                    <button onclick="exportToCSV()" class="hidden md:flex px-3 py-1.5 rounded-lg text-xs font-semibold bg-gold-500 text-maroon-900 hover:bg-gold-400 items-center space-x-1 transition">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>Export CSV</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="bg-maroon-800 border-t border-maroon-600/50 overflow-x-auto">
+            <div class="max-w-7xl mx-auto px-4 flex space-x-1 sm:space-x-4 min-w-max">
+                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-gold-500 text-gold-400 flex items-center space-x-2">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="switchTab('roster')" id="tab-roster" class="tab-btn px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-300 hover:text-white flex items-center space-x-2">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span>Master Roster</span>
+                </button>
+                <button onclick="switchTab('checkin')" id="tab-checkin" class="tab-btn px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-300 hover:text-white flex items-center space-x-2">
+                    <i data-lucide="check-square" class="w-4 h-4"></i>
+                    <span class="relative">
+                        Check-in & Coupons
+                        <span id="pendingBadge" class="ml-1 px-1.5 py-0.5 text-[10px] bg-gold-500 text-maroon-900 font-bold rounded-full">0</span>
+                    </span>
+                </button>
+                <button onclick="switchTab('teams')" id="tab-teams" class="tab-btn px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-300 hover:text-white flex items-center space-x-2">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
+                    <span>Duty Teams</span>
+                </button>
+                <button onclick="switchTab('venue')" id="tab-venue" class="tab-btn px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-300 hover:text-white flex items-center space-x-2">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                    <span>Venue & Parking Guidelines</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+        <!-- ================= TAB 1: DASHBOARD ================= -->
+        <section id="view-dashboard" class="space-y-6">
+            <!-- Event Info Banner -->
+            <div class="bg-gradient-to-r from-maroon-800 to-maroon-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                    <i data-lucide="church" class="w-64 h-64 text-white"></i>
+                </div>
+                <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-gold-500/20 text-gold-400 border border-gold-500/30 text-xs font-semibold rounded-full mb-2">
+                            Official Operational Roster
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Regional Bible Kalotsavam 2026</h2>
+                        <p class="text-sm text-slate-300 mt-1 flex items-center gap-2">
+                            <i data-lucide="calendar" class="w-4 h-4 text-gold-400"></i> Saturday, 31 October 2026
+                            <span class="mx-1">•</span>
+                            <i data-lucide="map-pin" class="w-4 h-4 text-gold-400"></i> St. Bernadette Catholic High School, BS14 9LS
+                        </p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="openAddModal()" class="admin-only hidden px-4 py-2.5 bg-gold-500 hover:bg-gold-400 text-maroon-900 font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+                            <i data-lucide="user-plus" class="w-4 h-4"></i> Add Volunteer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Metric Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Volunteers</p>
+                        <h3 id="statTotal" class="text-2xl font-black text-slate-800">114</h3>
+                        <p class="text-[11px] text-slate-400">Registered across 5 areas</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                        <i data-lucide="user-check" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Checked In</p>
+                        <h3 id="statCheckedIn" class="text-2xl font-black text-slate-800">0</h3>
+                        <p id="statCheckedInPct" class="text-[11px] text-emerald-600 font-semibold">0% Attendance</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                        <i data-lucide="utensils" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Coupons Claimed</p>
+                        <h3 id="statCoupons" class="text-2xl font-black text-slate-800">0</h3>
+                        <p id="statCouponsPct" class="text-[11px] text-amber-600 font-semibold">0 Issued/Redeemed</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+                        <i data-lucide="package-check" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pack-up Squad</p>
+                        <h3 id="statPackup" class="text-2xl font-black text-slate-800">30</h3>
+                        <p class="text-[11px] text-purple-600 font-semibold">14 Direct + 16 Flexible</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Area Breakdown Grid -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="pie-chart" class="w-5 h-5 text-maroon-700"></i> Volunteer Distribution by Duty Area
+                    </h3>
+                </div>
+                <div id="dutyBreakdownGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Dynamic rendering -->
+                </div>
+            </div>
+
+            <!-- Key Contacts & Leads Banner -->
+            <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-md">
+                <h3 class="text-base font-bold text-gold-400 mb-4 flex items-center gap-2">
+                    <i data-lucide="phone-call" class="w-5 h-5"></i> Key On-Site Coordinators & Department Leads
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                    <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
+                        <p class="text-slate-400 font-medium">Food Sales & Cash Desk</p>
+                        <p class="font-bold text-white text-sm mt-0.5">Shinu Jackson</p>
+                        <p class="text-gold-400 mt-1 font-mono">07577738490</p>
+                    </div>
+                    <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
+                        <p class="text-slate-400 font-medium">Parking Control Lead</p>
+                        <p class="font-bold text-white text-sm mt-0.5">Tom George</p>
+                        <p class="text-gold-400 mt-1 font-mono">07861042288</p>
+                    </div>
+                    <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
+                        <p class="text-slate-400 font-medium">Judges & Bible Apostolate</p>
+                        <p class="font-bold text-white text-sm mt-0.5">Anita Philip</p>
+                        <p class="text-gold-400 mt-1 font-mono">07809714895</p>
+                    </div>
+                    <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
+                        <p class="text-slate-400 font-medium">Registration & Badges</p>
+                        <p class="font-bold text-white text-sm mt-0.5">Jomy John</p>
+                        <p class="text-gold-400 mt-1 font-mono">07753821192</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: MASTER ROSTER ================= -->
+        <section id="view-roster" class="hidden space-y-4">
+            <!-- Search & Filters Header -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-80">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+                        <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Search name, phone, parish..." class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700 focus:outline-none">
+                    </div>
+
+                    <!-- Dropdown Filters -->
+                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                        <select id="filterDuty" onchange="applyFilters()" class="px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                            <option value="ALL">All Duties</option>
+                            <option value="Venue Arrangement">Venue Arrangement (Fri)</option>
+                            <option value="Food Preparation">Food Preparation</option>
+                            <option value="Food Service">Food Service & Sales</option>
+                            <option value="Cleaning Supervision">Cleaning Supervision</option>
+                            <option value="Venue Re-arrangement / Pack-up">Venue Pack-up (Sat 7 PM)</option>
+                        </select>
+
+                        <select id="filterParish" onchange="applyFilters()" class="px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                            <option value="ALL">All Parishes / Units</option>
+                        </select>
+
+                        <select id="filterAttendance" onchange="applyFilters()" class="px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                            <option value="ALL">All Statuses</option>
+                            <option value="Present">Present</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Absent">Absent</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Active Filter Count -->
+                <div class="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+                    <span>Showing <strong id="filterCount" class="text-slate-800">114</strong> of 114 volunteers</span>
+                    <button onclick="resetFilters()" class="text-maroon-700 font-semibold hover:underline">Reset Filters</button>
+                </div>
+            </div>
+
+            <!-- Master Table -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-3.5">Volunteer</th>
+                                <th class="p-3.5">Parish / Unit</th>
+                                <th class="p-3.5">Assigned Duty & Shift</th>
+                                <th class="p-3.5 text-center">Attendance</th>
+                                <th class="p-3.5 text-center">Food Coupon</th>
+                                <th class="p-3.5">Notes / Special Role</th>
+                                <th class="p-3.5 text-right admin-only hidden">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rosterTableBody" class="divide-y divide-slate-100">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: CHECK-IN & COUPONS (MOBILE OPTIMIZED) ================= -->
+        <section id="view-checkin" class="hidden space-y-4">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="qr-code" class="w-5 h-5 text-emerald-600"></i> Fast Event Check-in & Food Coupon Portal
+                        </h2>
+                        <p class="text-xs text-slate-500">Tap to mark attendance or redeem food coupons instantly.</p>
+                    </div>
+                    <div class="flex items-center space-x-2 w-full sm:w-auto">
+                        <input type="text" id="checkinSearch" oninput="renderCheckinList()" placeholder="Quick search name/phone..." class="w-full sm:w-64 px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Card List for Checkin -->
+            <div id="checkinCardGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <!-- Dynamic cards -->
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: DUTY TEAMS VIEW ================= -->
+        <section id="view-teams" class="hidden space-y-6">
+            <div class="flex overflow-x-auto space-x-2 pb-2 scrollbar-none">
+                <button onclick="renderTeamCategory('PACKUP')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-maroon-700 text-white shadow-sm whitespace-nowrap">
+                    Venue Pack-up (30 Members)
+                </button>
+                <button onclick="renderTeamCategory('SETUP')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
+                    Fri Setup (36 Members)
+                </button>
+                <button onclick="renderTeamCategory('FOOD_SERVICE')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
+                    Food Service & Sales (57)
+                </button>
+                <button onclick="renderTeamCategory('FOOD_PREP')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
+                    Food Prep (35)
+                </button>
+                <button onclick="renderTeamCategory('SPECIAL')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
+                    Special Sub-Teams
+                </button>
+            </div>
+
+            <div id="teamViewContainer" class="space-y-4">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: VENUE & PARKING GUIDELINES ================= -->
+        <section id="view-venue" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 pb-4">
+                    <span class="px-3 py-1 bg-maroon-100 text-maroon-800 text-xs font-bold rounded-full uppercase tracking-wider">
+                        Official Event Notice
+                    </span>
+                    <h2 class="text-2xl font-extrabold text-maroon-900 mt-2">CSMEGB Kalotsavam 2026 Parking & Traffic Rules</h2>
+                    <p class="text-xs text-slate-500 mt-1">Saturday, 31st October 2026 • St. Bernadette Catholic High Secondary School</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Warning Card 1 -->
+                    <div class="p-5 rounded-2xl bg-red-50 border border-red-200 flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center font-black shrink-0 text-xl">
+                            🚫
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-red-900 text-base">NO PARKING Inside School Premises</h3>
+                            <p class="text-xs text-red-700 mt-1 leading-relaxed">
+                                Parking is strictly prohibited inside St. Bernadette High School premises. Private vehicles will not be granted access to the school driveway or grounds.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Off-site Parking Card -->
+                    <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center font-black shrink-0 text-xl">
+                            🅿️
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-emerald-900 text-base">Arranged Off-Site Parking Location</h3>
+                            <p class="text-xs text-emerald-800 mt-1 font-semibold">
+                                The Church of Jesus Christ of Latter-day Saints
+                            </p>
+                            <p class="text-xs text-emerald-700">721 Wells Road, Whitchurch, Bristol, BS14 9HU</p>
+                            <p class="text-[11px] text-emerald-600 mt-1">*(Approx. 1 mile from school venue. Direct entry & exit on Wells Road)*</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coach Instructions -->
+                <div class="p-5 bg-amber-50 rounded-2xl border border-amber-200 flex items-start space-x-4">
+                    <div class="w-12 h-12 rounded-full bg-amber-600 text-white flex items-center justify-center font-black shrink-0 text-xl">
+                        🚌
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-amber-900 text-base">Coach & Bus Drop-off Guidelines</h3>
+                        <p class="text-xs text-amber-800 mt-1 leading-relaxed">
+                            <strong>Do NOT drive coaches inside the school grounds</strong> as there is no turning space available. All coaches carrying participants must drop off passengers at <strong>New Fosseway Road</strong>. Passengers should walk via the designated footpath to the school entrance.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Venue Map Summary -->
+                <div class="bg-slate-900 text-white p-6 rounded-2xl">
+                    <h3 class="font-bold text-gold-400 text-sm mb-2 flex items-center gap-2">
+                        <i data-lucide="map" class="w-4 h-4"></i> Address Quick Reference
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div>
+                            <p class="text-slate-400 font-semibold">MAIN EVENT VENUE</p>
+                            <p class="font-bold text-white mt-0.5">St. Bernadette Catholic High Secondary School</p>
+                            <p class="text-slate-300">Fossedale Avenue, Whitchurch, Bristol, BS14 9LS</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 font-semibold">OFF-SITE PARKING</p>
+                            <p class="font-bold text-white mt-0.5">The Church of Jesus Christ of Latter-day Saints</p>
+                            <p class="text-slate-300">721 Wells Road, Whitchurch, Bristol, BS14 9HU</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal: Edit / Add Volunteer -->
+    <div id="volunteerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 id="modalTitle" class="text-base font-bold text-slate-800">Edit Volunteer Details</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <form id="volunteerForm" onsubmit="saveVolunteer(event)" class="space-y-3 text-xs sm:text-sm">
+                <input type="hidden" id="modalIndex">
+
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Full Name</label>
+                    <input type="text" id="modalName" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Parish / Unit</label>
+                        <input type="text" id="modalParish" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Phone Number</label>
+                        <input type="text" id="modalPhone" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Assigned Duty</label>
+                        <select id="modalDuty" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                            <option value="Venue Arrangement">Venue Arrangement (Fri)</option>
+                            <option value="Food Preparation">Food Preparation</option>
+                            <option value="Food Service">Food Service & Sales</option>
+                            <option value="Cleaning Supervision">Cleaning Supervision</option>
+                            <option value="Venue Re-arrangement / Pack-up">Venue Pack-up (Sat 7 PM)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Shift / Time</label>
+                        <input type="text" id="modalShift" placeholder="e.g. Sat Full Day" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Attendance Status</label>
+                        <select id="modalAttendance" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                            <option value="Pending">Pending</option>
+                            <option value="Present">Present</option>
+                            <option value="Absent">Absent</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Food Coupon Status</label>
+                        <select id="modalCoupon" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                            <option value="Pending">Pending</option>
+                            <option value="Issued">Issued</option>
+                            <option value="Claimed">Claimed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Notes / Specific Role</label>
+                    <input type="text" id="modalNotes" placeholder="e.g. Parking Lead, Cash Counter" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-maroon-700 hover:bg-maroon-800 text-white font-bold rounded-xl shadow-md">Save Volunteer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Application Core JavaScript -->
+    <script>
+        // ================= PRE-POPULATED VOLUNTEER DATASET (114 VOLUNTEERS) =================
+        const initialVolunteers = [
+            // Pack-up Squad (Direct + Expanded)
+            { name: "Mathew Thomas", parish: "St.Alphonsa", phone: "07910000997", duty: "Venue Re-arrangement / Pack-up", shift: "Sat from 7:00 PM", attendance: "Pending", coupon: "Pending", notes: "Also Venue Setup Fri" },
+            { name: "Deepumon", parish: "St.Sebastian", phone: "07879728191", duty: "Venue Re-arrangement / Pack-up", shift: "Sat after 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Available after 5 PM" },
+            { name: "SajiGeorge", parish: "St.Thomas", phone: "07481849707", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Whole day available" },
+            { name: "Roy Sebastian", parish: "Devine Mercy", phone: "07862701046", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Assisting Judges Team" },
+            { name: "Tonsen Thomas", parish: "St.Cecily", phone: "07427691328", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
+            { name: "Abin Manoj", parish: "St.Antony's", phone: "07481183830", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Cash Counter Team" },
+            { name: "Shiny Aljo", parish: "Sacred Heart", phone: "07551708905", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Cleaning & Packup" },
+            { name: "Neuby Varghese", parish: "St.Vincent", phone: "07767944813", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
+            { name: "Jomy John", parish: "St.Antony's", phone: "07753821192", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Tag distribution / Registration" },
+            { name: "Shiny Sebastian", parish: "Sacred Heart", phone: "07551708905", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Registration Team" },
+            { name: "Sabu Mathew", parish: "St.Thomas", phone: "07466350670", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "General Help" },
+            { name: "Shaji Varkey", parish: "St.Chavara", phone: "07532182639", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Fully Flexible" },
+            { name: "Jijo John", parish: "St.Thomas", phone: "07769421944", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
+            { name: "Danny George", parish: "St.Mary", phone: "07305642067", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
+
+            // Expanded Pack-up (Flexible Comments)
+            { name: "Shiju Thettayil Vakkachan", parish: "St.Mary", phone: "07918393444", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "Available all day / Food Prep" },
+            { name: "Rohith Shiju", parish: "St.Mary", phone: "07881144662", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "Payment & Food Counter" },
+            { name: "Sibi Mathew", parish: "St.Xavier", phone: "07412348702", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Flexible support" },
+            { name: "Roshan Rapheal", parish: "St.Mary", phone: "07442903850", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "Whole day available" },
+            { name: "Sindhu Manuel", parish: "Lourdes Matha", phone: "07737812369", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "All day support" },
+            { name: "Aleena Vincent", parish: "Lourdes Matha", phone: "07422530922", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "All day" },
+            { name: "Dolly James", parish: "St.Vincent", phone: "07737739637", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Flexible wherever needed" },
+            { name: "Tijo Antony", parish: "St.Jude", phone: "07721949500", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Flexible" },
+            { name: "Shinto Thomas", parish: "St.Augustine", phone: "07555230670", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "All day" },
+            { name: "George Sebastian", parish: "St.Antony's", phone: "07883093766", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Happy to help with anything" },
+            { name: "Prabhu Plappallil James", parish: "St.Antony's", phone: "07394338272", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "As per requirement" },
+            { name: "Bazil Kurian", parish: "St.Micheal", phone: "07727054519", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "As per request" },
+            { name: "Subi Shaji", parish: "St.Chavara", phone: "07541103663", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Can help other areas" },
+            { name: "Jessy Jose", parish: "St.Augustine", phone: "07379043128", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "All day" },
+            { name: "Vargheese Scaria", parish: "St.Sebastian", phone: "07909723108", duty: "Venue Re-arrangement / Pack-up", shift: "Fri & Sat", attendance: "Pending", coupon: "Pending", notes: "Available 30 & 31 Oct" },
+            { name: "Shaji Thomas", parish: "St.Antony's", phone: "0745986507", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "All in all" },
+
+            // Venue Setup (Friday)
+            { name: "Rojis George", parish: "St.Thomas", phone: "07423138030", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Cleaning Sup & Setup" },
+            { name: "Joshy", parish: "St.Micheal", phone: "07301355229", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Hall setup" },
+            { name: "Joel Arikkat", parish: "St.Vincent", phone: "07414726699", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Half day Sat" },
+            { name: "Rajumon Kuriakose", parish: "St.Alphonsa", phone: "07717665236", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Admin / Leadership" },
+            { name: "Maboj Mathew", parish: "St.Augustine", phone: "07727273766", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Karol Thomas", parish: "Divine Mercy", phone: "07459317465", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Stage & hall" },
+            { name: "Beenamol Thomas", parish: "Lourdes Matha", phone: "07737506147", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup & Food service" },
+            { name: "Shelton Mathew", parish: "St.Theresa", phone: "07585067073", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Roy Mathew", parish: "St.Jude", phone: "07448727488", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Parking Control Team" },
+            { name: "George Joseph", parish: "St.Jude", phone: "07867909316", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Parking Control Team" },
+            { name: "Thomas Mathew", parish: "St.Augustine", phone: "07878865278", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Jasmin Joseph", parish: "St.Jude", phone: "07909488384", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Lalamma Thomas", parish: "St.Augustine", phone: "07757408496", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Food Sale Team" },
+            { name: "Femi Joseph", parish: "St.Thomas", phone: "07482237458", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Bijo", parish: "St.Micheal", phone: "07880435739", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Joju George", parish: "St.Thomas", phone: "07450173184", duty: "Venue Arrangement", shift: "Fri & Sat Morning", attendance: "Pending", coupon: "Pending", notes: "31st Morning till 4 PM" },
+            { name: "Gimy Gracias", parish: "Divine Mercy", phone: "07539081234", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup & Food" },
+            { name: "Jasmin George", parish: "St.Mary", phone: "07838904708", duty: "Venue Arrangement", shift: "Fri & Sat", attendance: "Pending", coupon: "Pending", notes: "Safeguarding Lead / H&S" },
+            { name: "Sinson George", parish: "St.Antony's", phone: "07435743681", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Tom George", parish: "St.Jude", phone: "07861042288", duty: "Venue Arrangement", shift: "Fri & Sat", attendance: "Pending", coupon: "Pending", notes: "Parking Team Lead" },
+            { name: "Dijo George", parish: "St.Jude", phone: "07733842801", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Parking Team" },
+            { name: "Jijo Augustine", parish: "St.Jude", phone: "07721988499", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Parking Assistant" },
+            { name: "Shiju K Paul", parish: "St.Sebastian", phone: "07350342392", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Tejal Sebastian", parish: "St.Xavier", phone: "0734582038", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Anita Philip", parish: "St.Alphonsa", phone: "07809714895", duty: "Venue Arrangement", shift: "Fri & Sat", attendance: "Pending", coupon: "Pending", notes: "Bible Apostolate / Judges Duty" },
+
+            // Food Preparation
+            { name: "John Joseph", parish: "St.Sebastian", phone: "07701089837", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Food Prep" },
+            { name: "Saji Mathew", parish: "Lourdes Matha", phone: "07737413793", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Jolly also available" },
+            { name: "Roy Joseph", parish: "St.Patric", phone: "0788853279", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Tea & Coffee Lead" },
+            { name: "Vincent Thomas", parish: "Lourdes Matha", phone: "07939010065", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Tom Loyied", parish: "St.Theresa", phone: "07423468998", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep Lead" },
+            { name: "Jojy Thomas", parish: "St.Theresa", phone: "07774430991", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep" },
+            { name: "Jinsan Panakkal Raphel", parish: "St.Theresa", phone: "07570329270", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Jinto Joseph", parish: "St.Theresa", phone: "07767913488", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep" },
+            { name: "Mable Baby", parish: "St.Theresa", phone: "07423468998", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Robin Varghese", parish: "St.Theresa", phone: "07436567745", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep" },
+            { name: "Chacko Varghese", parish: "St.Joseph", phone: "07920693900", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Manju Jose", parish: "St.Sebastian", phone: "07385298144", duty: "Food Preparation", shift: "Fri 30th Evening", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Friday" },
+            { name: "Joe Joseph", parish: "St.Antony's", phone: "07776620574", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Anns Manuel", parish: "Lourdes Matha", phone: "07443911575", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Jose Thomas", parish: "St.Sebastian", phone: "07721957438", duty: "Food Preparation", shift: "Fri 30th Evening", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Friday" },
+            { name: "Sanal Appukuttan", parish: "St.Jude", phone: "07429146972", duty: "Food Preparation", shift: "Sat till 3:00 PM", attendance: "Pending", coupon: "Pending", notes: "Sat Morning till 3 PM" },
+            { name: "Metty Thomas", parish: "St.Sebastian", phone: "07846136960", duty: "Food Preparation", shift: "Fri 30th Evening", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Friday" },
+            { name: "Sebiyachan Poulo", parish: "St.Sebastian", phone: "07975617631", duty: "Food Preparation", shift: "Fri 30th Evening", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Evening" },
+            { name: "Shibi Jose", parish: "St.Jude", phone: "07917466066", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Food & Parking" },
+            { name: "Aravind Mohanan", parish: "St.Patric", phone: "07775733270", duty: "Food Preparation", shift: "Sat from 12 PM", attendance: "Pending", coupon: "Pending", notes: "Saturday Afternoon" },
+            { name: "Shanty George", parish: "St.Antony's", phone: "07522821999", duty: "Food Preparation", shift: "Sat till 2 PM", attendance: "Pending", coupon: "Pending", notes: "Morning till 2 PM" },
+            { name: "Xavier Chakku", parish: "Sacred Heart", phone: "07467195775", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen & Counter" },
+            { name: "Jai John (Renju)", parish: "St.Patric", phone: "07985402991", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Gigy John", parish: "St.Sebastian", phone: "07753894576", duty: "Food Preparation", shift: "Fri 30th Evening", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th only" },
+            { name: "Shibu George", parish: "St.Mary", phone: "07921228815", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Mathew Jose", parish: "St.Jude", phone: "07901179011", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen & Parking" },
+            { name: "Tijomon George", parish: "St.Micheal", phone: "07824045695", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Shibu K Joseph", parish: "St.Mary", phone: "07585355038", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+
+            // Food Service & Sales
+            { name: "Shaji Sebastian", parish: "Lourdes Matha", phone: "07766873953", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Albin Shibu", parish: "St.Theresa", phone: "07423241394", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Linta Joseph", parish: "St.Patric", phone: "07884078293", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Molly Roy", parish: "Devine Mercy", phone: "07817784384", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Judges Support Team" },
+            { name: "Manuel", parish: "Lourdes Matha", phone: "07471804154", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Food Counter" },
+            { name: "Ligi Thomas", parish: "St.Alphonsa", phone: "07515635457", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Joseph Sunny", parish: "Lourdes Matha", phone: "07988111515", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Siby Vincent", parish: "Lourdes Matha", phone: "07454746432", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Shinu Jackson", parish: "St.Antony's", phone: "07577738490", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Food Sale Lead" },
+            { name: "Manoj", parish: "St.Antony's", phone: "07481183830", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "George Tharakan", parish: "Devine Mercy", phone: "07811197278", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Shiny Sibi", parish: "St.Xavier", phone: "07402793726", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Mathew Kurian", parish: "St.Antony's", phone: "07737963892", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Mathews Manuel", parish: "Lourdes Matha", phone: "07492572732", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Edwin Sebastian", parish: "Lourdes Matha", phone: "07305827490", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Tajmon Maliyilchira Kuriakose", parish: "St.Jude", phone: "07768621570", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Parking & Food" },
+            { name: "Colins Jacob", parish: "St.Joseph", phone: "07385164774", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Mary Thomas", parish: "St.Alphonsa", phone: "0789446820", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Harry Arikkat", parish: "St.Vincent", phone: "07505146260", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Subject to child timing" },
+            { name: "Sebastian Lonappan", parish: "Lourdes Matha", phone: "07809294312", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "George Nikolovoas", parish: "St.Jude", phone: "07899314358", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Parking & Service" },
+            { name: "Noychen Augustine", parish: "St.Mary", phone: "07886894388", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Jose Sebastian", parish: "St.Theresa", phone: "07721933195", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Mahesh M Babu", parish: "St.Theresa", phone: "07818993252", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Sanjoy Thomas", parish: "St.Jude", phone: "07823947630", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Parking & Food" },
+            { name: "Sheby", parish: "St.Xavier", phone: "07393900287", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Lissy Paul", parish: "Lourdes Matha", phone: "07951858312", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Jessica Vadhyanath", parish: "St.Alphonsa", phone: "07949407736", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Christy Francis", parish: "St.Joseph", phone: "+91 9538366840", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Santhosh Kachappilly", parish: "Lourdes Matha", phone: "07747248525", duty: "Food Service", shift: "Sat from 11:00 AM", attendance: "Pending", coupon: "Pending", notes: "From 11 AM" },
+
+            // Cleaning Supervision
+            { name: "Siju", parish: "St.Thomas", phone: "07961815719", duty: "Cleaning Supervision", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Early morning breakfast help" }
+        ];
+
+        // Application State
+        let volunteers = [];
+        let isAdmin = false;
+        let activeTab = 'dashboard';
+
+        // Initialize App
+        window.onload = function() {
+            // Load saved data or fallback to pre-populated
+            const saved = localStorage.getItem('kalotsavam_volunteers_2026');
+            if (saved) {
+                try { volunteers = JSON.parse(saved); } catch(e) { volunteers = initialVolunteers; }
+            } else {
+                volunteers = initialVolunteers;
+                saveToStorage();
+            }
+
+            populateParishFilter();
+            renderDashboard();
+            renderRosterTable();
+            renderCheckinList();
+            renderTeamCategory('PACKUP');
+            lucide.createIcons();
+        };
+
+        function saveToStorage() {
+            localStorage.setItem('kalotsavam_volunteers_2026', JSON.stringify(volunteers));
+        }
+
+        // Admin Toggle
+        function toggleAdminMode() {
+            isAdmin = !isAdmin;
+            const statusText = document.getElementById('adminStatusText');
+            statusText.textContent = `Admin Mode: ${isAdmin ? 'ON' : 'OFF'}`;
+            
+            document.querySelectorAll('.admin-only').forEach(el => {
+                if (isAdmin) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+
+            renderRosterTable();
+        }
+
+        // Tab Navigation
+        function switchTab(tabId) {
+            activeTab = tabId;
+            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-gold-500', 'text-gold-400');
+                btn.classList.add('border-transparent', 'text-slate-300');
+            });
+
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-transparent', 'text-slate-300');
+                activeBtn.classList.add('border-gold-500', 'text-gold-400');
+            }
+
+            if (tabId === 'dashboard') renderDashboard();
+            if (tabId === 'roster') renderRosterTable();
+            if (tabId === 'checkin') renderCheckinList();
+            
+            lucide.createIcons();
+        }
+
+        // ================= DASHBOARD RENDERER =================
+        function renderDashboard() {
+            const total = volunteers.length;
+            const checkedIn = volunteers.filter(v => v.attendance === 'Present').length;
+            const coupons = volunteers.filter(v => v.coupon === 'Issued' || v.coupon === 'Claimed').length;
+            const packup = volunteers.filter(v => v.duty === 'Venue Re-arrangement / Pack-up').length;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statCheckedIn').textContent = checkedIn;
+            document.getElementById('statCheckedInPct').textContent = `${Math.round((checkedIn/total)*100 || 0)}% Attendance`;
+            document.getElementById('statCoupons').textContent = coupons;
+            document.getElementById('statCouponsPct').textContent = `${coupons} Issued/Redeemed`;
+            document.getElementById('statPackup').textContent = packup;
+            document.getElementById('pendingBadge').textContent = total - checkedIn;
+
+            // Duty area breakdown
+            const duties = {
+                'Venue Re-arrangement / Pack-up': { name: 'Venue Pack-up (Sat 7 PM)', icon: 'package', color: 'purple' },
+                'Venue Arrangement': { name: 'Venue Setup (Fri 5 PM)', icon: 'wrench', color: 'blue' },
+                'Food Preparation': { name: 'Food Preparation', icon: 'chef-hat', color: 'amber' },
+                'Food Service': { name: 'Food Service & Sales', icon: 'utensils', color: 'emerald' },
+                'Cleaning Supervision': { name: 'Cleaning Supervision', icon: 'sparkles', color: 'teal' }
+            };
+
+            const grid = document.getElementById('dutyBreakdownGrid');
+            grid.innerHTML = '';
+
+            Object.keys(duties).forEach(dutyKey => {
+                const count = volunteers.filter(v => v.duty === dutyKey).length;
+                const meta = duties[dutyKey];
+                
+                grid.innerHTML += `
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-${meta.color}-100 text-${meta.color}-700 flex items-center justify-center">
+                                <i data-lucide="${meta.icon}" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-xs sm:text-sm">${meta.name}</h4>
+                                <p class="text-[11px] text-slate-500">${Math.round((count/total)*100)}% of total team</p>
+                            </div>
+                        </div>
+                        <span class="text-xl font-extrabold text-slate-800">${count}</span>
+                    </div>
+                `;
+            });
+
+            lucide.createIcons();
+        }
+
+        // ================= MASTER ROSTER RENDERER =================
+        function populateParishFilter() {
+            const parishes = [...new Set(volunteers.map(v => v.parish))].sort();
+            const select = document.getElementById('filterParish');
+            select.innerHTML = '<option value="ALL">All Parishes / Units</option>';
+            parishes.forEach(p => {
+                select.innerHTML += `<option value="${p}">${p}</option>`;
+            });
+        }
+
+        function renderRosterTable() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const duty = document.getElementById('filterDuty').value;
+            const parish = document.getElementById('filterParish').value;
+            const attendance = document.getElementById('filterAttendance').value;
+
+            const filtered = volunteers.filter(v => {
+                const matchesSearch = v.name.toLowerCase().includes(search) || 
+                                      v.phone.includes(search) || 
+                                      v.parish.toLowerCase().includes(search) ||
+                                      v.notes.toLowerCase().includes(search);
+                const matchesDuty = (duty === 'ALL' || v.duty === duty);
+                const matchesParish = (parish === 'ALL' || v.parish === parish);
+                const matchesAttendance = (attendance === 'ALL' || v.attendance === attendance);
+
+                return matchesSearch && matchesDuty && matchesParish && matchesAttendance;
+            });
+
+            document.getElementById('filterCount').textContent = filtered.length;
+
+            const tbody = document.getElementById('rosterTableBody');
+            tbody.innerHTML = '';
+
+            filtered.forEach((v, idx) => {
+                const realIndex = volunteers.indexOf(v);
+                
+                const attColor = v.attendance === 'Present' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
+                                 v.attendance === 'Absent' ? 'bg-red-100 text-red-800 border-red-300' : 'bg-slate-100 text-slate-700 border-slate-300';
+
+                const coupColor = v.coupon === 'Claimed' ? 'bg-purple-100 text-purple-800 border-purple-300' :
+                                  v.coupon === 'Issued' ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-slate-100 text-slate-600 border-slate-300';
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="p-3.5 font-bold text-slate-900">
+                            ${v.name}
+                            <div class="text-[11px] font-normal text-slate-500 font-mono">${v.phone}</div>
+                        </td>
+                        <td class="p-3.5">
+                            <span class="inline-block px-2 py-0.5 bg-slate-100 border border-slate-200 text-slate-700 rounded-md text-[11px] font-medium">
+                                ${v.parish}
+                            </span>
+                        </td>
+                        <td class="p-3.5">
+                            <div class="font-semibold text-slate-800">${v.duty}</div>
+                            <div class="text-[11px] text-maroon-700 font-medium">${v.shift}</div>
+                        </td>
+                        <td class="p-3.5 text-center">
+                            <button onclick="toggleAttendance(${realIndex})" class="px-2.5 py-1 rounded-lg text-[11px] font-bold border ${attColor} transition">
+                                ${v.attendance}
+                            </button>
+                        </td>
+                        <td class="p-3.5 text-center">
+                            <button onclick="toggleCoupon(${realIndex})" class="px-2.5 py-1 rounded-lg text-[11px] font-bold border ${coupColor} transition">
+                                ${v.coupon}
+                            </button>
+                        </td>
+                        <td class="p-3.5 text-slate-600 text-xs">
+                            ${v.notes || '-'}
+                        </td>
+                        <td class="p-3.5 text-right admin-only ${isAdmin ? '' : 'hidden'}">
+                            <div class="flex items-center justify-end space-x-1">
+                                <button onclick="openEditModal(${realIndex})" class="p-1.5 text-slate-500 hover:text-maroon-700 hover:bg-slate-100 rounded-lg">
+                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="deleteVolunteer(${realIndex})" class="p-1.5 text-slate-500 hover:text-red-600 hover:bg-slate-100 rounded-lg">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            lucide.createIcons();
+        }
+
+        function applyFilters() { renderRosterTable(); }
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterDuty').value = 'ALL';
+            document.getElementById('filterParish').value = 'ALL';
+            document.getElementById('filterAttendance').value = 'ALL';
+            renderRosterTable();
+        }
+
+        // Inline Toggles
+        function toggleAttendance(index) {
+            const current = volunteers[index].attendance;
+            volunteers[index].attendance = current === 'Pending' ? 'Present' : current === 'Present' ? 'Absent' : 'Pending';
+            saveToStorage();
+            renderRosterTable();
+            renderDashboard();
+            renderCheckinList();
+        }
+
+        function toggleCoupon(index) {
+            const current = volunteers[index].coupon;
+            volunteers[index].coupon = current === 'Pending' ? 'Issued' : current === 'Issued' ? 'Claimed' : 'Pending';
+            saveToStorage();
+            renderRosterTable();
+            renderDashboard();
+            renderCheckinList();
+        }
+
+        // ================= CHECK-IN PORTAL (MOBILE SCANNER) =================
+        function renderCheckinList() {
+            const query = (document.getElementById('checkinSearch')?.value || '').toLowerCase();
+            const grid = document.getElementById('checkinCardGrid');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+
+            const filtered = volunteers.filter(v => 
+                v.name.toLowerCase().includes(query) || 
+                v.phone.includes(query) || 
+                v.parish.toLowerCase().includes(query)
+            );
+
+            filtered.forEach(v => {
+                const realIdx = volunteers.indexOf(v);
+                const isPresent = v.attendance === 'Present';
+                const hasCoupon = v.coupon === 'Issued' || v.coupon === 'Claimed';
+
+                grid.innerHTML += `
+                    <div class="bg-white p-4 rounded-2xl border ${isPresent ? 'border-emerald-300 bg-emerald-50/30' : 'border-slate-200'} shadow-sm space-y-3">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">${v.name}</h4>
+                                <p class="text-xs text-slate-500">${v.parish} • <span class="font-mono">${v.phone}</span></p>
+                            </div>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">${v.duty.split(' ')[0]}</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100">
+                            <button onclick="toggleAttendance(${realIdx})" class="w-full py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center space-x-1.5 transition ${isPresent ? 'bg-emerald-600 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
+                                <i data-lucide="${isPresent ? 'check-circle-2' : 'circle'}" class="w-4 h-4"></i>
+                                <span>${isPresent ? 'Present' : 'Mark Present'}</span>
+                            </button>
+
+                            <button onclick="toggleCoupon(${realIdx})" class="w-full py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center space-x-1.5 transition ${hasCoupon ? 'bg-amber-500 text-maroon-900' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
+                                <i data-lucide="utensils" class="w-4 h-4"></i>
+                                <span>${v.coupon === 'Claimed' ? 'Redeemed' : v.coupon === 'Issued' ? 'Issued' : 'Coupon'}</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            lucide.createIcons();
+        }
+
+        // ================= DUTY TEAMS RENDERER =================
+        function renderTeamCategory(type) {
+            const container = document.getElementById('teamViewContainer');
+            container.innerHTML = '';
+
+            let list = [];
+            let title = "";
+            let description = "";
+
+            if (type === 'PACKUP') {
+                title = "Venue Re-arrangement & Pack-up Squad (Sat 31 Oct from 7:00 PM)";
+                description = "Priority expanded team consisting of 14 direct voters + 16 flexible volunteers.";
+                list = volunteers.filter(v => v.duty === 'Venue Re-arrangement / Pack-up');
+            } else if (type === 'SETUP') {
+                title = "Venue Arrangement Team (Friday 30 Oct from 5:00 PM)";
+                description = "Responsible for stage, hall setup, sound & seating arrangement.";
+                list = volunteers.filter(v => v.duty === 'Venue Arrangement');
+            } else if (type === 'FOOD_SERVICE') {
+                title = "Food Service & Sales / Cash Desk";
+                description = "Serving meals, handling food coupon sales and cash desk counters.";
+                list = volunteers.filter(v => v.duty === 'Food Service');
+            } else if (type === 'FOOD_PREP') {
+                title = "Food Preparation Team";
+                description = "Kitchen prep on Friday evening and Saturday full day cooking/snack distribution.";
+                list = volunteers.filter(v => v.duty === 'Food Preparation');
+            } else if (type === 'SPECIAL') {
+                title = "Special Sub-Teams & Department Leads";
+                description = "Dedicated operational teams assigned across critical venue areas.";
+                renderSpecialTeamsView();
+                return;
+            }
+
+            let html = `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-4">
+                    <h3 class="text-base font-bold text-slate-900">${title}</h3>
+                    <p class="text-xs text-slate-500">${description} (${list.length} Members Allocated)</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            `;
+
+            list.forEach((v, idx) => {
+                html += `
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-start space-x-3">
+                        <div class="w-7 h-7 rounded-full bg-maroon-100 text-maroon-800 flex items-center justify-center font-bold text-xs shrink-0">
+                            ${idx + 1}
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">${v.name}</h4>
+                            <p class="text-[11px] text-slate-500">${v.parish} • <span class="font-mono">${v.phone}</span></p>
+                            <span class="inline-block mt-1 px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] rounded font-medium">${v.notes || 'General Support'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function renderSpecialTeamsView() {
+            const container = document.getElementById('teamViewContainer');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Parking Team -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                        <div class="flex items-center space-x-3 text-emerald-700">
+                            <i data-lucide="car" class="w-5 h-5"></i>
+                            <h3 class="font-bold text-slate-900 text-sm">Parking & Traffic Control Team</h3>
+                        </div>
+                        <p class="text-xs text-slate-500">Managing off-site parking at LDS Church (BS14 9HU) & New Fosseway Rd coach drop-offs.</p>
+                        <div class="p-3 bg-emerald-50/50 rounded-xl border border-emerald-100 text-xs space-y-1">
+                            <p class="font-bold text-emerald-900">Team Lead: Tom George (07861042288)</p>
+                            <p class="text-slate-700">Members: Roy Mathew, George Joseph, Tajmon, Dijo George, Jijo Augustine, Mathew Jose, Sanjoy Thomas</p>
+                        </div>
+                    </div>
+
+                    <!-- Judges Team -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                        <div class="flex items-center space-x-3 text-purple-700">
+                            <i data-lucide="award" class="w-5 h-5"></i>
+                            <h3 class="font-bold text-slate-900 text-sm">Judges & Commission Support</h3>
+                        </div>
+                        <p class="text-xs text-slate-500">Judges hospitality, scoring sheets, and Bible Apostolate liaison.</p>
+                        <div class="p-3 bg-purple-50/50 rounded-xl border border-purple-100 text-xs space-y-1">
+                            <p class="font-bold text-purple-900">Team Lead: Anita Philip (07809714895)</p>
+                            <p class="text-slate-700">Members: Roy Sebastian, Molly Roy</p>
+                        </div>
+                    </div>
+
+                    <!-- Registration Team -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                        <div class="flex items-center space-x-3 text-blue-700">
+                            <i data-lucide="badge-check" class="w-5 h-5"></i>
+                            <h3 class="font-bold text-slate-900 text-sm">Registration & Participant Badges</h3>
+                        </div>
+                        <p class="text-xs text-slate-500">Chest tag distribution, desk registration, and Regional team coordination.</p>
+                        <div class="p-3 bg-blue-50/50 rounded-xl border border-blue-100 text-xs space-y-1">
+                            <p class="font-bold text-blue-900">Coordinators: Jomy John (07753821192) & Shiny Sebastian</p>
+                        </div>
+                    </div>
+
+                    <!-- Safeguarding -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                        <div class="flex items-center space-x-3 text-red-700">
+                            <i data-lucide="shield" class="w-5 h-5"></i>
+                            <h3 class="font-bold text-slate-900 text-sm">Safeguarding & Health / Safety</h3>
+                        </div>
+                        <p class="text-xs text-slate-500">First aid liaison, venue safety checks, and child protection oversight.</p>
+                        <div class="p-3 bg-red-50/50 rounded-xl border border-red-100 text-xs space-y-1">
+                            <p class="font-bold text-red-900">Lead Officer: Jasmin George (07838904708)</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // ================= MODAL & EDIT LOGIC =================
+        function openAddModal() {
+            document.getElementById('modalIndex').value = -1;
+            document.getElementById('modalTitle').textContent = 'Add New Volunteer';
+            document.getElementById('volunteerForm').reset();
+            document.getElementById('volunteerModal').classList.remove('hidden');
+        }
+
+        function openEditModal(index) {
+            const v = volunteers[index];
+            document.getElementById('modalIndex').value = index;
+            document.getElementById('modalTitle').textContent = `Edit Details: ${v.name}`;
+            document.getElementById('modalName').value = v.name;
+            document.getElementById('modalParish').value = v.parish;
+            document.getElementById('modalPhone').value = v.phone;
+            document.getElementById('modalDuty').value = v.duty;
+            document.getElementById('modalShift').value = v.shift;
+            document.getElementById('modalAttendance').value = v.attendance;
+            document.getElementById('modalCoupon').value = v.coupon;
+            document.getElementById('modalNotes').value = v.notes || '';
+
+            document.getElementById('volunteerModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('volunteerModal').classList.add('hidden');
+        }
+
+        function saveVolunteer(e) {
+            e.preventDefault();
+            const idx = parseInt(document.getElementById('modalIndex').value);
+
+            const data = {
+                name: document.getElementById('modalName').value,
+                parish: document.getElementById('modalParish').value,
+                phone: document.getElementById('modalPhone').value,
+                duty: document.getElementById('modalDuty').value,
+                shift: document.getElementById('modalShift').value,
+                attendance: document.getElementById('modalAttendance').value,
+                coupon: document.getElementById('modalCoupon').value,
+                notes: document.getElementById('modalNotes').value
+            };
+
+            if (idx >= 0) {
+                volunteers[idx] = data;
+            } else {
+                volunteers.push(data);
+            }
+
+            saveToStorage();
+            closeModal();
+            populateParishFilter();
+            renderDashboard();
+            renderRosterTable();
+            renderCheckinList();
+        }
+
+        function deleteVolunteer(index) {
+            if (confirm(`Are you sure you want to remove ${volunteers[index].name} from the roster?`)) {
+                volunteers.splice(index, 1);
+                saveToStorage();
+                populateParishFilter();
+                renderDashboard();
+                renderRosterTable();
+                renderCheckinList();
+            }
+        }
+
+        // ================= EXPORT CSV =================
+        function exportToCSV() {
+            let csv = 'Name,Parish,Phone,Assigned Duty,Shift,Attendance,Food Coupon,Notes\n';
+            volunteers.forEach(v => {
+                csv += `"${v.name}","${v.parish}","${v.phone}","${v.duty}","${v.shift}","${v.attendance}","${v.coupon}","${v.notes || ''}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'CSMEGB_Kalotsavam_Volunteer_Roster_2026.csv');
+            a.click();
+        }
+    </script>
+</body>
+</html>
