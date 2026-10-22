@@ -180,12 +180,12 @@
 
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
                     <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
-                        <i data-lucide="package-check" class="w-6 h-6"></i>
+                        <i data-lucide="layers" class="w-6 h-6"></i>
                     </div>
                     <div>
-                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pack-up Squad</p>
-                        <h3 id="statPackup" class="text-2xl font-black text-slate-800">30</h3>
-                        <p class="text-[11px] text-purple-600 font-semibold">14 Direct + 16 Flexible</p>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Multi-Duty Assignments</p>
+                        <h3 id="statMultiDuty" class="text-2xl font-black text-slate-800">0</h3>
+                        <p class="text-[11px] text-purple-600 font-semibold">Volunteers with 2+ roles</p>
                     </div>
                 </div>
             </div>
@@ -196,6 +196,7 @@
                     <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
                         <i data-lucide="pie-chart" class="w-5 h-5 text-maroon-700"></i> Volunteer Distribution by Duty Area
                     </h3>
+                    <span class="text-xs text-slate-500 font-medium">* Counts include primary and secondary assigned duties</span>
                 </div>
                 <div id="dutyBreakdownGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <!-- Dynamic rendering -->
@@ -246,7 +247,7 @@
                     <!-- Dropdown Filters -->
                     <div class="flex flex-wrap gap-2 w-full sm:w-auto">
                         <select id="filterDuty" onchange="applyFilters()" class="px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
-                            <option value="ALL">All Duties</option>
+                            <option value="ALL">All Duties (Primary & Secondary)</option>
                             <option value="Venue Arrangement">Venue Arrangement (Fri)</option>
                             <option value="Food Preparation">Food Preparation</option>
                             <option value="Food Service">Food Service & Sales</option>
@@ -282,7 +283,7 @@
                             <tr class="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
                                 <th class="p-3.5">Volunteer</th>
                                 <th class="p-3.5">Parish / Unit</th>
-                                <th class="p-3.5">Assigned Duty & Shift</th>
+                                <th class="p-3.5">Assigned Duties (Primary & Secondary)</th>
                                 <th class="p-3.5 text-center">Attendance</th>
                                 <th class="p-3.5 text-center">Food Coupon</th>
                                 <th class="p-3.5">Notes / Special Role</th>
@@ -322,19 +323,22 @@
         <!-- ================= TAB 4: DUTY TEAMS VIEW ================= -->
         <section id="view-teams" class="hidden space-y-6">
             <div class="flex overflow-x-auto space-x-2 pb-2 scrollbar-none">
-                <button onclick="renderTeamCategory('PACKUP')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-maroon-700 text-white shadow-sm whitespace-nowrap">
-                    Venue Pack-up (30 Members)
+                <button id="teamTab-PACKUP" onclick="renderTeamCategory('PACKUP')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-maroon-700 text-white shadow-sm whitespace-nowrap">
+                    Venue Pack-up
                 </button>
-                <button onclick="renderTeamCategory('SETUP')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
-                    Fri Setup (36 Members)
+                <button id="teamTab-SETUP" onclick="renderTeamCategory('SETUP')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
+                    Fri Setup
                 </button>
-                <button onclick="renderTeamCategory('FOOD_SERVICE')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
-                    Food Service & Sales (57)
+                <button id="teamTab-FOOD_SERVICE" onclick="renderTeamCategory('FOOD_SERVICE')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
+                    Food Service & Sales
                 </button>
-                <button onclick="renderTeamCategory('FOOD_PREP')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
-                    Food Prep (35)
+                <button id="teamTab-FOOD_PREP" onclick="renderTeamCategory('FOOD_PREP')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
+                    Food Prep
                 </button>
-                <button onclick="renderTeamCategory('SPECIAL')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
+                <button id="teamTab-CLEANING" onclick="renderTeamCategory('CLEANING')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
+                    Cleaning Supervision
+                </button>
+                <button id="teamTab-SPECIAL" onclick="renderTeamCategory('SPECIAL')" class="team-tab px-4 py-2 text-xs font-bold rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 whitespace-nowrap">
                     Special Sub-Teams
                 </button>
             </div>
@@ -423,7 +427,7 @@
 
     <!-- Modal: Edit / Add Volunteer -->
     <div id="volunteerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <h3 id="modalTitle" class="text-base font-bold text-slate-800">Edit Volunteer Details</h3>
                 <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
@@ -448,20 +452,55 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Assigned Duty</label>
-                        <select id="modalDuty" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
-                            <option value="Venue Arrangement">Venue Arrangement (Fri)</option>
-                            <option value="Food Preparation">Food Preparation</option>
-                            <option value="Food Service">Food Service & Sales</option>
-                            <option value="Cleaning Supervision">Cleaning Supervision</option>
-                            <option value="Venue Re-arrangement / Pack-up">Venue Pack-up (Sat 7 PM)</option>
-                        </select>
+                <!-- Primary Duty Section -->
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                    <span class="text-xs font-bold text-maroon-800 uppercase tracking-wider">Primary Assigned Duty</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Duty Category</label>
+                            <select id="modalDuty" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                                <option value="Venue Arrangement">Venue Arrangement (Fri)</option>
+                                <option value="Food Preparation">Food Preparation</option>
+                                <option value="Food Service">Food Service & Sales</option>
+                                <option value="Cleaning Supervision">Cleaning Supervision</option>
+                                <option value="Venue Re-arrangement / Pack-up">Venue Pack-up (Sat 7 PM)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Shift / Time</label>
+                            <input type="text" id="modalShift" placeholder="e.g. Sat Full Day" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Shift / Time</label>
-                        <input type="text" id="modalShift" placeholder="e.g. Sat Full Day" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                </div>
+
+                <!-- Secondary / Additional Duty Section -->
+                <div id="secondaryDutyWrapper" class="p-3 bg-amber-50/60 border border-amber-200 rounded-xl space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
+                            <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-amber-700"></i> Additional / Secondary Duty
+                        </span>
+                        <button type="button" id="toggleSecondaryBtn" onclick="toggleSecondaryDutyFields()" class="text-xs text-maroon-700 hover:underline font-semibold">
+                            + Enable Secondary Duty
+                        </button>
+                    </div>
+
+                    <div id="secondaryDutyFields" class="hidden space-y-2 pt-1 border-t border-amber-200/60">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Secondary Duty Category</label>
+                                <select id="modalSecondaryDuty" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                                    <option value="Venue Re-arrangement / Pack-up">Venue Pack-up (Sat 7 PM)</option>
+                                    <option value="Venue Arrangement">Venue Arrangement (Fri)</option>
+                                    <option value="Food Preparation">Food Preparation</option>
+                                    <option value="Food Service">Food Service & Sales</option>
+                                    <option value="Cleaning Supervision">Cleaning Supervision</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Shift / Time</label>
+                                <input type="text" id="modalSecondaryShift" placeholder="e.g. Sat after 7 PM" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-maroon-700">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -502,141 +541,142 @@
         // ================= PRE-POPULATED VOLUNTEER DATASET (114 VOLUNTEERS) =================
         const initialVolunteers = [
             // Pack-up Squad (Direct + Expanded)
-            { name: "Mathew Thomas", parish: "St.Alphonsa", phone: "07910000997", duty: "Venue Re-arrangement / Pack-up", shift: "Sat from 7:00 PM", attendance: "Pending", coupon: "Pending", notes: "Also Venue Setup Fri" },
-            { name: "Deepumon", parish: "St.Sebastian", phone: "07879728191", duty: "Venue Re-arrangement / Pack-up", shift: "Sat after 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Available after 5 PM" },
-            { name: "SajiGeorge", parish: "St.Thomas", phone: "07481849707", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Whole day available" },
-            { name: "Roy Sebastian", parish: "Devine Mercy", phone: "07862701046", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Assisting Judges Team" },
-            { name: "Tonsen Thomas", parish: "St.Cecily", phone: "07427691328", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
-            { name: "Abin Manoj", parish: "St.Antony's", phone: "07481183830", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Cash Counter Team" },
-            { name: "Shiny Aljo", parish: "Sacred Heart", phone: "07551708905", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Cleaning & Packup" },
-            { name: "Neuby Varghese", parish: "St.Vincent", phone: "07767944813", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
-            { name: "Jomy John", parish: "St.Antony's", phone: "07753821192", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Tag distribution / Registration" },
-            { name: "Shiny Sebastian", parish: "Sacred Heart", phone: "07551708905", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Registration Team" },
-            { name: "Sabu Mathew", parish: "St.Thomas", phone: "07466350670", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "General Help" },
-            { name: "Shaji Varkey", parish: "St.Chavara", phone: "07532182639", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Fully Flexible" },
-            { name: "Jijo John", parish: "St.Thomas", phone: "07769421944", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
-            { name: "Danny George", parish: "St.Mary", phone: "07305642067", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
+            { name: "Mathew Thomas", parish: "St.Alphonsa", phone: "07910000997", duty: "Venue Re-arrangement / Pack-up", shift: "Sat from 7:00 PM", secondaryDuty: "Venue Arrangement", secondaryShift: "Fri Setup", attendance: "Pending", coupon: "Pending", notes: "Also Venue Setup Fri" },
+            { name: "Deepumon", parish: "St.Sebastian", phone: "07879728191", duty: "Venue Re-arrangement / Pack-up", shift: "Sat after 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Available after 5 PM" },
+            { name: "SajiGeorge", parish: "St.Thomas", phone: "07481849707", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Whole day available" },
+            { name: "Roy Sebastian", parish: "Devine Mercy", phone: "07862701046", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Assisting Judges Team" },
+            { name: "Tonsen Thomas", parish: "St.Cecily", phone: "07427691328", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
+            { name: "Abin Manoj", parish: "St.Antony's", phone: "07481183830", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "Food Service", secondaryShift: "Sat Afternoon", attendance: "Pending", coupon: "Pending", notes: "Cash Counter Team" },
+            { name: "Shiny Aljo", parish: "Sacred Heart", phone: "07551708905", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Full Day", secondaryDuty: "Cleaning Supervision", secondaryShift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Cleaning & Packup" },
+            { name: "Neuby Varghese", parish: "St.Vincent", phone: "07767944813", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
+            { name: "Jomy John", parish: "St.Antony's", phone: "07753821192", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Tag distribution / Registration" },
+            { name: "Shiny Sebastian", parish: "Sacred Heart", phone: "07551708905", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Registration Team" },
+            { name: "Sabu Mathew", parish: "St.Thomas", phone: "07466350670", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "General Help" },
+            { name: "Shaji Varkey", parish: "St.Chavara", phone: "07532182639", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Fully Flexible" },
+            { name: "Jijo John", parish: "St.Thomas", phone: "07769421944", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
+            { name: "Danny George", parish: "St.Mary", phone: "07305642067", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Direct voter" },
 
             // Expanded Pack-up (Flexible Comments)
-            { name: "Shiju Thettayil Vakkachan", parish: "St.Mary", phone: "07918393444", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "Available all day / Food Prep" },
-            { name: "Rohith Shiju", parish: "St.Mary", phone: "07881144662", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "Payment & Food Counter" },
-            { name: "Sibi Mathew", parish: "St.Xavier", phone: "07412348702", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Flexible support" },
-            { name: "Roshan Rapheal", parish: "St.Mary", phone: "07442903850", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "Whole day available" },
-            { name: "Sindhu Manuel", parish: "Lourdes Matha", phone: "07737812369", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "All day support" },
-            { name: "Aleena Vincent", parish: "Lourdes Matha", phone: "07422530922", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "All day" },
-            { name: "Dolly James", parish: "St.Vincent", phone: "07737739637", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Flexible wherever needed" },
-            { name: "Tijo Antony", parish: "St.Jude", phone: "07721949500", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Flexible" },
-            { name: "Shinto Thomas", parish: "St.Augustine", phone: "07555230670", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "All day" },
-            { name: "George Sebastian", parish: "St.Antony's", phone: "07883093766", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Happy to help with anything" },
-            { name: "Prabhu Plappallil James", parish: "St.Antony's", phone: "07394338272", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "As per requirement" },
-            { name: "Bazil Kurian", parish: "St.Micheal", phone: "07727054519", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "As per request" },
-            { name: "Subi Shaji", parish: "St.Chavara", phone: "07541103663", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Can help other areas" },
-            { name: "Jessy Jose", parish: "St.Augustine", phone: "07379043128", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", attendance: "Pending", coupon: "Pending", notes: "All day" },
-            { name: "Vargheese Scaria", parish: "St.Sebastian", phone: "07909723108", duty: "Venue Re-arrangement / Pack-up", shift: "Fri & Sat", attendance: "Pending", coupon: "Pending", notes: "Available 30 & 31 Oct" },
-            { name: "Shaji Thomas", parish: "St.Antony's", phone: "0745986507", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "All in all" },
+            { name: "Shiju Thettayil Vakkachan", parish: "St.Mary", phone: "07918393444", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", secondaryDuty: "Food Preparation", secondaryShift: "Sat Morning", attendance: "Pending", coupon: "Pending", notes: "Available all day / Food Prep" },
+            { name: "Rohith Shiju", parish: "St.Mary", phone: "07881144662", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", secondaryDuty: "Food Service", secondaryShift: "Sat Day", attendance: "Pending", coupon: "Pending", notes: "Payment & Food Counter" },
+            { name: "Sibi Mathew", parish: "St.Xavier", phone: "07412348702", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Flexible support" },
+            { name: "Roshan Rapheal", parish: "St.Mary", phone: "07442903850", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Whole day available" },
+            { name: "Sindhu Manuel", parish: "Lourdes Matha", phone: "07737812369", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "All day support" },
+            { name: "Aleena Vincent", parish: "Lourdes Matha", phone: "07422530922", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "All day" },
+            { name: "Dolly James", parish: "St.Vincent", phone: "07737739637", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Flexible wherever needed" },
+            { name: "Tijo Antony", parish: "St.Jude", phone: "07721949500", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Flexible" },
+            { name: "Shinto Thomas", parish: "St.Augustine", phone: "07555230670", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "All day" },
+            { name: "George Sebastian", parish: "St.Antony's", phone: "07883093766", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Happy to help with anything" },
+            { name: "Prabhu Plappallil James", parish: "St.Antony's", phone: "07394338272", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "As per requirement" },
+            { name: "Bazil Kurian", parish: "St.Micheal", phone: "07727054519", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "As per request" },
+            { name: "Subi Shaji", parish: "St.Chavara", phone: "07541103663", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Can help other areas" },
+            { name: "Jessy Jose", parish: "St.Augustine", phone: "07379043128", duty: "Venue Re-arrangement / Pack-up", shift: "Sat All Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "All day" },
+            { name: "Vargheese Scaria", parish: "St.Sebastian", phone: "07909723108", duty: "Venue Re-arrangement / Pack-up", shift: "Fri & Sat", secondaryDuty: "Venue Arrangement", secondaryShift: "Fri Setup", attendance: "Pending", coupon: "Pending", notes: "Available 30 & 31 Oct" },
+            { name: "Shaji Thomas", parish: "St.Antony's", phone: "0745986507", duty: "Venue Re-arrangement / Pack-up", shift: "Sat Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "All in all" },
 
             // Venue Setup (Friday)
-            { name: "Rojis George", parish: "St.Thomas", phone: "07423138030", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Cleaning Sup & Setup" },
-            { name: "Joshy", parish: "St.Micheal", phone: "07301355229", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Hall setup" },
-            { name: "Joel Arikkat", parish: "St.Vincent", phone: "07414726699", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Half day Sat" },
-            { name: "Rajumon Kuriakose", parish: "St.Alphonsa", phone: "07717665236", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Admin / Leadership" },
-            { name: "Maboj Mathew", parish: "St.Augustine", phone: "07727273766", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
-            { name: "Karol Thomas", parish: "Divine Mercy", phone: "07459317465", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Stage & hall" },
-            { name: "Beenamol Thomas", parish: "Lourdes Matha", phone: "07737506147", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup & Food service" },
-            { name: "Shelton Mathew", parish: "St.Theresa", phone: "07585067073", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
-            { name: "Roy Mathew", parish: "St.Jude", phone: "07448727488", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Parking Control Team" },
-            { name: "George Joseph", parish: "St.Jude", phone: "07867909316", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Parking Control Team" },
-            { name: "Thomas Mathew", parish: "St.Augustine", phone: "07878865278", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
-            { name: "Jasmin Joseph", parish: "St.Jude", phone: "07909488384", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
-            { name: "Lalamma Thomas", parish: "St.Augustine", phone: "07757408496", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Food Sale Team" },
-            { name: "Femi Joseph", parish: "St.Thomas", phone: "07482237458", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
-            { name: "Bijo", parish: "St.Micheal", phone: "07880435739", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
-            { name: "Joju George", parish: "St.Thomas", phone: "07450173184", duty: "Venue Arrangement", shift: "Fri & Sat Morning", attendance: "Pending", coupon: "Pending", notes: "31st Morning till 4 PM" },
-            { name: "Gimy Gracias", parish: "Divine Mercy", phone: "07539081234", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup & Food" },
-            { name: "Jasmin George", parish: "St.Mary", phone: "07838904708", duty: "Venue Arrangement", shift: "Fri & Sat", attendance: "Pending", coupon: "Pending", notes: "Safeguarding Lead / H&S" },
-            { name: "Sinson George", parish: "St.Antony's", phone: "07435743681", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
-            { name: "Tom George", parish: "St.Jude", phone: "07861042288", duty: "Venue Arrangement", shift: "Fri & Sat", attendance: "Pending", coupon: "Pending", notes: "Parking Team Lead" },
-            { name: "Dijo George", parish: "St.Jude", phone: "07733842801", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Parking Team" },
-            { name: "Jijo Augustine", parish: "St.Jude", phone: "07721988499", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Parking Assistant" },
-            { name: "Shiju K Paul", parish: "St.Sebastian", phone: "07350342392", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
-            { name: "Tejal Sebastian", parish: "St.Xavier", phone: "0734582038", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
-            { name: "Anita Philip", parish: "St.Alphonsa", phone: "07809714895", duty: "Venue Arrangement", shift: "Fri & Sat", attendance: "Pending", coupon: "Pending", notes: "Bible Apostolate / Judges Duty" },
+            { name: "Rojis George", parish: "St.Thomas", phone: "07423138030", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "Cleaning Supervision", secondaryShift: "Fri Night", attendance: "Pending", coupon: "Pending", notes: "Cleaning Sup & Setup" },
+            { name: "Joshy", parish: "St.Micheal", phone: "07301355229", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Hall setup" },
+            { name: "Joel Arikkat", parish: "St.Vincent", phone: "07414726699", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Half day Sat" },
+            { name: "Rajumon Kuriakose", parish: "St.Alphonsa", phone: "07717665236", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Admin / Leadership" },
+            { name: "Maboj Mathew", parish: "St.Augustine", phone: "07727273766", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Karol Thomas", parish: "Divine Mercy", phone: "07459317465", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Stage & hall" },
+            { name: "Beenamol Thomas", parish: "Lourdes Matha", phone: "07737506147", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "Food Service", secondaryShift: "Sat Afternoon", attendance: "Pending", coupon: "Pending", notes: "Setup & Food service" },
+            { name: "Shelton Mathew", parish: "St.Theresa", phone: "07585067073", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Roy Mathew", parish: "St.Jude", phone: "07448727488", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Parking Control Team" },
+            { name: "George Joseph", parish: "St.Jude", phone: "07867909316", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Parking Control Team" },
+            { name: "Thomas Mathew", parish: "St.Augustine", phone: "07878865278", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Jasmin Joseph", parish: "St.Jude", phone: "07909488384", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Lalamma Thomas", parish: "St.Augustine", phone: "07757408496", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "Food Service", secondaryShift: "Sat Day", attendance: "Pending", coupon: "Pending", notes: "Food Sale Team" },
+            { name: "Femi Joseph", parish: "St.Thomas", phone: "07482237458", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Bijo", parish: "St.Micheal", phone: "07880435739", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Joju George", parish: "St.Thomas", phone: "07450173184", duty: "Venue Arrangement", shift: "Fri & Sat Morning", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "31st Morning till 4 PM" },
+            { name: "Gimy Gracias", parish: "Divine Mercy", phone: "07539081234", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "Food Service", secondaryShift: "Sat Day", attendance: "Pending", coupon: "Pending", notes: "Setup & Food" },
+            { name: "Jasmin George", parish: "St.Mary", phone: "07838904708", duty: "Venue Arrangement", shift: "Fri & Sat", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Safeguarding Lead / H&S" },
+            { name: "Sinson George", parish: "St.Antony's", phone: "07435743681", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Tom George", parish: "St.Jude", phone: "07861042288", duty: "Venue Arrangement", shift: "Fri & Sat", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Parking Team Lead" },
+            { name: "Dijo George", parish: "St.Jude", phone: "07733842801", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Parking Team" },
+            { name: "Jijo Augustine", parish: "St.Jude", phone: "07721988499", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Parking Assistant" },
+            { name: "Shiju K Paul", parish: "St.Sebastian", phone: "07350342392", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Tejal Sebastian", parish: "St.Xavier", phone: "0734582038", duty: "Venue Arrangement", shift: "Fri from 5:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Setup team" },
+            { name: "Anita Philip", parish: "St.Alphonsa", phone: "07809714895", duty: "Venue Arrangement", shift: "Fri & Sat", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Bible Apostolate / Judges Duty" },
 
             // Food Preparation
-            { name: "John Joseph", parish: "St.Sebastian", phone: "07701089837", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Food Prep" },
-            { name: "Saji Mathew", parish: "Lourdes Matha", phone: "07737413793", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Jolly also available" },
-            { name: "Roy Joseph", parish: "St.Patric", phone: "0788853279", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Tea & Coffee Lead" },
-            { name: "Vincent Thomas", parish: "Lourdes Matha", phone: "07939010065", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
-            { name: "Tom Loyied", parish: "St.Theresa", phone: "07423468998", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep Lead" },
-            { name: "Jojy Thomas", parish: "St.Theresa", phone: "07774430991", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep" },
-            { name: "Jinsan Panakkal Raphel", parish: "St.Theresa", phone: "07570329270", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
-            { name: "Jinto Joseph", parish: "St.Theresa", phone: "07767913488", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep" },
-            { name: "Mable Baby", parish: "St.Theresa", phone: "07423468998", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
-            { name: "Robin Varghese", parish: "St.Theresa", phone: "07436567745", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep" },
-            { name: "Chacko Varghese", parish: "St.Joseph", phone: "07920693900", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
-            { name: "Manju Jose", parish: "St.Sebastian", phone: "07385298144", duty: "Food Preparation", shift: "Fri 30th Evening", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Friday" },
-            { name: "Joe Joseph", parish: "St.Antony's", phone: "07776620574", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
-            { name: "Anns Manuel", parish: "Lourdes Matha", phone: "07443911575", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
-            { name: "Jose Thomas", parish: "St.Sebastian", phone: "07721957438", duty: "Food Preparation", shift: "Fri 30th Evening", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Friday" },
-            { name: "Sanal Appukuttan", parish: "St.Jude", phone: "07429146972", duty: "Food Preparation", shift: "Sat till 3:00 PM", attendance: "Pending", coupon: "Pending", notes: "Sat Morning till 3 PM" },
-            { name: "Metty Thomas", parish: "St.Sebastian", phone: "07846136960", duty: "Food Preparation", shift: "Fri 30th Evening", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Friday" },
-            { name: "Sebiyachan Poulo", parish: "St.Sebastian", phone: "07975617631", duty: "Food Preparation", shift: "Fri 30th Evening", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Evening" },
-            { name: "Shibi Jose", parish: "St.Jude", phone: "07917466066", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Food & Parking" },
-            { name: "Aravind Mohanan", parish: "St.Patric", phone: "07775733270", duty: "Food Preparation", shift: "Sat from 12 PM", attendance: "Pending", coupon: "Pending", notes: "Saturday Afternoon" },
-            { name: "Shanty George", parish: "St.Antony's", phone: "07522821999", duty: "Food Preparation", shift: "Sat till 2 PM", attendance: "Pending", coupon: "Pending", notes: "Morning till 2 PM" },
-            { name: "Xavier Chakku", parish: "Sacred Heart", phone: "07467195775", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen & Counter" },
-            { name: "Jai John (Renju)", parish: "St.Patric", phone: "07985402991", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
-            { name: "Gigy John", parish: "St.Sebastian", phone: "07753894576", duty: "Food Preparation", shift: "Fri 30th Evening", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th only" },
-            { name: "Shibu George", parish: "St.Mary", phone: "07921228815", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
-            { name: "Mathew Jose", parish: "St.Jude", phone: "07901179011", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen & Parking" },
-            { name: "Tijomon George", parish: "St.Micheal", phone: "07824045695", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
-            { name: "Shibu K Joseph", parish: "St.Mary", phone: "07585355038", duty: "Food Preparation", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "John Joseph", parish: "St.Sebastian", phone: "07701089837", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Food Prep" },
+            { name: "Saji Mathew", parish: "Lourdes Matha", phone: "07737413793", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Jolly also available" },
+            { name: "Roy Joseph", parish: "St.Patric", phone: "0788853279", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Tea & Coffee Lead" },
+            { name: "Vincent Thomas", parish: "Lourdes Matha", phone: "07939010065", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Tom Loyied", parish: "St.Theresa", phone: "07423468998", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep Lead" },
+            { name: "Jojy Thomas", parish: "St.Theresa", phone: "07774430991", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep" },
+            { name: "Jinsan Panakkal Raphel", parish: "St.Theresa", phone: "07570329270", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Jinto Joseph", parish: "St.Theresa", phone: "07767913488", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep" },
+            { name: "Mable Baby", parish: "St.Theresa", phone: "07423468998", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Robin Varghese", parish: "St.Theresa", phone: "07436567745", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Snacks Prep" },
+            { name: "Chacko Varghese", parish: "St.Joseph", phone: "07920693900", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Manju Jose", parish: "St.Sebastian", phone: "07385298144", duty: "Food Preparation", shift: "Fri 30th Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Friday" },
+            { name: "Joe Joseph", parish: "St.Antony's", phone: "07776620574", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Anns Manuel", parish: "Lourdes Matha", phone: "07443911575", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Jose Thomas", parish: "St.Sebastian", phone: "07721957438", duty: "Food Preparation", shift: "Fri 30th Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Friday" },
+            { name: "Sanal Appukuttan", parish: "St.Jude", phone: "07429146972", duty: "Food Preparation", shift: "Sat till 3:00 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Sat Morning till 3 PM" },
+            { name: "Metty Thomas", parish: "St.Sebastian", phone: "07846136960", duty: "Food Preparation", shift: "Fri 30th Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Friday" },
+            { name: "Sebiyachan Poulo", parish: "St.Sebastian", phone: "07975617631", duty: "Food Preparation", shift: "Fri 30th Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th Evening" },
+            { name: "Shibi Jose", parish: "St.Jude", phone: "07917466066", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "Venue Re-arrangement / Pack-up", secondaryShift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Food & Parking" },
+            { name: "Aravind Mohanan", parish: "St.Patric", phone: "07775733270", duty: "Food Preparation", shift: "Sat from 12 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Saturday Afternoon" },
+            { name: "Shanty George", parish: "St.Antony's", phone: "07522821999", duty: "Food Preparation", shift: "Sat till 2 PM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Morning till 2 PM" },
+            { name: "Xavier Chakku", parish: "Sacred Heart", phone: "07467195775", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "Food Service", secondaryShift: "Sat Counter", attendance: "Pending", coupon: "Pending", notes: "Kitchen & Counter" },
+            { name: "Jai John (Renju)", parish: "St.Patric", phone: "07985402991", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Gigy John", parish: "St.Sebastian", phone: "07753894576", duty: "Food Preparation", shift: "Fri 30th Evening", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Prep on 30th only" },
+            { name: "Shibu George", parish: "St.Mary", phone: "07921228815", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Mathew Jose", parish: "St.Jude", phone: "07901179011", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "Venue Re-arrangement / Pack-up", secondaryShift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Kitchen & Parking" },
+            { name: "Tijomon George", parish: "St.Micheal", phone: "07824045695", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
+            { name: "Shibu K Joseph", parish: "St.Mary", phone: "07585355038", duty: "Food Preparation", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Kitchen Team" },
 
             // Food Service & Sales
-            { name: "Shaji Sebastian", parish: "Lourdes Matha", phone: "07766873953", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Albin Shibu", parish: "St.Theresa", phone: "07423241394", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Linta Joseph", parish: "St.Patric", phone: "07884078293", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Molly Roy", parish: "Devine Mercy", phone: "07817784384", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Judges Support Team" },
-            { name: "Manuel", parish: "Lourdes Matha", phone: "07471804154", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Food Counter" },
-            { name: "Ligi Thomas", parish: "St.Alphonsa", phone: "07515635457", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Joseph Sunny", parish: "Lourdes Matha", phone: "07988111515", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Siby Vincent", parish: "Lourdes Matha", phone: "07454746432", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Shinu Jackson", parish: "St.Antony's", phone: "07577738490", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Food Sale Lead" },
-            { name: "Manoj", parish: "St.Antony's", phone: "07481183830", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "George Tharakan", parish: "Devine Mercy", phone: "07811197278", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Shiny Sibi", parish: "St.Xavier", phone: "07402793726", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Mathew Kurian", parish: "St.Antony's", phone: "07737963892", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Mathews Manuel", parish: "Lourdes Matha", phone: "07492572732", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Edwin Sebastian", parish: "Lourdes Matha", phone: "07305827490", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Tajmon Maliyilchira Kuriakose", parish: "St.Jude", phone: "07768621570", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Parking & Food" },
-            { name: "Colins Jacob", parish: "St.Joseph", phone: "07385164774", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Mary Thomas", parish: "St.Alphonsa", phone: "0789446820", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Harry Arikkat", parish: "St.Vincent", phone: "07505146260", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Subject to child timing" },
-            { name: "Sebastian Lonappan", parish: "Lourdes Matha", phone: "07809294312", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "George Nikolovoas", parish: "St.Jude", phone: "07899314358", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Parking & Service" },
-            { name: "Noychen Augustine", parish: "St.Mary", phone: "07886894388", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Jose Sebastian", parish: "St.Theresa", phone: "07721933195", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Mahesh M Babu", parish: "St.Theresa", phone: "07818993252", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Sanjoy Thomas", parish: "St.Jude", phone: "07823947630", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Parking & Food" },
-            { name: "Sheby", parish: "St.Xavier", phone: "07393900287", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Lissy Paul", parish: "Lourdes Matha", phone: "07951858312", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Jessica Vadhyanath", parish: "St.Alphonsa", phone: "07949407736", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Christy Francis", parish: "St.Joseph", phone: "+91 9538366840", duty: "Food Service", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
-            { name: "Santhosh Kachappilly", parish: "Lourdes Matha", phone: "07747248525", duty: "Food Service", shift: "Sat from 11:00 AM", attendance: "Pending", coupon: "Pending", notes: "From 11 AM" },
+            { name: "Shaji Sebastian", parish: "Lourdes Matha", phone: "07766873953", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Albin Shibu", parish: "St.Theresa", phone: "07423241394", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Linta Joseph", parish: "St.Patric", phone: "07884078293", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Molly Roy", parish: "Devine Mercy", phone: "07817784384", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Judges Support Team" },
+            { name: "Manuel", parish: "Lourdes Matha", phone: "07471804154", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Food Counter" },
+            { name: "Ligi Thomas", parish: "St.Alphonsa", phone: "07515635457", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Joseph Sunny", parish: "Lourdes Matha", phone: "07988111515", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Siby Vincent", parish: "Lourdes Matha", phone: "07454746432", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Shinu Jackson", parish: "St.Antony's", phone: "07577738490", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Food Sale Lead" },
+            { name: "Manoj", parish: "St.Antony's", phone: "07481183830", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "George Tharakan", parish: "Devine Mercy", phone: "07811197278", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Shiny Sibi", parish: "St.Xavier", phone: "07402793726", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Mathew Kurian", parish: "St.Antony's", phone: "07737963892", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Mathews Manuel", parish: "Lourdes Matha", phone: "07492572732", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Edwin Sebastian", parish: "Lourdes Matha", phone: "07305827490", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Tajmon Maliyilchira Kuriakose", parish: "St.Jude", phone: "07768621570", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "Venue Re-arrangement / Pack-up", secondaryShift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Parking & Food" },
+            { name: "Colins Jacob", parish: "St.Joseph", phone: "07385164774", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Mary Thomas", parish: "St.Alphonsa", phone: "0789446820", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Harry Arikkat", parish: "St.Vincent", phone: "07505146260", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Subject to child timing" },
+            { name: "Sebastian Lonappan", parish: "Lourdes Matha", phone: "07809294312", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "George Nikolovoas", parish: "St.Jude", phone: "07899314358", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Parking & Service" },
+            { name: "Noychen Augustine", parish: "St.Mary", phone: "07886894388", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Jose Sebastian", parish: "St.Theresa", phone: "07721933195", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Mahesh M Babu", parish: "St.Theresa", phone: "07818993252", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Sanjoy Thomas", parish: "St.Jude", phone: "07823947630", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "Venue Re-arrangement / Pack-up", secondaryShift: "Sat Evening", attendance: "Pending", coupon: "Pending", notes: "Parking & Food" },
+            { name: "Sheby", parish: "St.Xavier", phone: "07393900287", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Lissy Paul", parish: "Lourdes Matha", phone: "07951858312", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Jessica Vadhyanath", parish: "St.Alphonsa", phone: "07949407736", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Christy Francis", parish: "St.Joseph", phone: "+91 9538366840", duty: "Food Service", shift: "Sat Full Day", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "Counter Service" },
+            { name: "Santhosh Kachappilly", parish: "Lourdes Matha", phone: "07747248525", duty: "Food Service", shift: "Sat from 11:00 AM", secondaryDuty: "", secondaryShift: "", attendance: "Pending", coupon: "Pending", notes: "From 11 AM" },
 
             // Cleaning Supervision
-            { name: "Siju", parish: "St.Thomas", phone: "07961815719", duty: "Cleaning Supervision", shift: "Sat Full Day", attendance: "Pending", coupon: "Pending", notes: "Early morning breakfast help" }
+            { name: "Siju", parish: "St.Thomas", phone: "07961815719", duty: "Cleaning Supervision", shift: "Sat Full Day", secondaryDuty: "Food Preparation", secondaryShift: "Sat Early Morning", attendance: "Pending", coupon: "Pending", notes: "Early morning breakfast help" }
         ];
 
         // Application State
         let volunteers = [];
         let isAdmin = false;
         let activeTab = 'dashboard';
+        let currentTeamTab = 'PACKUP';
 
         // Initialize App
         window.onload = function() {
             // Load saved data or fallback to pre-populated
-            const saved = localStorage.getItem('kalotsavam_volunteers_2026');
+            const saved = localStorage.getItem('kalotsavam_volunteers_2026_v2');
             if (saved) {
                 try { volunteers = JSON.parse(saved); } catch(e) { volunteers = initialVolunteers; }
             } else {
@@ -653,7 +693,7 @@
         };
 
         function saveToStorage() {
-            localStorage.setItem('kalotsavam_volunteers_2026', JSON.stringify(volunteers));
+            localStorage.setItem('kalotsavam_volunteers_2026_v2', JSON.stringify(volunteers));
         }
 
         // Admin Toggle
@@ -668,6 +708,8 @@
             });
 
             renderRosterTable();
+            renderCheckinList();
+            renderTeamCategory(currentTeamTab);
         }
 
         // Tab Navigation
@@ -690,8 +732,15 @@
             if (tabId === 'dashboard') renderDashboard();
             if (tabId === 'roster') renderRosterTable();
             if (tabId === 'checkin') renderCheckinList();
+            if (tabId === 'teams') renderTeamCategory(currentTeamTab);
             
             lucide.createIcons();
+        }
+
+        // Helper: Check if volunteer matches a duty (primary or secondary)
+        function volunteerMatchesDuty(v, dutyCategory) {
+            if (!dutyCategory || dutyCategory === 'ALL') return true;
+            return v.duty === dutyCategory || (v.secondaryDuty && v.secondaryDuty === dutyCategory);
         }
 
         // ================= DASHBOARD RENDERER =================
@@ -699,14 +748,14 @@
             const total = volunteers.length;
             const checkedIn = volunteers.filter(v => v.attendance === 'Present').length;
             const coupons = volunteers.filter(v => v.coupon === 'Issued' || v.coupon === 'Claimed').length;
-            const packup = volunteers.filter(v => v.duty === 'Venue Re-arrangement / Pack-up').length;
+            const multiDutyCount = volunteers.filter(v => v.secondaryDuty && v.secondaryDuty.trim() !== '').length;
 
             document.getElementById('statTotal').textContent = total;
             document.getElementById('statCheckedIn').textContent = checkedIn;
             document.getElementById('statCheckedInPct').textContent = `${Math.round((checkedIn/total)*100 || 0)}% Attendance`;
             document.getElementById('statCoupons').textContent = coupons;
             document.getElementById('statCouponsPct').textContent = `${coupons} Issued/Redeemed`;
-            document.getElementById('statPackup').textContent = packup;
+            document.getElementById('statMultiDuty').textContent = multiDutyCount;
             document.getElementById('pendingBadge').textContent = total - checkedIn;
 
             // Duty area breakdown
@@ -722,21 +771,26 @@
             grid.innerHTML = '';
 
             Object.keys(duties).forEach(dutyKey => {
-                const count = volunteers.filter(v => v.duty === dutyKey).length;
+                const primaryCount = volunteers.filter(v => v.duty === dutyKey).length;
+                const secondaryCount = volunteers.filter(v => v.secondaryDuty === dutyKey).length;
+                const totalAssigned = primaryCount + secondaryCount;
                 const meta = duties[dutyKey];
                 
                 grid.innerHTML += `
                     <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
                         <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-lg bg-${meta.color}-100 text-${meta.color}-700 flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-lg bg-${meta.color}-100 text-${meta.color}-700 flex items-center justify-center font-bold shrink-0">
                                 <i data-lucide="${meta.icon}" class="w-5 h-5"></i>
                             </div>
                             <div>
                                 <h4 class="font-bold text-slate-800 text-xs sm:text-sm">${meta.name}</h4>
-                                <p class="text-[11px] text-slate-500">${Math.round((count/total)*100)}% of total team</p>
+                                <p class="text-[11px] text-slate-500">${primaryCount} Primary ${secondaryCount > 0 ? `+ ${secondaryCount} Secondary` : ''}</p>
                             </div>
                         </div>
-                        <span class="text-xl font-extrabold text-slate-800">${count}</span>
+                        <div class="text-right">
+                            <span class="text-xl font-extrabold text-slate-800">${totalAssigned}</span>
+                            <span class="block text-[10px] text-slate-400">Total</span>
+                        </div>
                     </div>
                 `;
             });
@@ -764,8 +818,8 @@
                 const matchesSearch = v.name.toLowerCase().includes(search) || 
                                       v.phone.includes(search) || 
                                       v.parish.toLowerCase().includes(search) ||
-                                      v.notes.toLowerCase().includes(search);
-                const matchesDuty = (duty === 'ALL' || v.duty === duty);
+                                      (v.notes && v.notes.toLowerCase().includes(search));
+                const matchesDuty = (duty === 'ALL' || volunteerMatchesDuty(v, duty));
                 const matchesParish = (parish === 'ALL' || v.parish === parish);
                 const matchesAttendance = (attendance === 'ALL' || v.attendance === attendance);
 
@@ -777,7 +831,7 @@
             const tbody = document.getElementById('rosterTableBody');
             tbody.innerHTML = '';
 
-            filtered.forEach((v, idx) => {
+            filtered.forEach((v) => {
                 const realIndex = volunteers.indexOf(v);
                 
                 const attColor = v.attendance === 'Present' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
@@ -785,6 +839,8 @@
 
                 const coupColor = v.coupon === 'Claimed' ? 'bg-purple-100 text-purple-800 border-purple-300' :
                                   v.coupon === 'Issued' ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-slate-100 text-slate-600 border-slate-300';
+
+                const hasSecondary = v.secondaryDuty && v.secondaryDuty.trim() !== '';
 
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50/80 transition">
@@ -798,8 +854,22 @@
                             </span>
                         </td>
                         <td class="p-3.5">
-                            <div class="font-semibold text-slate-800">${v.duty}</div>
-                            <div class="text-[11px] text-maroon-700 font-medium">${v.shift}</div>
+                            <div class="space-y-1">
+                                <!-- Primary Duty -->
+                                <div>
+                                    <span class="font-semibold text-slate-800 text-xs">${v.duty}</span>
+                                    <span class="text-[11px] text-maroon-700 font-medium ml-1">(${v.shift || 'As assigned'})</span>
+                                </div>
+
+                                <!-- Secondary Duty -->
+                                ${hasSecondary ? `
+                                    <div class="flex items-center gap-1.5 pt-0.5">
+                                        <span class="px-1.5 py-0.5 bg-amber-100 text-amber-800 border border-amber-300 rounded text-[10px] font-bold uppercase tracking-wider">2nd Duty</span>
+                                        <span class="font-medium text-slate-700 text-xs">${v.secondaryDuty}</span>
+                                        <span class="text-[10px] text-amber-700 font-medium">(${v.secondaryShift || 'Secondary'})</span>
+                                    </div>
+                                ` : ''}
+                            </div>
                         </td>
                         <td class="p-3.5 text-center">
                             <button onclick="toggleAttendance(${realIndex})" class="px-2.5 py-1 rounded-lg text-[11px] font-bold border ${attColor} transition">
@@ -816,6 +886,9 @@
                         </td>
                         <td class="p-3.5 text-right admin-only ${isAdmin ? '' : 'hidden'}">
                             <div class="flex items-center justify-end space-x-1">
+                                <button onclick="quickAddSecondaryDuty(${realIndex})" title="Add/Manage Secondary Duty" class="p-1.5 text-amber-700 hover:bg-amber-50 rounded-lg border border-amber-200 flex items-center gap-1 text-[11px] font-semibold">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Duty
+                                </button>
                                 <button onclick="openEditModal(${realIndex})" class="p-1.5 text-slate-500 hover:text-maroon-700 hover:bg-slate-100 rounded-lg">
                                     <i data-lucide="edit-3" class="w-4 h-4"></i>
                                 </button>
@@ -859,6 +932,15 @@
             renderCheckinList();
         }
 
+        function quickAddSecondaryDuty(index) {
+            openEditModal(index);
+            // Auto expand secondary duty fields
+            const fields = document.getElementById('secondaryDutyFields');
+            if (fields && fields.classList.contains('hidden')) {
+                toggleSecondaryDutyFields();
+            }
+        }
+
         // ================= CHECK-IN PORTAL (MOBILE SCANNER) =================
         function renderCheckinList() {
             const query = (document.getElementById('checkinSearch')?.value || '').toLowerCase();
@@ -877,6 +959,7 @@
                 const realIdx = volunteers.indexOf(v);
                 const isPresent = v.attendance === 'Present';
                 const hasCoupon = v.coupon === 'Issued' || v.coupon === 'Claimed';
+                const hasSecondary = v.secondaryDuty && v.secondaryDuty.trim() !== '';
 
                 grid.innerHTML += `
                     <div class="bg-white p-4 rounded-2xl border ${isPresent ? 'border-emerald-300 bg-emerald-50/30' : 'border-slate-200'} shadow-sm space-y-3">
@@ -885,7 +968,15 @@
                                 <h4 class="font-bold text-slate-900 text-sm">${v.name}</h4>
                                 <p class="text-xs text-slate-500">${v.parish} • <span class="font-mono">${v.phone}</span></p>
                             </div>
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">${v.duty.split(' ')[0]}</span>
+                            <div class="flex flex-col items-end gap-1">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">${v.duty.split(' ')[0]}</span>
+                                ${hasSecondary ? `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200">+ ${v.secondaryDuty.split(' ')[0]}</span>` : ''}
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg space-y-0.5">
+                            <p><strong class="text-slate-800">Primary:</strong> ${v.duty} (${v.shift || 'Assigned'})</p>
+                            ${hasSecondary ? `<p class="text-amber-900"><strong class="text-amber-800">Secondary:</strong> ${v.secondaryDuty} (${v.secondaryShift || 'Assigned'})</p>` : ''}
                         </div>
 
                         <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100">
@@ -908,35 +999,54 @@
 
         // ================= DUTY TEAMS RENDERER =================
         function renderTeamCategory(type) {
+            currentTeamTab = type;
             const container = document.getElementById('teamViewContainer');
+            if (!container) return;
             container.innerHTML = '';
 
-            let list = [];
+            // Update Tab Active Styling
+            document.querySelectorAll('.team-tab').forEach(btn => {
+                btn.classList.remove('bg-maroon-700', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-700');
+            });
+            const activeBtn = document.getElementById(`teamTab-${type}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-slate-700');
+                activeBtn.classList.add('bg-maroon-700', 'text-white');
+            }
+
+            let categoryFilter = "";
             let title = "";
             let description = "";
 
             if (type === 'PACKUP') {
                 title = "Venue Re-arrangement & Pack-up Squad (Sat 31 Oct from 7:00 PM)";
-                description = "Priority expanded team consisting of 14 direct voters + 16 flexible volunteers.";
-                list = volunteers.filter(v => v.duty === 'Venue Re-arrangement / Pack-up');
+                description = "Priority team for Saturday evening venue clear-up. Includes primary and additional duty assignees.";
+                categoryFilter = "Venue Re-arrangement / Pack-up";
             } else if (type === 'SETUP') {
                 title = "Venue Arrangement Team (Friday 30 Oct from 5:00 PM)";
                 description = "Responsible for stage, hall setup, sound & seating arrangement.";
-                list = volunteers.filter(v => v.duty === 'Venue Arrangement');
+                categoryFilter = "Venue Arrangement";
             } else if (type === 'FOOD_SERVICE') {
                 title = "Food Service & Sales / Cash Desk";
                 description = "Serving meals, handling food coupon sales and cash desk counters.";
-                list = volunteers.filter(v => v.duty === 'Food Service');
+                categoryFilter = "Food Service";
             } else if (type === 'FOOD_PREP') {
                 title = "Food Preparation Team";
                 description = "Kitchen prep on Friday evening and Saturday full day cooking/snack distribution.";
-                list = volunteers.filter(v => v.duty === 'Food Preparation');
+                categoryFilter = "Food Preparation";
+            } else if (type === 'CLEANING') {
+                title = "Cleaning Supervision & Maintenance";
+                description = "Overseeing venue hygiene, bin management, and hall clearance.";
+                categoryFilter = "Cleaning Supervision";
             } else if (type === 'SPECIAL') {
                 title = "Special Sub-Teams & Department Leads";
                 description = "Dedicated operational teams assigned across critical venue areas.";
                 renderSpecialTeamsView();
                 return;
             }
+
+            const list = volunteers.filter(v => volunteerMatchesDuty(v, categoryFilter));
 
             let html = `
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm mb-4">
@@ -947,14 +1057,21 @@
             `;
 
             list.forEach((v, idx) => {
+                const isSecondary = v.secondaryDuty === categoryFilter;
+                const shiftText = isSecondary ? (v.secondaryShift || 'Secondary Duty') : (v.shift || 'Primary Duty');
+
                 html += `
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-start space-x-3">
-                        <div class="w-7 h-7 rounded-full bg-maroon-100 text-maroon-800 flex items-center justify-center font-bold text-xs shrink-0">
+                    <div class="bg-white p-4 rounded-xl border ${isSecondary ? 'border-amber-200 bg-amber-50/30' : 'border-slate-200'} flex items-start space-x-3">
+                        <div class="w-7 h-7 rounded-full ${isSecondary ? 'bg-amber-200 text-amber-900' : 'bg-maroon-100 text-maroon-800'} flex items-center justify-center font-bold text-xs shrink-0">
                             ${idx + 1}
                         </div>
-                        <div>
-                            <h4 class="font-bold text-slate-900 text-xs sm:text-sm">${v.name}</h4>
+                        <div class="flex-grow">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-bold text-slate-900 text-xs sm:text-sm">${v.name}</h4>
+                                ${isSecondary ? '<span class="text-[9px] font-bold px-1.5 py-0.5 bg-amber-100 text-amber-800 border border-amber-300 rounded">2nd Duty</span>' : ''}
+                            </div>
                             <p class="text-[11px] text-slate-500">${v.parish} • <span class="font-mono">${v.phone}</span></p>
+                            <p class="text-[11px] text-maroon-700 font-semibold mt-0.5">${shiftText}</p>
                             <span class="inline-block mt-1 px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] rounded font-medium">${v.notes || 'General Support'}</span>
                         </div>
                     </div>
@@ -1025,10 +1142,29 @@
         }
 
         // ================= MODAL & EDIT LOGIC =================
+        function toggleSecondaryDutyFields() {
+            const fields = document.getElementById('secondaryDutyFields');
+            const btn = document.getElementById('toggleSecondaryBtn');
+            
+            if (fields.classList.contains('hidden')) {
+                fields.classList.remove('hidden');
+                btn.textContent = '– Remove Secondary Duty';
+            } else {
+                fields.classList.add('hidden');
+                document.getElementById('modalSecondaryShift').value = '';
+                btn.textContent = '+ Enable Secondary Duty';
+            }
+        }
+
         function openAddModal() {
             document.getElementById('modalIndex').value = -1;
             document.getElementById('modalTitle').textContent = 'Add New Volunteer';
             document.getElementById('volunteerForm').reset();
+            
+            // Hide secondary duty by default
+            document.getElementById('secondaryDutyFields').classList.add('hidden');
+            document.getElementById('toggleSecondaryBtn').textContent = '+ Enable Secondary Duty';
+
             document.getElementById('volunteerModal').classList.remove('hidden');
         }
 
@@ -1040,7 +1176,24 @@
             document.getElementById('modalParish').value = v.parish;
             document.getElementById('modalPhone').value = v.phone;
             document.getElementById('modalDuty').value = v.duty;
-            document.getElementById('modalShift').value = v.shift;
+            document.getElementById('modalShift').value = v.shift || '';
+            
+            // Handle secondary duty fields
+            const hasSecondary = v.secondaryDuty && v.secondaryDuty.trim() !== '';
+            document.getElementById('modalSecondaryDuty').value = v.secondaryDuty || 'Venue Re-arrangement / Pack-up';
+            document.getElementById('modalSecondaryShift').value = v.secondaryShift || '';
+
+            const secondaryFields = document.getElementById('secondaryDutyFields');
+            const toggleBtn = document.getElementById('toggleSecondaryBtn');
+
+            if (hasSecondary) {
+                secondaryFields.classList.remove('hidden');
+                toggleBtn.textContent = '– Remove Secondary Duty';
+            } else {
+                secondaryFields.classList.add('hidden');
+                toggleBtn.textContent = '+ Enable Secondary Duty';
+            }
+
             document.getElementById('modalAttendance').value = v.attendance;
             document.getElementById('modalCoupon').value = v.coupon;
             document.getElementById('modalNotes').value = v.notes || '';
@@ -1055,6 +1208,7 @@
         function saveVolunteer(e) {
             e.preventDefault();
             const idx = parseInt(document.getElementById('modalIndex').value);
+            const secondaryVisible = !document.getElementById('secondaryDutyFields').classList.contains('hidden');
 
             const data = {
                 name: document.getElementById('modalName').value,
@@ -1062,6 +1216,8 @@
                 phone: document.getElementById('modalPhone').value,
                 duty: document.getElementById('modalDuty').value,
                 shift: document.getElementById('modalShift').value,
+                secondaryDuty: secondaryVisible ? document.getElementById('modalSecondaryDuty').value : '',
+                secondaryShift: secondaryVisible ? document.getElementById('modalSecondaryShift').value : '',
                 attendance: document.getElementById('modalAttendance').value,
                 coupon: document.getElementById('modalCoupon').value,
                 notes: document.getElementById('modalNotes').value
@@ -1079,6 +1235,7 @@
             renderDashboard();
             renderRosterTable();
             renderCheckinList();
+            renderTeamCategory(currentTeamTab);
         }
 
         function deleteVolunteer(index) {
@@ -1089,14 +1246,15 @@
                 renderDashboard();
                 renderRosterTable();
                 renderCheckinList();
+                renderTeamCategory(currentTeamTab);
             }
         }
 
         // ================= EXPORT CSV =================
         function exportToCSV() {
-            let csv = 'Name,Parish,Phone,Assigned Duty,Shift,Attendance,Food Coupon,Notes\n';
+            let csv = 'Name,Parish,Phone,Primary Duty,Primary Shift,Secondary Duty,Secondary Shift,Attendance,Food Coupon,Notes\n';
             volunteers.forEach(v => {
-                csv += `"${v.name}","${v.parish}","${v.phone}","${v.duty}","${v.shift}","${v.attendance}","${v.coupon}","${v.notes || ''}"\n`;
+                csv += `"${v.name}","${v.parish}","${v.phone}","${v.duty}","${v.shift || ''}","${v.secondaryDuty || ''}","${v.secondaryShift || ''}","${v.attendance}","${v.coupon}","${v.notes || ''}"\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv' });
