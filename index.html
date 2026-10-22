@@ -46,12 +46,12 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-    <!-- HEADER WITH EMBEDDED LOGOS -->
+    <!-- HEADER WITH LOGOS -->
     <header class="bg-gradient-to-r from-brand-900 via-brand-700 to-slate-900 text-white shadow-xl sticky top-0 z-30 border-b border-gold-500/40">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <div class="flex items-center space-x-2 sm:space-x-4">
-                    <!-- CSMEGB Bible Kalotsavam Emblem -->
+                    <!-- IMG_0159.JPG -->
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-xl p-1 shadow-lg flex items-center justify-center border-2 border-gold-400 shrink-0">
                         <svg viewBox="0 0 100 100" class="w-full h-full">
                             <path d="M50 50 L10 10 M50 50 L30 5 M50 50 L50 2 M50 50 L70 5 M50 50 L90 10 M50 50 L98 30 M50 50 L98 50 M50 50 L98 70" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
@@ -64,7 +64,7 @@
                         </svg>
                     </div>
 
-                    <!-- Eparchy Coat of Arms -->
+                    <!-- IMG_0160.JPG -->
                     <div class="hidden md:flex w-11 h-11 bg-amber-50/90 rounded-xl p-1 shadow border border-gold-500/50 items-center justify-center shrink-0">
                         <svg viewBox="0 0 100 120" class="w-full h-full">
                             <path d="M10 20 L50 5 L90 20 L90 75 C90 100 50 115 50 115 C50 115 10 100 10 75 Z" fill="#fef3c7" stroke="#ca8a04" stroke-width="3"/>
@@ -85,7 +85,7 @@
                     </div>
                 </div>
 
-                <!-- Admin Status / Lock Button -->
+                <!-- Admin Lock/Unlock Button -->
                 <div class="flex items-center space-x-2">
                     <div id="adminBadge" class="flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-900/80 text-amber-300 border border-amber-500/30">
                         <i class="fa-solid fa-lock text-xs mr-1.5 text-amber-400"></i> <span class="hidden sm:inline">Read-Only View</span>
@@ -114,7 +114,7 @@
                             </span>
                             <span class="text-xs text-gold-300 font-semibold"><i class="fa-solid fa-location-dot text-rose-400 mr-1"></i> Bristol Host Committee</span>
                         </div>
-                        <h2 class="text-xl sm:text-2xl font-black text-white">114 Volunteer Roster & Committee Duty Manager</h2>
+                        <h2 class="text-xl sm:text-2xl font-black text-white">114 Volunteer Roster & Team Operations Portal</h2>
                         <p class="text-rose-100 text-xs sm:text-sm mt-1 flex flex-wrap gap-x-4 gap-y-1">
                             <span><i class="fa-regular fa-calendar-check text-gold-400 mr-1"></i> Sat 31st October 2026</span>
                             <span><i class="fa-solid fa-school text-gold-400 mr-1"></i> St. Bernadette Catholic Secondary School</span>
@@ -191,7 +191,7 @@
             </div>
         </div>
 
-        <!-- NAVIGATION TABS -->
+        <!-- TABS NAV -->
         <div class="border-b border-slate-200 bg-white rounded-xl shadow-sm px-2 pt-2">
             <nav class="flex space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar pb-2">
                 <button onclick="switchTab('all')" id="tab-all" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg whitespace-nowrap transition bg-brand-50 text-brand-700 border border-brand-200/60">
@@ -262,7 +262,7 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                                <th class="p-3.5">Volunteer Details</th>
+                                <th class="p-3.5">Volunteer Details (Click to view profile)</th>
                                 <th class="p-3.5">Parish / Unit</th>
                                 <th class="p-3.5">Assigned Duties & Leadership</th>
                                 <th class="p-3.5">Stage / Food Items</th>
@@ -288,7 +288,7 @@
             <div class="bg-blue-50/70 border border-blue-200 p-4 rounded-xl text-xs sm:text-sm text-blue-900 flex justify-between items-center">
                 <div>
                     <p class="font-bold"><i class="fa-solid fa-circle-info mr-1.5 text-blue-600"></i> Stage & Green Room Management (Stage 1 to 12 & Green Room 1 to 12)</p>
-                    <p class="text-blue-700 text-xs mt-0.5">Admin can assign dedicated volunteers and designate Stage Leaders / Green Room Leaders for each zone.</p>
+                    <p class="text-blue-700 text-xs mt-0.5">Click on any volunteer's name to view their profile, notes, and team members.</p>
                 </div>
             </div>
 
@@ -312,7 +312,7 @@
             <div class="bg-amber-50/80 border border-amber-200 p-4 rounded-xl text-xs sm:text-sm text-amber-900 flex justify-between items-center">
                 <div>
                     <p class="font-bold"><i class="fa-solid fa-utensils mr-1.5 text-amber-600"></i> Food Preparation Item Breakdowns</p>
-                    <p class="text-amber-800 text-xs mt-0.5">Admin can assign volunteers to specific food preparation items and assign team leads.</p>
+                    <p class="text-amber-800 text-xs mt-0.5">Click on any volunteer's name to view their team roster and submit availability notes.</p>
                 </div>
             </div>
 
@@ -374,6 +374,51 @@
         <p class="mt-1 text-slate-500">Host Region: Bristol-Cardiff Operations Team</p>
     </footer>
 
+    <!-- MODAL: VOLUNTEER PROFILE & PUBLIC TEAM VIEW -->
+    <div id="userModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h3 id="uModalName" class="text-xl font-black text-slate-900"></h3>
+                        <span id="uModalLeaderTag" class="hidden bg-amber-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded-full"></span>
+                    </div>
+                    <p id="uModalParish" class="text-xs text-slate-500 font-bold mt-0.5"></p>
+                </div>
+                <button onclick="closeUserModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <div class="py-4 space-y-4">
+                <!-- Status Bar -->
+                <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                    <div>
+                        <span class="text-slate-500 block font-semibold">Attendance</span>
+                        <span id="uModalAttendance" class="font-extrabold text-sm"></span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block font-semibold">Food Coupon</span>
+                        <span id="uModalCoupon" class="font-extrabold text-sm"></span>
+                    </div>
+                </div>
+
+                <!-- Assigned Duties & Team View Toggle -->
+                <div class="space-y-2">
+                    <h4 class="text-xs font-black text-slate-500 uppercase tracking-wider">Your Duty Allocations & Teams</h4>
+                    <div id="uModalDuties" class="space-y-2"></div>
+                </div>
+
+                <!-- Add Public Volunteer Comment -->
+                <div class="pt-3 border-t border-slate-100 space-y-2">
+                    <label class="block text-xs font-bold text-slate-700">Add / Update Volunteer Comments or Notes</label>
+                    <textarea id="uModalCommentInput" rows="2" placeholder="e.g. Arriving at 9:30 AM, or willing to help with food packing..." class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                    <button onclick="saveUserComment()" class="w-full py-2 bg-brand-700 hover:bg-brand-800 text-white font-extrabold rounded-lg text-xs transition shadow-sm">
+                        <i class="fa-solid fa-comment-dots mr-1.5"></i> Save Note
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL: ADMIN LOGIN -->
     <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-100">
@@ -400,7 +445,7 @@
         </div>
     </div>
 
-    <!-- MODAL: ADD / EDIT VOLUNTEER & ALLOCATIONS -->
+    <!-- MODAL: ADD / EDIT VOLUNTEER (ADMIN) -->
     <div id="volunteerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[92vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
@@ -440,7 +485,6 @@
                     </div>
                 </div>
 
-                <!-- PRIMARY & SECONDARY DUTIES -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Primary Duty Category</label>
@@ -475,7 +519,6 @@
                     </div>
                 </div>
 
-                <!-- STAGES CHECKBOX SELECTION (1 to 12) -->
                 <div class="bg-blue-50/60 p-3.5 rounded-xl border border-blue-200 space-y-2">
                     <label class="block text-xs font-black text-blue-900 flex items-center gap-1.5">
                         <i class="fa-solid fa-masks-theater text-blue-600"></i> Assign Competition Stages (Stages 1 - 12)
@@ -483,7 +526,6 @@
                     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 text-xs" id="stageCheckboxes"></div>
                 </div>
 
-                <!-- GREEN ROOMS CHECKBOX SELECTION (1 to 12) -->
                 <div class="bg-purple-50/60 p-3.5 rounded-xl border border-purple-200 space-y-2">
                     <label class="block text-xs font-black text-purple-900 flex items-center gap-1.5">
                         <i class="fa-solid fa-door-closed text-purple-600"></i> Assign Green Rooms (Green Rooms 1 - 12)
@@ -491,7 +533,6 @@
                     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 text-xs" id="greenRoomCheckboxes"></div>
                 </div>
 
-                <!-- FOOD PREPARATION CHECKBOXES -->
                 <div class="bg-amber-50/60 p-3.5 rounded-xl border border-amber-200 space-y-2">
                     <label class="block text-xs font-black text-amber-900 flex items-center gap-1.5">
                         <i class="fa-solid fa-utensils text-amber-600"></i> Food Preparation & Sales Items
@@ -535,7 +576,7 @@
         </div>
     </div>
 
-    <!-- APPLICATION SCRIPT & DATA -->
+    <!-- SCRIPT & FULL DATASET -->
     <script>
         const FOOD_PREP_ITEMS = [
             "Kappa Biriyani & Chicken Curry",
@@ -671,6 +712,7 @@
         let volunteers = [];
         let isAdmin = false;
         let currentTab = 'all';
+        let activeUserId = null;
 
         document.addEventListener("DOMContentLoaded", () => {
             loadVolunteers();
@@ -679,26 +721,22 @@
         });
 
         function loadVolunteers() {
-            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v3");
+            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v4");
             if (saved) {
-                try {
-                    volunteers = JSON.parse(saved);
-                } catch(e) {
-                    volunteers = [...DEFAULT_VOLUNTEERS];
-                }
+                try { volunteers = JSON.parse(saved); } catch(e) { volunteers = [...DEFAULT_VOLUNTEERS]; }
             } else {
                 volunteers = [...DEFAULT_VOLUNTEERS];
             }
         }
 
         function saveVolunteers() {
-            localStorage.setItem("kalotsavam_volunteers_2026_v3", JSON.stringify(volunteers));
+            localStorage.setItem("kalotsavam_volunteers_2026_v4", JSON.stringify(volunteers));
             renderApp();
         }
 
         function resetToDefaults() {
-            if (confirm("Reset all volunteer data and allocations back to the document defaults?")) {
-                localStorage.removeItem("kalotsavam_volunteers_2026_v3");
+            if (confirm("Reset all volunteer data and allocations back to original defaults?")) {
+                localStorage.removeItem("kalotsavam_volunteers_2026_v4");
                 volunteers = [...DEFAULT_VOLUNTEERS];
                 renderApp();
             }
@@ -865,7 +903,9 @@
                 return `
                     <tr class="hover:bg-slate-50/80 transition">
                         <td class="p-3.5">
-                            <div class="font-extrabold text-slate-900 flex items-center gap-1.5">${v.name}</div>
+                            <button onclick="openUserModal(${v.id})" class="font-extrabold text-brand-700 hover:text-brand-900 hover:underline text-left flex items-center gap-1.5">
+                                ${v.name} <i class="fa-solid fa-circle-info text-[10px] text-slate-400"></i>
+                            </button>
                             <div class="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
                                 <span><i class="fa-solid fa-phone text-[10px] text-slate-400"></i> ${v.phone || 'N/A'}</span>
                             </div>
@@ -931,7 +971,7 @@
                         <div class="space-y-1.5 my-1 flex-1">
                             ${leader ? `<div class="bg-amber-50 border border-amber-200 p-1.5 rounded-lg text-xs flex items-center gap-1.5"><i class="fa-solid fa-crown text-amber-600"></i> <div><span class="font-extrabold text-slate-900">${leader.name}</span> <span class="text-[10px] text-amber-700 font-bold block">(Stage Leader)</span></div></div>` : ''}
                             <div class="text-xs space-y-1 max-h-28 overflow-y-auto pr-1">
-                                ${assigned.map(v => `<div class="flex justify-between items-center bg-slate-50 p-1.5 rounded border border-slate-100 text-slate-800 font-medium"><span>${v.name}</span> <span class="text-[10px] text-slate-400">${v.parish}</span></div>`).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
+                                ${assigned.map(v => `<div class="flex justify-between items-center bg-slate-50 p-1.5 rounded border border-slate-100 text-slate-800 font-medium"><button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900">${v.name}</button> <span class="text-[10px] text-slate-400">${v.parish}</span></div>`).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
                             </div>
                         </div>
                     </div>
@@ -956,7 +996,7 @@
                         <div class="space-y-1.5 my-1 flex-1">
                             ${leader ? `<div class="bg-amber-50 border border-amber-200 p-1.5 rounded-lg text-xs flex items-center gap-1.5"><i class="fa-solid fa-crown text-amber-600"></i> <div><span class="font-extrabold text-slate-900">${leader.name}</span> <span class="text-[10px] text-amber-700 font-bold block">(Green Room Leader)</span></div></div>` : ''}
                             <div class="text-xs space-y-1 max-h-28 overflow-y-auto pr-1">
-                                ${assigned.map(v => `<div class="flex justify-between items-center bg-slate-50 p-1.5 rounded border border-slate-100 text-slate-800 font-medium"><span>${v.name}</span> <span class="text-[10px] text-slate-400">${v.parish}</span></div>`).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
+                                ${assigned.map(v => `<div class="flex justify-between items-center bg-slate-50 p-1.5 rounded border border-slate-100 text-slate-800 font-medium"><button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900">${v.name}</button> <span class="text-[10px] text-slate-400">${v.parish}</span></div>`).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
                             </div>
                         </div>
                     </div>
@@ -983,7 +1023,7 @@
                         <div class="space-y-2 flex-1">
                             ${leader ? `<div class="bg-amber-50 border border-amber-200 p-2 rounded-lg text-xs flex items-center gap-2"><i class="fa-solid fa-crown text-amber-600"></i> <div><span class="font-black text-slate-900">${leader.name}</span> <span class="text-[10px] text-amber-800 font-bold block">(Item / Category Lead)</span></div></div>` : ''}
                             <div class="text-xs space-y-1 max-h-36 overflow-y-auto pr-1">
-                                ${assigned.map(v => `<div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100 text-slate-800 font-medium"><span>${v.name}</span> <span class="text-[10px] text-slate-500 font-semibold">${v.parish}</span></div>`).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers designated yet.</p>'}
+                                ${assigned.map(v => `<div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100 text-slate-800 font-medium"><button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900">${v.name}</button> <span class="text-[10px] text-slate-500 font-semibold">${v.parish}</span></div>`).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers designated yet.</p>'}
                             </div>
                         </div>
                     </div>
@@ -1021,15 +1061,114 @@
                             <span class="text-xs font-black bg-slate-100 text-slate-800 px-2.5 py-0.5 rounded-full">${members.length} Members</span>
                         </div>
                         <div class="space-y-1.5">
-                            ${leaders.map(l => `<div class="bg-amber-50 border border-amber-200 p-2 rounded-lg text-xs flex items-center justify-between"><div class="flex items-center gap-1.5"><i class="fa-solid fa-crown text-amber-600"></i> <span class="font-black text-slate-900">${l.name}</span></div><span class="text-[10px] bg-amber-200 text-amber-900 font-extrabold px-1.5 py-0.5 rounded">${l.leaderRole}</span></div>`).join("")}
+                            ${leaders.map(l => `<div class="bg-amber-50 border border-amber-200 p-2 rounded-lg text-xs flex items-center justify-between"><div class="flex items-center gap-1.5"><i class="fa-solid fa-crown text-amber-600"></i> <button onclick="openUserModal(${l.id})" class="font-black text-slate-900 hover:underline">${l.name}</button></div><span class="text-[10px] bg-amber-200 text-amber-900 font-extrabold px-1.5 py-0.5 rounded">${l.leaderRole}</span></div>`).join("")}
                             <div class="text-xs space-y-1 max-h-48 overflow-y-auto pr-1">
-                                ${members.map(v => `<div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100 text-slate-800 font-medium"><span>${v.name}</span> <span class="text-[10px] text-slate-500 font-semibold">${v.parish}</span></div>`).join("")}
+                                ${members.map(v => `<div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100 text-slate-800 font-medium"><button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900">${v.name}</button> <span class="text-[10px] text-slate-500 font-semibold">${v.parish}</span></div>`).join("")}
                             </div>
                         </div>
                     </div>
                 `;
             });
             container.innerHTML = html;
+        }
+
+        // VOLUNTEER USER PROFILE MODAL & TEAM VIEW
+        function openUserModal(id) {
+            const v = volunteers.find(vol => vol.id === id);
+            if (!v) return;
+            activeUserId = id;
+
+            document.getElementById("uModalName").textContent = v.name;
+            document.getElementById("uModalParish").textContent = `${v.parish} • ${v.phone || 'Phone N/A'}`;
+            
+            const leaderTag = document.getElementById("uModalLeaderTag");
+            if (v.leaderRole) {
+                leaderTag.textContent = v.leaderRole;
+                leaderTag.classList.remove("hidden");
+            } else {
+                leaderTag.classList.add("hidden");
+            }
+
+            document.getElementById("uModalAttendance").innerHTML = v.checkedIn ? `<span class="text-emerald-600"><i class="fa-solid fa-circle-check"></i> Checked In</span>` : `<span class="text-slate-400"><i class="fa-solid fa-circle-dot"></i> Not Checked In</span>`;
+            document.getElementById("uModalCoupon").innerHTML = v.couponClaimed ? `<span class="text-amber-600"><i class="fa-solid fa-ticket"></i> Coupon Issued</span>` : `<span class="text-slate-400"><i class="fa-solid fa-ticket"></i> Pending</span>`;
+
+            // Build Duty List & Team View
+            const dutiesContainer = document.getElementById("uModalDuties");
+            let dHtml = "";
+
+            // Primary Duty Team
+            const primaryTeam = volunteers.filter(m => m.primaryDuty === v.primaryDuty || m.secondaryDuty === v.primaryDuty);
+            dHtml += `
+                <div class="bg-brand-50/60 border border-brand-200 p-3 rounded-xl space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-extrabold text-brand-900 text-xs"><i class="fa-solid fa-briefcase text-brand-700 mr-1"></i> Primary: ${v.primaryDuty}</span>
+                        <button onclick="toggleTeamList('pTeam')" class="text-[11px] bg-brand-700 text-white font-bold px-2 py-0.5 rounded hover:bg-brand-800 transition">View Team (${primaryTeam.length})</button>
+                    </div>
+                    <div id="pTeam" class="hidden pt-2 border-t border-brand-200/60 text-xs space-y-1 max-h-36 overflow-y-auto">
+                        <p class="font-extrabold text-slate-700 text-[11px] mb-1">Co-workers in ${v.primaryDuty}:</p>
+                        ${primaryTeam.map(m => `<div class="flex justify-between items-center bg-white p-1.5 rounded border border-brand-100">${m.leaderRole ? '<i class="fa-solid fa-crown text-amber-500 text-[10px]"></i> ' : ''}<span class="font-bold text-slate-800">${m.name}</span> <span class="text-[10px] text-slate-500">${m.parish}</span></div>`).join("")}
+                    </div>
+                </div>
+            `;
+
+            // Secondary Duty Team
+            if (v.secondaryDuty) {
+                const secTeam = volunteers.filter(m => m.primaryDuty === v.secondaryDuty || m.secondaryDuty === v.secondaryDuty);
+                dHtml += `
+                    <div class="bg-indigo-50/60 border border-indigo-200 p-3 rounded-xl space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-extrabold text-indigo-900 text-xs"><i class="fa-solid fa-plus text-indigo-700 mr-1"></i> Secondary: ${v.secondaryDuty}</span>
+                            <button onclick="toggleTeamList('sTeam')" class="text-[11px] bg-indigo-700 text-white font-bold px-2 py-0.5 rounded hover:bg-indigo-800 transition">View Team (${secTeam.length})</button>
+                        </div>
+                        <div id="sTeam" class="hidden pt-2 border-t border-indigo-200/60 text-xs space-y-1 max-h-36 overflow-y-auto">
+                            <p class="font-extrabold text-slate-700 text-[11px] mb-1">Co-workers in ${v.secondaryDuty}:</p>
+                            ${secTeam.map(m => `<div class="flex justify-between items-center bg-white p-1.5 rounded border border-indigo-100">${m.leaderRole ? '<i class="fa-solid fa-crown text-amber-500 text-[10px]"></i> ' : ''}<span class="font-bold text-slate-800">${m.name}</span> <span class="text-[10px] text-slate-500">${m.parish}</span></div>`).join("")}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Stage Assignments
+            if (v.stages && v.stages.length > 0) {
+                dHtml += `
+                    <div class="bg-blue-50/60 border border-blue-200 p-3 rounded-xl space-y-2">
+                        <span class="font-extrabold text-blue-900 text-xs block"><i class="fa-solid fa-masks-theater text-blue-600 mr-1"></i> Stages: ${v.stages.map(s => `Stage ${s}`).join(", ")}</span>
+                    </div>
+                `;
+            }
+
+            // Food Items
+            if (v.foodItems && v.foodItems.length > 0) {
+                dHtml += `
+                    <div class="bg-amber-50/60 border border-amber-200 p-3 rounded-xl space-y-2">
+                        <span class="font-extrabold text-amber-900 text-xs block"><i class="fa-solid fa-utensils text-amber-600 mr-1"></i> Food Items: ${v.foodItems.join(", ")}</span>
+                    </div>
+                `;
+            }
+
+            dutiesContainer.innerHTML = dHtml;
+            document.getElementById("uModalCommentInput").value = v.notes || "";
+            document.getElementById("userModal").classList.remove("hidden");
+        }
+
+        function toggleTeamList(elementId) {
+            const el = document.getElementById(elementId);
+            if (el) el.classList.toggle("hidden");
+        }
+
+        function closeUserModal() {
+            document.getElementById("userModal").classList.add("hidden");
+            activeUserId = null;
+        }
+
+        function saveUserComment() {
+            if (!activeUserId) return;
+            const v = volunteers.find(vol => vol.id === activeUserId);
+            if (v) {
+                v.notes = document.getElementById("uModalCommentInput").value.trim();
+                saveVolunteers();
+                closeUserModal();
+            }
         }
 
         function toggleAttendance(id) {
