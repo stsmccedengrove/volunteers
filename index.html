@@ -191,9 +191,6 @@
                 <button onclick="switchTab('foodprep')" id="tab-foodprep" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
                     <i class="fa-solid fa-bowl-rice mr-1.5 text-purple-600"></i> Food Prep & Menu
                 </button>
-                <button onclick="switchTab('venue')" id="tab-venue" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
-                    <i class="fa-solid fa-square-parking mr-1.5 text-emerald-600"></i> Venue & Parking Guide
-                </button>
             </nav>
         </div>
 
@@ -326,48 +323,6 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="foodPrepCategoriesGrid"></div>
-        </div>
-
-        <!-- TAB CONTENT 5: VENUE & PARKING -->
-        <div id="content-venue" class="tab-content hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                <div>
-                    <h3 class="text-lg font-extrabold text-slate-900 border-b border-slate-200 pb-2 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-map-location-dot text-brand-700"></i> Key Event Venue & Logistics
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
-                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                            <span class="font-extrabold text-brand-900 block text-base mb-1">Main Event Venue</span>
-                            <p class="text-slate-800 font-bold">St. Bernadette Catholic Secondary School</p>
-                            <p class="text-slate-600">Fossedale Ave, Whitchurch, Bristol BS14 9LS</p>
-                            <div class="mt-3 p-2.5 bg-rose-50 rounded-lg border border-rose-200 text-xs text-brand-800 font-semibold">
-                                <i class="fa-solid fa-bus text-rose-600 mr-1"></i> Coach Alight & Drop-off: <strong>New Fosseway Road</strong>.
-                            </div>
-                        </div>
-
-                        <div class="p-4 bg-amber-50/80 rounded-xl border border-amber-200">
-                            <span class="font-extrabold text-amber-900 block text-base mb-1">Off-Site Volunteer & Delegate Parking</span>
-                            <p class="text-amber-900 font-bold">Church of Jesus Christ of Latter-day Saints</p>
-                            <p class="text-amber-800">721 Wells Road, Bristol BS14 9HU</p>
-                            <div class="mt-3 p-2.5 bg-white/80 rounded-lg border border-amber-300 text-xs text-amber-900 font-semibold">
-                                <i class="fa-solid fa-person-walking text-amber-700 mr-1"></i> Designated volunteer car park with 3-minute walking route.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-lg font-extrabold text-slate-900 border-b border-slate-200 pb-2 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-clipboard-check text-brand-700"></i> Operational Guidelines
-                    </h3>
-                    <ul class="list-disc list-inside space-y-2 text-xs sm:text-sm text-slate-700 font-medium">
-                        <li><strong>Check-in:</strong> Report to the Operations desk upon arrival to pick up your High-Vis badge and sign in.</li>
-                        <li><strong>Food Coupons:</strong> Issued per registered volunteer for full shifts.</li>
-                        <li><strong>Stage Stewards:</strong> Keep competition stages on time according to official schedules.</li>
-                        <li><strong>Swaps & Coverage:</strong> Report to Category Leaders before exchanging duties.</li>
-                    </ul>
-                </div>
-            </div>
         </div>
 
     </main>
@@ -590,7 +545,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT & FULL DATASET FROM EXCEL -->
+    <!-- SCRIPT & FULL DATASET (117 VOLUNTEERS FROM EXCEL) -->
     <script>
         const FOOD_PREP_ITEMS = [
             "Kappa Biriyani & Chicken Curry",
@@ -623,7 +578,7 @@
             "Safeguarding"
         ];
 
-        // Complete dataset loaded directly from CSMEGB_Kalotsavam_Volunteers_2026-2.xlsx
+        // Complete dataset containing all 117 volunteers from CSMEGB_Kalotsavam_Volunteers_2026-2.xlsx
         const DEFAULT_VOLUNTEERS = [
             { id: 1, name: "John Joseph", phone: "7701089837", parish: "St.Sebastian", primaryDuty: "Food Preparation", secondaryDuty: "General Rearrangement", leaderRole: "Food Preparation Leader", stages: [], greenRooms: [], foodItems: ["Kappa Biriyani & Chicken Curry", "Appam & Chicken Stew", "Biriyani"], shift: "Saturday Full Day", notes: "Food Committee Lead", checkedIn: false, couponClaimed: false },
             { id: 2, name: "Shiju Thettayil Vakkachan", phone: "7918393444", parish: "St.Mary", primaryDuty: "Food Preparation", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Biriyani", "Kappa Biriyani & Chicken Curry"], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
@@ -644,7 +599,6 @@
             { id: 17, name: "Jinto Joseph", phone: "7767913488", parish: "St.Theresa", primaryDuty: "Food Preparation", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Snacks (Vada / Bonda / Banana Fry)"], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 18, name: "Xavier Chakku", phone: "7467195775", parish: "Sacred Heart", primaryDuty: "Food Preparation", secondaryDuty: "Food Service", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Biriyani"], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 19, name: "Roy Joseph", phone: "788853279", parish: "St.Patric", primaryDuty: "Food Preparation", secondaryDuty: "", leaderRole: "Food Preparation Leader", stages: [], greenRooms: [], foodItems: ["Coffee / Tea"], shift: "Saturday Full Day", notes: "Tea & Coffee Lead", checkedIn: false, couponClaimed: false },
-            { id: 20, name: "Siju", phone: "7961815719", parish: "St.Thomas", primaryDuty: "Food Preparation", secondaryDuty: "Cleaning Supervision", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Kappa Biriyani & Chicken Curry", "Coffee / Tea"], shift: "Saturday Full Day", notes: "George Chicken Curry Lead", checkedIn: false, couponClaimed: false },
             { id: 21, name: "Robin Varghese", phone: "7436567745", parish: "St.Theresa", primaryDuty: "Food Preparation", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Snacks (Vada / Bonda / Banana Fry)"], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 22, name: "Sebiyachan Poulo", phone: "7975617631", parish: "St.Sebastian", primaryDuty: "Food Preparation", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Kappa Biriyani & Chicken Curry"], shift: "Friday Evening", notes: "", checkedIn: false, couponClaimed: false },
             { id: 23, name: "Gigy John", phone: "7753894576", parish: "St.Sebastian", primaryDuty: "Food Preparation", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Kappa Biriyani & Chicken Curry"], shift: "Friday Evening", notes: "", checkedIn: false, couponClaimed: false },
@@ -660,18 +614,18 @@
             { id: 33, name: "Tijo Antony", phone: "7721949500", parish: "St.Jude", primaryDuty: "Stage Squad", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [1, 2, 11, 12], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 34, name: "Mahesh M Babu", phone: "7818993252", parish: "St.Theresa", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Biriyani"], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 35, name: "Mable Baby", phone: "7423468998", parish: "St.Theresa", primaryDuty: "Food Preparation", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Thattu Dosa + Thakkali Chutney + Sambar"], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
-            { id: 36, name: "Rojis George", phone: "7423138030", parish: "St.Thomas", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [1, 2, 11, 12], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
+            { id: 36, name: "Rojis George", phone: "7423138030", parish: "St.Thomas", primaryDuty: "Cleaning Supervision", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 37, name: "Joshy", phone: "7301355229", parish: "St.Micheal", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [1, 2, 11, 12], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
-            { id: 38, name: "Joel Arikkat", phone: "7414726699", parish: "St.Vincent", primaryDuty: "Stage Squad", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [1, 2], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
+            { id: 38, name: "Joel Arikkat", phone: "7414726699", parish: "St.Vincent", primaryDuty: "Stage Squad", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [1, 2], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Transportation", checkedIn: false, couponClaimed: false },
             { id: 39, name: "Rajumon Kuriakose", phone: "7717665236", parish: "St.Alphonsa", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "Category Leader", stages: [3, 4, 5], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 40, name: "Karol Thomas", phone: "7459317465", parish: "Divine Mercy", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [3, 4, 5], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Family Unit Leader - Divine Mercy", checkedIn: false, couponClaimed: false },
             { id: 41, name: "Beenamol Thomas", phone: "7737506147", parish: "Lourdes Matha", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [3, 4, 5], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 42, name: "Shelton Mathew", phone: "7585067073", parish: "St.Theresa", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [6, 7, 8], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
-            { id: 43, name: "Thomas Mathew", phone: "7878865278", parish: "St.Augustine", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [9, 10], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
+            { id: 43, name: "Thomas Mathew", phone: "7878865278", parish: "St.Augustine", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "Green Room Leader", stages: [9, 10], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 44, name: "Lalamma Thomas", phone: "7757408496", parish: "St.Augustine", primaryDuty: "Stage Squad", secondaryDuty: "Food Service", leaderRole: "", stages: [9, 10], greenRooms: [], foodItems: ["Cash Counter & Sales"], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 45, name: "Bijo", phone: "7880435739", parish: "St.Micheal", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [9, 10], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 46, name: "Joju George", phone: "7450173184", parish: "St.Thomas", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [12], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
-            { id: 47, name: "Neuby Varghese", phone: "7767944813", parish: "St.Vincent", primaryDuty: "Stage Squad", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [12], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Family Unit Leader - St Vincent", checkedIn: false, couponClaimed: false },
+            { id: 47, name: "Neuby Varghese", phone: "7767944813", parish: "St.Vincent", primaryDuty: "Cleaning Supervision", secondaryDuty: "General Rearrangement", leaderRole: "Category Leader", stages: [12], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Family Unit Leader - St Vincent", checkedIn: false, couponClaimed: false },
             { id: 48, name: "Gimy Gracias", phone: "7539081234", parish: "Divine Mercy", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [12], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 49, name: "Tejal Sebastian", phone: "734582038", parish: "St.Xavier", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [12], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 50, name: "Sinson George", phone: "7435743681", parish: "St.Antony's", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", leaderRole: "", stages: [11, 12], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
@@ -680,11 +634,11 @@
             { id: 53, name: "Molly Roy", phone: "7817784384", parish: "Divine Mercy", primaryDuty: "Food Service", secondaryDuty: "Judges Support", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Judges Hospitality Team", checkedIn: false, couponClaimed: false },
             { id: 54, name: "Roy Sebastian", phone: "7862701046", parish: "Divine Mercy", primaryDuty: "General Rearrangement", secondaryDuty: "Judges Support", leaderRole: "Category Leader", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Judges Hospitality Lead", checkedIn: false, couponClaimed: false },
             { id: 55, name: "Shaji Sebastian", phone: "7766873953", parish: "Lourdes Matha", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
-            { id: 56, name: "George Tharakan", phone: "7811197278", parish: "Divine Mercy", primaryDuty: "Food Service", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
+            { id: 56, name: "George Tharakan", phone: "7811197278", parish: "Divine Mercy", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Counter setting and rearrangement", checkedIn: false, couponClaimed: false },
             { id: 57, name: "Sindhu Manuel", phone: "7737812369", parish: "Lourdes Matha", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 58, name: "Joseph Sunny", phone: "7988111515", parish: "Lourdes Matha", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 59, name: "Siby Vincent", phone: "7454746432", parish: "Lourdes Matha", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
-            { id: 60, name: "Mathews Manuel", phone: "7492572732", parish: "Lourdes Matha", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
+            { id: 60, name: "Mathews Manuel", phone: "7492572732", parish: "Lourdes Matha", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Kitchen re-arrangement", checkedIn: false, couponClaimed: false },
             { id: 61, name: "Aleena Vincent", phone: "7422530922", parish: "Lourdes Matha", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 62, name: "Edwin Sebastian", phone: "7305827490", parish: "Lourdes Matha", primaryDuty: "Food Service", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 63, name: "Tonsen Thomas", phone: "7427691328", parish: "St.Cecily", primaryDuty: "General Rearrangement", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday 7 PM", notes: "", checkedIn: false, couponClaimed: false },
@@ -697,13 +651,13 @@
             { id: 70, name: "Mathew Kurian", phone: "7737963892", parish: "St.Antony's", primaryDuty: "Food Service", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 71, name: "Jessy Jose", phone: "7379043128", parish: "St.Augustine", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 72, name: "Subi Shaji", phone: "7541103663", parish: "St.Chavara", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
-            { id: 73, name: "Colins Jacob", phone: "7385164774", parish: "St.Joseph", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
+            { id: 73, name: "Colins Jacob", phone: "7385164774", parish: "St.Joseph", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Kitchen Re-arrangement", checkedIn: false, couponClaimed: false },
             { id: 74, name: "Tom George", phone: "7861042288", parish: "St.Jude", primaryDuty: "Parking Team", secondaryDuty: "General Rearrangement", leaderRole: "Parking Leader", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 75, name: "Tajmon Maliyilchira Kuriakose", phone: "7768621570", parish: "St.Jude", primaryDuty: "Parking Team", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 76, name: "George Nikolovoas", phone: "7899314358", parish: "St.Jude", primaryDuty: "Parking Team", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 77, name: "Noychen Augustine", phone: "7886894388", parish: "St.Mary", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "Category Leader", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Family Unit Leader - St Mary", checkedIn: false, couponClaimed: false },
             { id: 78, name: "Bazil Kurian", phone: "7727054519", parish: "St.Micheal", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "Category Leader", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Family Unit Leader - St Michael", checkedIn: false, couponClaimed: false },
-            { id: 79, name: "saji mathew", phone: "7737413793", parish: "Lourdes Matha", primaryDuty: "Food Preparation", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Pasta Tikka"], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
+            { id: 79, name: "saji mathew", phone: "7737413793", parish: "Lourdes Matha", primaryDuty: "Food Preparation", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Pasta Tikka"], shift: "Saturday Full Day", notes: "kitchen rearrangement", checkedIn: false, couponClaimed: false },
             { id: 80, name: "Jose Sebastian", phone: "7721933195", parish: "St.Theresa", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 81, name: "Dolly James", phone: "7737739637", parish: "St.Vincent", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 82, name: "Sibi Mathew", phone: "7412348702", parish: "St.Xavier", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
@@ -725,8 +679,8 @@
             { id: 98, name: "Aravind Mohanan", phone: "7775733270", parish: "St.Patric", primaryDuty: "Food Preparation", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Biriyani"], shift: "Saturday 12 PM", notes: "", checkedIn: false, couponClaimed: false },
             { id: 99, name: "Jai John (Renju)", phone: "7985402991", parish: "St.Patric", primaryDuty: "Food Preparation", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Coffee / Tea"], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 100, name: "Jose Thomas", phone: "7721957438", parish: "St.Sebastian", primaryDuty: "Food Preparation", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Biriyani"], shift: "Friday Evening", notes: "", checkedIn: false, couponClaimed: false },
-            { id: 101, name: "Maboj Mathew", phone: "7727273766", parish: "St.Augustine", primaryDuty: "Venue Arrangement", secondaryDuty: "Food Service", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Fri & Sat", notes: "", checkedIn: false, couponClaimed: false },
-            { id: 102, name: "Harry Arikkat", phone: "7505146260", parish: "St.Vincent", primaryDuty: "Food Service", secondaryDuty: "Cleaning Supervision", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
+            { id: 101, name: "Maboj Mathew", phone: "7727273766", parish: "St.Augustine", primaryDuty: "Venue Arrangement", secondaryDuty: "Food Service", leaderRole: "Category Leader", stages: [], greenRooms: [], foodItems: [], shift: "Fri & Sat", notes: "Kitchen", checkedIn: false, couponClaimed: false },
+            { id: 102, name: "Harry Arikkat", phone: "7505146260", parish: "St.Vincent", primaryDuty: "General Rearrangement", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Transportation", checkedIn: false, couponClaimed: false },
             { id: 103, name: "Sheby", phone: "7393900287", parish: "St.Xavier", primaryDuty: "Food Service", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 104, name: "Lissy Paul", phone: "7951858312", parish: "Lourdes Matha", primaryDuty: "Food Service", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 105, name: "Shiju K Paul", phone: "7350342392", parish: "St.Sebastian", primaryDuty: "Venue Arrangement", secondaryDuty: "Stage Squad", leaderRole: "", stages: [11, 12], greenRooms: [], foodItems: [], shift: "Fri & Sat", notes: "", checkedIn: false, couponClaimed: false },
@@ -739,9 +693,10 @@
             { id: 112, name: "Mathew Thomas", phone: "7910000997", parish: "St.Alphonsa", primaryDuty: "Venue Arrangement", secondaryDuty: "General Rearrangement", leaderRole: "Category Leader", stages: [1, 2], greenRooms: [], foodItems: [], shift: "Fri & Sat", notes: "Family Unit Leader - St Alphonsa", checkedIn: false, couponClaimed: false },
             { id: 113, name: "Shinto Thomas", phone: "7555230670", parish: "St.Augustine", primaryDuty: "Food Preparation", secondaryDuty: "General Rearrangement", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Biriyani"], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
             { id: 114, name: "Manuel", phone: "7471804154", parish: "Lourdes Matha", primaryDuty: "Food Service", secondaryDuty: "", leaderRole: "Category Leader", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Family Unit Leader - Lourdes Matha", checkedIn: false, couponClaimed: false },
-            { id: 115, name: "Additional Volunteer 1", phone: "", parish: "Bristol", primaryDuty: "Food Packing", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Food Packing Support", checkedIn: false, couponClaimed: false },
-            { id: 116, name: "Additional Volunteer 2", phone: "", parish: "Bristol", primaryDuty: "Food Sale", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: ["Cash Counter & Sales"], shift: "Saturday Full Day", notes: "Food Sale Support", checkedIn: false, couponClaimed: false },
-            { id: 117, name: "Additional Volunteer 3", phone: "", parish: "Bristol", primaryDuty: "Transportation", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Transportation Support", checkedIn: false, couponClaimed: false }
+            { id: 115, name: "Linson", phone: "792672339482", parish: "St.Thomas", primaryDuty: "Venue Arrangement", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
+            { id: 116, name: "Tom Joseph", phone: "792674723227", parish: "St.Mary", primaryDuty: "Venue Arrangement", secondaryDuty: "", leaderRole: "Category Leader", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "Transportation and kitchen rearranging", checkedIn: false, couponClaimed: false },
+            { id: 117, name: "Sam J Kunnel", phone: "792675191867", parish: "Divine Mercy", primaryDuty: "Venue Arrangement", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false },
+            { id: 118, name: "Jibin", phone: "792676533851", parish: "st.mary", primaryDuty: "Food Preparation", secondaryDuty: "", leaderRole: "", stages: [], greenRooms: [], foodItems: [], shift: "Saturday Full Day", notes: "", checkedIn: false, couponClaimed: false }
         ];
 
         let volunteers = [];
@@ -758,7 +713,7 @@
         });
 
         function loadVolunteers() {
-            const saved = localStorage.getItem("kalotsavam_volunteers_2026_excel_v5");
+            const saved = localStorage.getItem("kalotsavam_volunteers_2026_excel_v6");
             if (saved) {
                 try { volunteers = JSON.parse(saved); } catch(e) { volunteers = [...DEFAULT_VOLUNTEERS]; }
             } else {
@@ -767,13 +722,13 @@
         }
 
         function saveVolunteers() {
-            localStorage.setItem("kalotsavam_volunteers_2026_excel_v5", JSON.stringify(volunteers));
+            localStorage.setItem("kalotsavam_volunteers_2026_excel_v6", JSON.stringify(volunteers));
             renderApp();
         }
 
         function resetToDefaults() {
             if (confirm("Reset all volunteer data and allocations back to original defaults?")) {
-                localStorage.removeItem("kalotsavam_volunteers_2026_excel_v5");
+                localStorage.removeItem("kalotsavam_volunteers_2026_excel_v6");
                 volunteers = [...DEFAULT_VOLUNTEERS];
                 renderApp();
             }
