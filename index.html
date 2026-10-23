@@ -11,14 +11,46 @@
     <!-- Google Fonts (Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK v10 CDN -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#be123c',
+                            600: '#9f1239',
+                            700: '#800020',
+                            800: '#5c0017',
+                            900: '#38000d',
+                        },
+                        gold: {
+                            300: '#fde047',
+                            400: '#facc15',
+                            500: '#d4af37',
+                            600: '#ca8a04',
+                            700: '#a16207',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Firebase SDK v10 (Real-Time Cloud Sync) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // =========================================================================
-        // FIREBASE CONFIGURATION (Connected to kalotsavam-volunteer)
-        // =========================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBMH7rW2R7VpwWkiH-aa4DNbUKEcZL_u20",
             authDomain: "kalotsavam-volunteer.firebaseapp.com",
@@ -40,72 +72,27 @@
         }
     </script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        brand: {
-                            50: '#fff1f2',
-                            100: '#ffe4e6',
-                            500: '#be123c',
-                            600: '#9f1239',
-                            700: '#800020', // CSMEGB Deep Burgundy
-                            800: '#5c0017',
-                            900: '#38000d',
-                        },
-                        gold: {
-                            300: '#fde047',
-                            400: '#facc15',
-                            500: '#d4af37', // Kalotsavam Gold
-                            600: '#ca8a04',
-                            700: '#a16207',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .badge-leader { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    </style>
-</head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
-
-    <!-- HEADER WITH LOGOS -->
+    <!-- HEADER -->
     <header class="bg-gradient-to-r from-brand-900 via-brand-700 to-slate-900 text-white shadow-xl sticky top-0 z-30 border-b border-gold-500/40">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <div class="flex items-center space-x-2 sm:space-x-4">
-                    <!-- Main Logo -->
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-xl p-1 shadow-lg flex items-center justify-center border-2 border-gold-400 shrink-0 overflow-hidden">
                         <img src="./IMG_0159.png" alt="Kalotsavam Logo" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/100x100?text=CSMEGB'">
                     </div>
-
-                    <!-- Second Logo -->
-                    <div class="hidden md:flex w-11 h-11 bg-white rounded-xl p-1 shadow border border-gold-500/50 items-center justify-center shrink-0 overflow-hidden">
-                        <img src="./IMG_0160.png" alt="Eparchy Logo" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/100x100?text=Eparchy'">
-                    </div>
-
                     <div>
                         <div class="flex items-center gap-2">
                             <h1 class="font-black text-sm sm:text-lg leading-tight tracking-wide text-gold-400 uppercase">CSMEGB Kalotsavam 2026</h1>
-                            <span id="syncStatusBadge" class="bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block">Connecting to Remote DB...</span>
+                            <span id="syncStatusBadge" class="bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block">Connecting...</span>
                         </div>
                         <p class="text-[11px] sm:text-xs text-rose-100/90 font-medium">Syro-Malabar Eparchy of Great Britain • Host Region Bristol-Cardiff</p>
                     </div>
                 </div>
 
-                <!-- Admin Lock/Unlock Button -->
                 <div class="flex items-center space-x-2">
                     <div id="adminBadge" class="flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-900/80 text-amber-300 border border-amber-500/30">
                         <i class="fa-solid fa-lock text-xs mr-1.5 text-amber-400"></i> <span class="hidden sm:inline">Read-Only View</span>
                     </div>
-                    
                     <button id="authBtn" onclick="handleAuthToggle()" class="bg-gold-500 hover:bg-gold-400 text-brand-900 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold transition flex items-center gap-1.5 shadow-md">
                         <i class="fa-solid fa-key text-brand-900"></i>
                         <span id="authBtnText">Admin Login</span>
@@ -129,11 +116,8 @@
                             </span>
                             <span class="text-xs text-gold-300 font-semibold"><i class="fa-solid fa-location-dot text-rose-400 mr-1"></i> Bristol Host Committee</span>
                         </div>
-                        <h2 class="text-xl sm:text-2xl font-black text-white">Volunteer Roster & Team Operations Portal</h2>
-                        <p class="text-rose-100 text-xs sm:text-sm mt-1 flex flex-wrap gap-x-4 gap-y-1">
-                            <span><i class="fa-regular fa-calendar-check text-gold-400 mr-1"></i> Sat 31st October 2026</span>
-                            <span><i class="fa-solid fa-school text-gold-400 mr-1"></i> St. Bernadette Catholic Secondary School</span>
-                        </p>
+                        <h2 class="text-xl sm:text-2xl font-black text-white">Individual Duty Portals & Team Assignments</h2>
+                        <p class="text-rose-100 text-xs sm:text-sm mt-1">Each member's separate assigned duties, expandable team rosters, and admin controls.</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="exportCSV()" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs px-3 py-2 rounded-lg font-semibold transition flex items-center gap-1.5 shadow-sm">
@@ -150,104 +134,36 @@
             </div>
         </div>
 
-        <!-- DASHBOARD STATS -->
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Total Volunteers</p>
-                    <p id="statTotal" class="text-2xl font-black text-slate-800 mt-0.5">121</p>
-                </div>
-                <div class="w-10 h-10 rounded-xl bg-rose-50 text-brand-700 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-users"></i>
-                </div>
-            </div>
-            
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Checked In</p>
-                    <div class="flex items-baseline gap-1 mt-0.5">
-                        <span id="statCheckedIn" class="text-2xl font-black text-emerald-600">0</span>
-                        <span id="statCheckedInPct" class="text-xs text-slate-400 font-semibold">(0%)</span>
-                    </div>
-                </div>
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-user-check"></i>
-                </div>
-            </div>
-
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Food Coupons Issued</p>
-                    <p id="statCoupons" class="text-2xl font-black text-amber-600 mt-0.5">0</p>
-                </div>
-                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-utensils"></i>
-                </div>
-            </div>
-
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Stage & Green Room</p>
-                    <p id="statStageAlloc" class="text-2xl font-black text-blue-600 mt-0.5">0</p>
-                </div>
-                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-masks-theater"></i>
-                </div>
-            </div>
-
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between col-span-2 lg:col-span-1">
-                <div>
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Food & Prep Team</p>
-                    <p id="statFoodPrep" class="text-2xl font-black text-purple-600 mt-0.5">0</p>
-                </div>
-                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-kitchen-set"></i>
-                </div>
-            </div>
-        </div>
-
         <!-- TABS NAV -->
         <div class="border-b border-slate-200 bg-white rounded-xl shadow-sm px-2 pt-2">
             <nav class="flex space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar pb-2">
-                <button onclick="switchTab('all')" id="tab-all" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg whitespace-nowrap transition bg-brand-50 text-brand-700 border border-brand-200/60">
-                    <i class="fa-solid fa-list mr-1.5"></i> All Volunteers (<span id="count-all">121</span>)
-                </button>
-                <button onclick="switchTab('stages')" id="tab-stages" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
-                    <i class="fa-solid fa-masks-theater mr-1.5 text-blue-600"></i> Stages & Green Rooms
+                <button onclick="switchTab('members')" id="tab-members" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg whitespace-nowrap transition bg-brand-50 text-brand-700 border border-brand-200/60">
+                    <i class="fa-solid fa-address-card mr-1.5"></i> Individual Member Tables (<span id="count-members">146</span>)
                 </button>
                 <button onclick="switchTab('categories')" id="tab-categories" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
-                    <i class="fa-solid fa-layer-group mr-1.5 text-amber-600"></i> Duty Category Buttons
-                </button>
-                <button onclick="switchTab('foodprep')" id="tab-foodprep" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
-                    <i class="fa-solid fa-bowl-rice mr-1.5 text-purple-600"></i> Food Prep & Menu
+                    <i class="fa-solid fa-layer-group mr-1.5 text-amber-600"></i> Category Breakdown & Counts
                 </button>
             </nav>
         </div>
 
         <!-- SEARCH AND FILTERS -->
         <div id="filterSection" class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 <div class="relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
-                    <input type="text" id="searchInput" oninput="renderApp()" placeholder="Search name, phone, or duty..." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <input type="text" id="searchInput" oninput="renderApp()" placeholder="Search member name, parish, or duty..." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
                 </div>
 
                 <div>
                     <select id="dutyFilter" onchange="renderApp()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700 font-medium">
-                        <option value="">All Duty Categories</option>
-                        <option value="Venue Arrangement">Venue Arrangement</option>
+                        <option value="">All Duties Assigned</option>
                         <option value="Food Preparation">Food Preparation</option>
                         <option value="Food Packing">Food Packing</option>
-                        <option value="Food Sale">Food Sale</option>
-                        <option value="Cash Counter">Cash Counter</option>
                         <option value="Food Service">Food Service</option>
-                        <option value="Kitchen Rearrangement">Kitchen Rearrangement</option>
-                        <option value="General Rearrangement">General Rearrangement</option>
+                        <option value="Cash Counter">Cash Counter</option>
                         <option value="Stage Squad">Stage Squad</option>
-                        <option value="Cleaning Supervision">Cleaning Supervision</option>
                         <option value="Parking Team">Parking Team</option>
                         <option value="Transportation">Transportation</option>
-                        <option value="Judges Support">Judges Support</option>
                         <option value="Registration">Registration</option>
                         <option value="Safeguarding">Safeguarding</option>
                     </select>
@@ -258,104 +174,28 @@
                         <option value="">All Parishes / Units</option>
                     </select>
                 </div>
-
-                <div>
-                    <select id="statusFilter" onchange="renderApp()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700 font-medium">
-                        <option value="">All Attendance & Coupon Statuses</option>
-                        <option value="leadersOnly">Category Leaders Only</option>
-                        <option value="checkedIn">Checked In Only</option>
-                        <option value="notCheckedIn">Not Checked In</option>
-                        <option value="couponClaimed">Food Coupon Issued</option>
-                        <option value="couponPending">Food Coupon Pending</option>
-                    </select>
-                </div>
             </div>
         </div>
 
-        <!-- TAB CONTENT 1: ALL VOLUNTEERS ROSTER -->
-        <div id="content-all" class="tab-content space-y-4">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                                <th class="p-3.5">Volunteer Details (Click name for duty team)</th>
-                                <th class="p-3.5">Parish / Unit</th>
-                                <th class="p-3.5">Assigned Duties & Leadership</th>
-                                <th class="p-3.5">Stage / Food Items</th>
-                                <th class="p-3.5 text-center">Attendance</th>
-                                <th class="p-3.5 text-center">Food Coupon</th>
-                                <th class="p-3.5 text-right admin-col hidden">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="volunteerTableBody" class="divide-y divide-slate-200 text-xs sm:text-sm">
-                            <!-- Populated dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-                <div id="emptyState" class="hidden p-8 text-center text-slate-500">
-                    <i class="fa-solid fa-users-slash text-3xl mb-2 text-slate-300"></i>
-                    <p class="font-semibold text-slate-600">No volunteers found matching your filter criteria.</p>
-                </div>
+        <!-- TAB CONTENT 1: INDIVIDUAL MEMBER TABLES -->
+        <div id="content-members" class="tab-content space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="memberCardsGrid"></div>
+            <div id="emptyState" class="hidden p-8 text-center text-slate-500 bg-white rounded-xl border border-slate-200">
+                <i class="fa-solid fa-users-slash text-3xl mb-2 text-slate-300"></i>
+                <p class="font-semibold text-slate-600">No members found matching your search criteria.</p>
             </div>
         </div>
 
-        <!-- TAB CONTENT 2: STAGES & GREEN ROOMS -->
-        <div id="content-stages" class="tab-content hidden space-y-6">
-            <div class="bg-blue-50/70 border border-blue-200 p-4 rounded-xl text-xs sm:text-sm text-blue-900 flex justify-between items-center flex-wrap gap-2">
-                <div>
-                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1.5 text-blue-600"></i> Stage & Green Room Operations (Stage 1 to 12 & Green Room 1 to 12)</p>
-                    <p class="text-blue-700 text-xs mt-0.5">Click any volunteer's name or use <b>"+ Assign"</b> to manage assignments directly.</p>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-base font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-masks-theater text-blue-600"></i> Competition Stages (Stage 1 - Stage 12)
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5" id="stagesGrid"></div>
-            </div>
-
-            <div class="pt-4 border-t border-slate-200">
-                <h3 class="text-base font-extrabold text-slate-900 mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-door-closed text-purple-600"></i> Green Rooms (Green Room 1 - Green Room 12)
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5" id="greenRoomsGrid"></div>
-            </div>
-        </div>
-
-        <!-- TAB CONTENT 3: DUTY CATEGORY BUTTONS -->
+        <!-- TAB CONTENT 2: CATEGORY BREAKDOWN WITH COUNTS -->
         <div id="content-categories" class="tab-content hidden space-y-6">
             <div class="bg-amber-50/80 border border-amber-200 p-4 rounded-xl text-xs sm:text-sm text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <p class="font-bold"><i class="fa-solid fa-layer-group mr-1.5 text-amber-600"></i> Duty Category Quick Buttons</p>
-                    <p class="text-amber-800 text-xs mt-0.5">Click any category button below to view assigned volunteers or assign people to that duty.</p>
+                    <p class="font-bold"><i class="fa-solid fa-layer-group mr-1.5 text-amber-600"></i> Duty Category Breakdown & Member Counts</p>
+                    <p class="text-amber-800 text-xs mt-0.5">Click any category below to view assigned members, leaders, and manage allocations.</p>
                 </div>
-                <button onclick="openAddModalForCategory(selectedCategory)" class="bg-amber-600 hover:bg-amber-700 text-white font-black text-xs px-3.5 py-2 rounded-lg shadow transition flex items-center gap-1.5 shrink-0">
-                    <i class="fa-solid fa-user-plus"></i> Add Person to <span id="addCatBtnName">Category</span>
-                </button>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5" id="categoryButtonsContainer"></div>
-
-            <div id="selectedCategoryView" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                    <h3 id="selectedCategoryTitle" class="text-lg font-black text-slate-900">Select a Category Above</h3>
-                    <span id="selectedCategoryCount" class="text-xs font-bold bg-slate-100 text-slate-700 px-3 py-1 rounded-full">0 Volunteers</span>
-                </div>
-                <div id="selectedCategoryLeader" class="hidden"></div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="selectedCategoryMembers"></div>
-            </div>
-        </div>
-
-        <!-- TAB CONTENT 4: FOOD PREP & MENU -->
-        <div id="content-foodprep" class="tab-content hidden space-y-6">
-            <div class="bg-purple-50/80 border border-purple-200 p-4 rounded-xl text-xs sm:text-sm text-purple-900">
-                <p class="font-bold"><i class="fa-solid fa-utensils mr-1.5 text-purple-600"></i> Food Preparation & Menu Breakdowns</p>
-                <p class="text-purple-800 text-xs mt-0.5">Click on any food item card to view, update team members, or set a Food Team Leader.</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="foodPrepCategoriesGrid"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="categoryBreakdownGrid"></div>
         </div>
 
     </main>
@@ -366,50 +206,6 @@
         <p class="mt-1 text-slate-500">Host Region: Bristol-Cardiff Operations Team</p>
     </footer>
 
-    <!-- MODAL: VOLUNTEER PROFILE & DUTY TEAM VIEW -->
-    <div id="userModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-start border-b border-slate-100 pb-3">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h3 id="uModalName" class="text-xl font-black text-slate-900"></h3>
-                        <span id="uModalLeaderTag" class="hidden bg-amber-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded-full"></span>
-                    </div>
-                    <p id="uModalParish" class="text-xs text-slate-500 font-bold mt-0.5"></p>
-                </div>
-                <button onclick="closeUserModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-
-            <div class="py-4 space-y-4">
-                <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
-                    <div>
-                        <span class="text-slate-500 block font-semibold">Attendance</span>
-                        <span id="uModalAttendance" class="font-extrabold text-sm"></span>
-                    </div>
-                    <div>
-                        <span class="text-slate-500 block font-semibold">Food Coupon</span>
-                        <span id="uModalCoupon" class="font-extrabold text-sm"></span>
-                    </div>
-                </div>
-
-                <div class="space-y-3">
-                    <h4 class="text-xs font-black text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-users text-brand-700"></i> What I Am Doing & Who Is Working With Me
-                    </h4>
-                    <div id="uModalDutyTeams" class="space-y-3"></div>
-                </div>
-
-                <div class="pt-3 border-t border-slate-100 space-y-2">
-                    <label class="block text-xs font-bold text-slate-700">Add / Update Volunteer Comments or Notes</label>
-                    <textarea id="uModalCommentInput" rows="2" placeholder="e.g. Arriving at 9:30 AM, or willing to help with food packing..." class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
-                    <button onclick="saveUserComment()" class="w-full py-2 bg-brand-700 hover:bg-brand-800 text-white font-extrabold rounded-lg text-xs transition shadow-sm">
-                        <i class="fa-solid fa-comment-dots mr-1.5"></i> Save Note
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL: ADMIN LOGIN -->
     <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-100">
@@ -418,7 +214,7 @@
                     <i class="fa-solid fa-lock"></i>
                 </div>
                 <h3 class="text-lg font-bold text-slate-900">Admin Authentication</h3>
-                <p class="text-xs text-slate-500 mt-1">Unlock allocation, leadership, and editing rights.</p>
+                <p class="text-xs text-slate-500 mt-1">Unlock job assignment and role editing rights.</p>
             </div>
             <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
                 <div>
@@ -436,25 +232,16 @@
         </div>
     </div>
 
-    <!-- MODAL: ADD / EDIT VOLUNTEER (ADMIN) -->
+    <!-- MODAL: ADD / EDIT MEMBER (ADMIN) -->
     <div id="volunteerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[92vh] overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 max-h-[92vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
-                <h3 id="modalTitle" class="text-lg font-extrabold text-slate-900">Edit Volunteer & Duty Allocations</h3>
+                <h3 id="modalTitle" class="text-lg font-extrabold text-slate-900">Edit Member & Duties</h3>
                 <button onclick="closeVolunteerModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="volunteerForm" onsubmit="handleVolunteerFormSubmit(event)" class="space-y-4">
                 <input type="hidden" id="formVolId">
                 
-                <div id="existingSelectContainer" class="bg-amber-50/80 p-3 rounded-xl border border-amber-200">
-                    <label class="block text-xs font-black text-amber-900 mb-1">
-                        <i class="fa-solid fa-user-check text-amber-600 mr-1"></i> Select Existing Volunteer to Assign or Edit:
-                    </label>
-                    <select id="formSelectExisting" onchange="onSelectExistingVolunteer(this.value)" class="w-full px-3 py-2 border border-amber-300 rounded-lg text-xs sm:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-amber-500 bg-white">
-                        <option value="">-- Choose an Existing Volunteer from Roster --</option>
-                    </select>
-                </div>
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
@@ -472,110 +259,17 @@
                         <input type="text" id="formPhone" placeholder="07xxxxxxxxx" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Leadership Role / Designation</label>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Role Type</label>
                         <select id="formLeaderRole" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold">
                             <option value="">Standard Volunteer</option>
-                            <option value="Category Leader">Category Leader (General)</option>
-                            <option value="Food Preparation Leader">Food Preparation Leader</option>
-                            <option value="Food Service Leader">Food Service Leader</option>
-                            <option value="Stage Arrangement Leader">Stage Arrangement Leader</option>
-                            <option value="Green Room Leader">Green Room Leader</option>
-                            <option value="Parking Leader">Parking Leader</option>
+                            <option value="Category Leader">Category Leader / Lead</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Primary Duty Category</label>
-                        <select id="formPrimaryDuty" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold bg-white">
-                            <option value="Venue Arrangement">Venue Arrangement</option>
-                            <option value="Food Preparation">Food Preparation</option>
-                            <option value="Food Packing">Food Packing</option>
-                            <option value="Food Sale">Food Sale</option>
-                            <option value="Cash Counter">Cash Counter</option>
-                            <option value="Food Service">Food Service</option>
-                            <option value="Kitchen Rearrangement">Kitchen Rearrangement</option>
-                            <option value="General Rearrangement">General Rearrangement</option>
-                            <option value="Stage Squad">Stage Squad</option>
-                            <option value="Cleaning Supervision">Cleaning Supervision</option>
-                            <option value="Parking Team">Parking Team</option>
-                            <option value="Transportation">Transportation</option>
-                            <option value="Judges Support">Judges Support</option>
-                            <option value="Registration">Registration</option>
-                            <option value="Safeguarding">Safeguarding</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Secondary / Additional Duty</label>
-                        <select id="formSecondaryDuty" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold bg-white">
-                            <option value="">None</option>
-                            <option value="Venue Arrangement">Venue Arrangement</option>
-                            <option value="Food Preparation">Food Preparation</option>
-                            <option value="Food Packing">Food Packing</option>
-                            <option value="Food Sale">Food Sale</option>
-                            <option value="Cash Counter">Cash Counter</option>
-                            <option value="Food Service">Food Service</option>
-                            <option value="Kitchen Rearrangement">Kitchen Rearrangement</option>
-                            <option value="General Rearrangement">General Rearrangement</option>
-                            <option value="Stage Squad">Stage Squad</option>
-                            <option value="Cleaning Supervision">Cleaning Supervision</option>
-                            <option value="Parking Team">Parking Team</option>
-                            <option value="Transportation">Transportation</option>
-                            <option value="Judges Support">Judges Support</option>
-                            <option value="Registration">Registration</option>
-                            <option value="Safeguarding">Safeguarding</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="bg-blue-50/60 p-3.5 rounded-xl border border-blue-200 space-y-2">
-                    <label class="block text-xs font-black text-blue-900 flex items-center gap-1.5">
-                        <i class="fa-solid fa-masks-theater text-blue-600"></i> Assign Competition Stages (Stages 1 - 12)
-                    </label>
-                    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 text-xs" id="stageCheckboxes"></div>
-                </div>
-
-                <div class="bg-purple-50/60 p-3.5 rounded-xl border border-purple-200 space-y-2">
-                    <label class="block text-xs font-black text-purple-900 flex items-center gap-1.5">
-                        <i class="fa-solid fa-door-closed text-purple-600"></i> Assign Green Rooms (Green Rooms 1 - 12)
-                    </label>
-                    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 text-xs" id="greenRoomCheckboxes"></div>
-                </div>
-
-                <div class="bg-amber-50/60 p-3.5 rounded-xl border border-amber-200 space-y-2">
-                    <label class="block text-xs font-black text-amber-900 flex items-center gap-1.5">
-                        <i class="fa-solid fa-utensils text-amber-600"></i> Food Preparation & Sales Items
-                    </label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="foodPrepCheckboxes"></div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Shift / Availability Time</label>
-                        <input type="text" id="formShift" placeholder="e.g. Saturday Full Day / Friday 5 PM" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Volunteer Notes / Comments</label>
-                        <input type="text" id="formNotes" placeholder="Additional comments..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Attendance Status</label>
-                        <select id="formCheckedIn" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-bold text-slate-800">
-                            <option value="false">Not Checked In</option>
-                            <option value="true">Checked In / Present</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Food Coupon Issued</label>
-                        <select id="formCouponClaimed" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-bold text-slate-800">
-                            <option value="false">Coupon Pending</option>
-                            <option value="true">Coupon Issued / Claimed</option>
-                        </select>
-                    </div>
+                <div class="space-y-2 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <label class="block text-xs font-black text-slate-900">Assign Duties & Jobs (Check all applicable):</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="modalDutiesCheckboxes"></div>
                 </div>
 
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
@@ -586,186 +280,94 @@
         </div>
     </div>
 
-    <!-- MAIN APP SCRIPT WITH FIREBASE FIRESTORE SYNC -->
+    <!-- MAIN APP MODULE & GLOBAL BINDINGS -->
     <script type="module">
-        import { doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const ADMIN_HASH_KEY = "a2Fsb3RzYXZhbTIwMjY="; // "kalotsavam2026"
+        const ADMIN_HASH_KEY = "a2Fsb3RzYXZhbTIwMjY=";
 
-        const FOOD_PREP_ITEMS = [
-            "Kappa Biriyani & Chicken Curry",
-            "Appam & Chicken Stew",
-            "Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)",
-            "Biriyani",
-            "Pasta Tikka",
-            "Coffee / Tea",
-            "Snacks (Vada / Bonda / Banana Fry)",
-            "Cash Counter & Sales",
-            "Water, Fizzy Drinks & Packet Snacks"
-        ];
-
-        const ALL_CATEGORIES = [
-            "Venue Arrangement",
+        const ALL_DUTIES = [
             "Food Preparation",
             "Food Packing",
-            "Food Sale",
-            "Cash Counter",
             "Food Service",
-            "Kitchen Rearrangement",
-            "General Rearrangement",
+            "Cash Counter",
             "Stage Squad",
-            "Cleaning Supervision",
             "Parking Team",
             "Transportation",
-            "Judges Support",
             "Registration",
-            "Safeguarding"
+            "Safeguarding",
+            "General Rearrangement",
+            "Venue Arrangement",
+            "Cleaning Supervision",
+            "Judges Support",
+            "Coffee / Tea",
+            "Appam & Chicken Stew",
+            "Kappa Biriyani & Chicken Curry",
+            "Biriyani",
+            "Thattukada",
+            "Snacks",
+            "Pasta Tikka",
+            "Water & Drinks"
         ];
 
+        // Exact deduplicated dataset from Excel
         const DEFAULT_VOLUNTEERS = [
-            {"id": 1, "name": "John Joseph", "phone": "7701089837", "parish": "St.Sebastian", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Kappa Biriyani & Chicken Curry", "Appam & Chicken Stew", "Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Food Committee Lead"},
-            {"id": 2, "name": "Shiju Thettayil Vakkachan", "phone": "7918393444", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani", "Kappa Biriyani & Chicken Curry"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 3, "name": "Jasmin Joseph", "phone": "7909488384", "parish": "St.Jude", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "Stage Arrangement Leader", "stages": [1, 2], "greenRooms": [12], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Stage Arrangement Leader - Main Stage 1, Sports Room Stage 2 & Stage 11/12"},
-            {"id": 4, "name": "Deepumon", "phone": "7879728191", "parish": "St.Sebastian", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "Stage Arrangement Leader", "stages": [3, 4, 5], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Stage Arrangement Leader - Class Rooms 1, 2, 3 (Stages 3, 4, 5)"},
-            {"id": 5, "name": "Roshan Rapheal", "phone": "7442903850", "parish": "St.Mary", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "Stage Arrangement Leader", "stages": [6, 7, 8], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Stage Arrangement Leader - Class Rooms 4, 5, 6 (Stages 6, 7, 8)"},
-            {"id": 6, "name": "Vargheese Scaria", "phone": "7909723108", "parish": "St.Sebastian", "primaryDuty": "Stage Squad", "secondaryDuty": "General Rearrangement", "leaderRole": "Stage Arrangement Leader", "stages": [], "greenRooms": [], "foodItems": ["Kappa Biriyani & Chicken Curry", "Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Kitchen rearrangement"},
-            {"id": 7, "name": "Femi Joseph", "phone": "7482237458", "parish": "St.Thomas", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "Stage Arrangement Leader", "stages": [], "greenRooms": [1, 2, 3], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Stage Arrangement Leader - Exeter, Gloucester, Hereford (Stage 12)"},
-            {"id": 8, "name": "Shaji Varkey", "phone": "7532182639", "parish": "St.Chavara", "primaryDuty": "Stage Squad", "secondaryDuty": "General Rearrangement", "leaderRole": "Category Leader", "stages": [], "greenRooms": [6, 7, 8], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "General Coordinator green rooms"},
-            {"id": 9, "name": "Shiny Aljo", "phone": "7551708905", "parish": "Sacred Heart", "primaryDuty": "Stage Squad", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [9, 10, 11], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Stage Coordinator - Weston-super-Mare & Taunton"},
-            {"id": 10, "name": "Roy Mathew", "phone": "7448727488", "parish": "St.Jude", "primaryDuty": "Parking Team", "secondaryDuty": "Stage Squad", "leaderRole": "Parking Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Parking Team Lead & Stage 6-8 Support"},
-            {"id": 11, "name": "Shinu Jackson", "phone": "7577738490", "parish": "St.Antony's", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "Food Service Leader", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Cash Counter Lead"},
-            {"id": 12, "name": "Rohith Shiju", "phone": "7881144662", "parish": "St.Mary", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Cash Counter Lead"},
-            {"id": 13, "name": "Anita Philip", "phone": "7809714895", "parish": "St.Alphonsa", "primaryDuty": "Judges Support", "secondaryDuty": "", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Judges Food & Hospitality Lead"},
-            {"id": 14, "name": "Jasmin George", "phone": "7838904708", "parish": "St.Mary", "primaryDuty": "Safeguarding", "secondaryDuty": "Venue Arrangement", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Safeguarding & Health Safety Lead"},
-            {"id": 15, "name": "Jomy John", "phone": "7753821192", "parish": "St.Antony's", "primaryDuty": "Registration", "secondaryDuty": "Stage Squad", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Registration & Tag Distribution Lead"},
-            {"id": 16, "name": "Tom Loyied", "phone": "7423468998", "parish": "St.Theresa", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Snacks (Vada / Bonda / Banana Fry)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 17, "name": "Jinto Joseph", "phone": "7767913488", "parish": "St.Theresa", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Snacks (Vada / Bonda / Banana Fry)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 18, "name": "Xavier Chakku", "phone": "7467195775", "parish": "Sacred Heart", "primaryDuty": "Food Preparation", "secondaryDuty": "Food Service", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 19, "name": "Roy Joseph", "phone": "788853279", "parish": "St.Patric", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Coffee / Tea"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Tea & Coffee Lead"},
-            {"id": 20, "name": "Siju", "phone": "", "parish": "St.Jude", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Kappa Biriyani & Chicken Curry", "Coffee / Tea"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 21, "name": "Robin Varghese", "phone": "7436567745", "parish": "St.Theresa", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Snacks (Vada / Bonda / Banana Fry)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 22, "name": "Sebiyachan Poulo", "phone": "7975617631", "parish": "St.Sebastian", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Kappa Biriyani & Chicken Curry"], "shift": "Friday Evening", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 23, "name": "Gigy John", "phone": "7753894576", "parish": "St.Sebastian", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Kappa Biriyani & Chicken Curry"], "shift": "Friday Evening", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 24, "name": "Jojy Thomas", "phone": "7774430991", "parish": "St.Theresa", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Snacks (Vada / Bonda / Banana Fry)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 25, "name": "Shibu K Joseph", "phone": "7585355038", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani", "Water, Fizzy Drinks & Packet Snacks"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 26, "name": "Vincent Thomas", "phone": "7939010065", "parish": "Lourdes Matha", "primaryDuty": "Food Preparation", "secondaryDuty": "Food Service", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 27, "name": "George Joseph", "phone": "7867909316", "parish": "St.Jude", "primaryDuty": "Parking Team", "secondaryDuty": "Stage Squad", "leaderRole": "", "stages": [6, 7, 8], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 28, "name": "Metty Thomas", "phone": "7846136960", "parish": "St.Sebastian", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Appam & Chicken Stew"], "shift": "Friday Evening", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 29, "name": "Jinson Panakkal Raphel", "phone": "7570329270", "parish": "St.Theresa", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Snacks (Vada / Bonda / Banana Fry)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 30, "name": "Dijo George", "phone": "7733842801", "parish": "St.Jude", "primaryDuty": "Parking Team", "secondaryDuty": "Stage Squad", "leaderRole": "", "stages": [11, 12], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 31, "name": "Manoj", "phone": "7481183830", "parish": "St.Antony's", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Kitchen Rearrangement Lead"},
-            {"id": 32, "name": "Albin Shibu", "phone": "7423241394", "parish": "St.Theresa", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Appam & Chicken Stew"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 33, "name": "Tijo Antony", "phone": "7721949500", "parish": "St.Jude", "primaryDuty": "Stage Squad", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [1, 2, 11, 12], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 34, "name": "Mahesh M Babu", "phone": "7818993252", "parish": "St.Theresa", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 35, "name": "Mable Baby", "phone": "7423468998", "parish": "St.Theresa", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 36, "name": "Rojis George", "phone": "7423138030", "parish": "St.Thomas", "primaryDuty": "Cleaning Supervision", "secondaryDuty": "Venue Arrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 37, "name": "Joshy", "phone": "7301355229", "parish": "St.Micheal", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "", "stages": [1, 2, 11, 12], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 38, "name": "Joel Arikkat", "phone": "7414726699", "parish": "St.Vincent", "primaryDuty": "Stage Squad", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [1, 2], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Transportation"},
-            {"id": 39, "name": "Rajumon Kuriakose", "phone": "7717665236", "parish": "St.Alphonsa", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "Category Leader", "stages": [3, 4, 5], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 40, "name": "Karol Thomas", "phone": "7459317465", "parish": "Divine Mercy", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "", "stages": [3, 4, 5], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Family Unit Leader - Divine Mercy"},
-            {"id": 41, "name": "Beenamol Thomas", "phone": "7737506147", "parish": "Lourdes Matha", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "", "stages": [3, 4, 5], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 42, "name": "Shelton Mathew", "phone": "7585067073", "parish": "St.Theresa", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "", "stages": [6, 7, 8], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 43, "name": "Thomas Mathew", "phone": "7878865278", "parish": "St.Augustine", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "Green Room Leader", "stages": [9, 10], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 44, "name": "Lalamma Thomas", "phone": "7757408496", "parish": "St.Augustine", "primaryDuty": "Stage Squad", "secondaryDuty": "Food Service", "leaderRole": "", "stages": [9, 10], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 45, "name": "Bijo", "phone": "7880435739", "parish": "St.Micheal", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "", "stages": [9, 10], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 46, "name": "Joju George", "phone": "7450173184", "parish": "St.Thomas", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "", "stages": [12], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 47, "name": "Neuby Varghese", "phone": "7767944813", "parish": "St.Vincent", "primaryDuty": "Cleaning Supervision", "secondaryDuty": "General Rearrangement", "leaderRole": "Category Leader", "stages": [12], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Family Unit Leader - St Vincent"},
-            {"id": 48, "name": "Gimy Gracias", "phone": "7539081234", "parish": "Divine Mercy", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "", "stages": [12], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 49, "name": "Tejal Sebastian", "phone": "734582038", "parish": "St.Xavier", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "", "stages": [12], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 50, "name": "Sinson George", "phone": "7435743681", "parish": "St.Antony's", "primaryDuty": "Stage Squad", "secondaryDuty": "Venue Arrangement", "leaderRole": "", "stages": [11, 12], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 51, "name": "Prabhu Plappallil James", "phone": "7394338272", "parish": "St.Antony's", "primaryDuty": "Stage Squad", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [11, 12], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 52, "name": "Jijo Augustine", "phone": "7721988499", "parish": "St.Jude", "primaryDuty": "Parking Team", "secondaryDuty": "Stage Squad", "leaderRole": "", "stages": [11, 12], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 53, "name": "Molly Roy", "phone": "7817784384", "parish": "Divine Mercy", "primaryDuty": "Food Service", "secondaryDuty": "Judges Support", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Judges Hospitality Team"},
-            {"id": 54, "name": "Roy Sebastian", "phone": "7862701046", "parish": "Divine Mercy", "primaryDuty": "General Rearrangement", "secondaryDuty": "Judges Support", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Judges Hospitality Lead"},
-            {"id": 55, "name": "Shaji Sebastian", "phone": "7766873953", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 56, "name": "George Tharakan", "phone": "7811197278", "parish": "Divine Mercy", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Counter setting and rearrangement"},
-            {"id": 57, "name": "Sindhu Manuel", "phone": "7737812369", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 58, "name": "Joseph Sunny", "phone": "7988111515", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 59, "name": "Siby Vincent", "phone": "7454746432", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 60, "name": "Mathews Manuel", "phone": "7492572732", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Kitchen re-arrangement"},
-            {"id": 61, "name": "Aleena Vincent", "phone": "7422530922", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 62, "name": "Edwin Sebastian", "phone": "7305827490", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 63, "name": "Tonsen Thomas", "phone": "7427691328", "parish": "St.Cecily", "primaryDuty": "General Rearrangement", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday 7 PM", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 64, "name": "Sebastian Lonappan", "phone": "7809294312", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 65, "name": "SajiGeorge", "phone": "7481849707", "parish": "St.Thomas", "primaryDuty": "General Rearrangement", "secondaryDuty": "Venue Arrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 66, "name": "Ligi Thomas", "phone": "7515635457", "parish": "St.Alphonsa", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 67, "name": "Sabu Mathew", "phone": "7466350670", "parish": "St.Thomas", "primaryDuty": "General Rearrangement", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday 7 PM", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 68, "name": "Mary Thomas", "phone": "789446820", "parish": "St.Alphonsa", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 69, "name": "Jijo john", "phone": "7769421944", "parish": "St.Thomas", "primaryDuty": "General Rearrangement", "secondaryDuty": "", "leaderRole": "", "stages": [11, 12], "greenRooms": [], "foodItems": [], "shift": "Saturday 7 PM", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 70, "name": "Mathew Kurian", "phone": "7737963892", "parish": "St.Antony's", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 71, "name": "Jessy Jose", "phone": "7379043128", "parish": "St.Augustine", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 72, "name": "Subi Shaji", "phone": "7541103663", "parish": "St.Chavara", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 73, "name": "Colins Jacob", "phone": "7385164774", "parish": "St.Joseph", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Kitchen Re-arrangement"},
-            {"id": 74, "name": "Tom George", "phone": "7861042288", "parish": "St.Jude", "primaryDuty": "Parking Team", "secondaryDuty": "General Rearrangement", "leaderRole": "Parking Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 75, "name": "Tajmon Maliyilchira Kuriakose", "phone": "7768621570", "parish": "St.Jude", "primaryDuty": "Parking Team", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 76, "name": "George Nikolovoas", "phone": "7899314358", "parish": "St.Jude", "primaryDuty": "Parking Team", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 77, "name": "Noychen Augustine", "phone": "7886894388", "parish": "St.Mary", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Family Unit Leader - St Mary"},
-            {"id": 78, "name": "Bazil Kurian", "phone": "7727054519", "parish": "St.Micheal", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Family Unit Leader - St Michael"},
-            {"id": 79, "name": "saji mathew", "phone": "7737413793", "parish": "Lourdes Matha", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Pasta Tikka"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "kitchen rearrangement"},
-            {"id": 80, "name": "Jose Sebastian", "phone": "7721933195", "parish": "St.Theresa", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 81, "name": "Dolly James", "phone": "7737739637", "parish": "St.Vincent", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 82, "name": "Sibi Mathew", "phone": "7412348702", "parish": "St.Xavier", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 83, "name": "Shiny Sibi", "phone": "7402793726", "parish": "St.Xavier", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 84, "name": "Abin Manoj", "phone": "7481183830", "parish": "St.Antony's", "primaryDuty": "General Rearrangement", "secondaryDuty": "Food Service", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 85, "name": "Shiny Sebastian", "phone": "7551708905", "parish": "Sacred Heart", "primaryDuty": "Registration", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 86, "name": "Joe Joseph", "phone": "7776620574", "parish": "St.Antony's", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 87, "name": "Shaji Thomas", "phone": "745986507", "parish": "St.Antony's", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 88, "name": "George Sebastian", "phone": "7883093766", "parish": "St.Antony's", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 89, "name": "Shibu George", "phone": "7921228815", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 90, "name": "Mathew Jose", "phone": "7901179011", "parish": "St.Jude", "primaryDuty": "Parking Team", "secondaryDuty": "Food Preparation", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 91, "name": "TIJOMON GEORGE", "phone": "7824045695", "parish": "St.Micheal", "primaryDuty": "Food Preparation", "secondaryDuty": "Food Service", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Water, Fizzy Drinks & Packet Snacks"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 92, "name": "Shibi Jose", "phone": "7393900287", "parish": "St.Jude", "primaryDuty": "Parking Team", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 93, "name": "Sanjoy Thomas", "phone": "7823947630", "parish": "St.Jude", "primaryDuty": "Parking Team", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 94, "name": "Sanal Appukuttan", "phone": "7429146972", "parish": "St.Jude", "primaryDuty": "Food Preparation", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Appam & Chicken Stew"], "shift": "Saturday Morning", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 95, "name": "Chacko Varghese", "phone": "7920693900", "parish": "St.Joseph", "primaryDuty": "Food Preparation", "secondaryDuty": "Food Service", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Family Unit Leader - St Joseph"},
-            {"id": 96, "name": "Manju Jose", "phone": "7385298144", "parish": "St.Sebastian", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Appam & Chicken Stew"], "shift": "Friday Evening", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 97, "name": "Shanty George", "phone": "7522821999", "parish": "St.Antony's", "primaryDuty": "Food Preparation", "secondaryDuty": "Food Service", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Fri & Sat", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 98, "name": "Aravind Mohanan", "phone": "7775733270", "parish": "St.Patric", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday 12 PM", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 99, "name": "Jai John (Renju)", "phone": "7985402991", "parish": "St.Patric", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Coffee / Tea"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 100, "name": "Jose Thomas", "phone": "7721957438", "parish": "St.Sebastian", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Friday Evening", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 101, "name": "Maboj Mathew", "phone": "7727273766", "parish": "St.Augustine", "primaryDuty": "Venue Arrangement", "secondaryDuty": "Food Service", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Fri & Sat", "checkedIn": false, "couponClaimed": false, "notes": "Kitchen"},
-            {"id": 102, "name": "Harry Arikkat", "phone": "7505146260", "parish": "St.Vincent", "primaryDuty": "General Rearrangement", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Transportation"},
-            {"id": 103, "name": "Sheby", "phone": "7393900287", "parish": "St.Xavier", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 104, "name": "Lissy Paul", "phone": "7951858312", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 105, "name": "Shiju K Paul", "phone": "7350342392", "parish": "St.Sebastian", "primaryDuty": "Venue Arrangement", "secondaryDuty": "Stage Squad", "leaderRole": "", "stages": [11, 12], "greenRooms": [], "foodItems": [], "shift": "Fri & Sat", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 106, "name": "Jessica Vadhyanath", "phone": "7949407736", "parish": "St.Alphonsa", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Water, Fizzy Drinks & Packet Snacks"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 107, "name": "Christy Francis", "phone": "+91 9538366840", "parish": "St.Joseph", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 108, "name": "Santhosh Kachappilly", "phone": "7747248525", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "From 11 AM", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 109, "name": "Danny George", "phone": "7305642067", "parish": "St.Mary", "primaryDuty": "Venue Arrangement", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Fri & Sat", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 110, "name": "Anns Manuel", "phone": "7443911575", "parish": "Lourdes Matha", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Appam & Chicken Stew"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 111, "name": "Linta Joseph", "phone": "7884078293", "parish": "St.Patric", "primaryDuty": "Food Service", "secondaryDuty": "General Rearrangement", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 112, "name": "Mathew Thomas", "phone": "7910000997", "parish": "St.Alphonsa", "primaryDuty": "Venue Arrangement", "secondaryDuty": "General Rearrangement", "leaderRole": "Category Leader", "stages": [1, 2], "greenRooms": [], "foodItems": [], "shift": "Fri & Sat", "checkedIn": false, "couponClaimed": false, "notes": "Family Unit Leader - St Alphonsa"},
-            {"id": 113, "name": "Shinto Thomas", "phone": "7555230670", "parish": "St.Augustine", "primaryDuty": "Food Preparation", "secondaryDuty": "Safeguarding", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Appam & Chicken Stew", "Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 114, "name": "Manuel", "phone": "7471804154", "parish": "Lourdes Matha", "primaryDuty": "Food Service", "secondaryDuty": "", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": [], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Family Unit Leader - Lourdes Matha"},
-            {"id": 115, "name": "Linson", "phone": "", "parish": "St.Thomas", "primaryDuty": "Food Packing", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 116, "name": "Rex Philip", "phone": "", "parish": "St.Thomas", "primaryDuty": "Food Sale", "secondaryDuty": "", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Food Sale Support"},
-            {"id": 117, "name": "Jibin Thomas", "phone": "", "parish": "St.Marys", "primaryDuty": "Transportation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": "Transportation Support"},
-            {"id": 1792683923202, "name": "Binu Jacob", "phone": "", "parish": "St.Mary", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "Food Preparation Leader", "stages": [], "greenRooms": [], "foodItems": ["Pasta Tikka"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 1792684532598, "name": "Sam Joy Junnel", "phone": "", "parish": "Divine Mercy", "primaryDuty": "Cash Counter", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 1792684620835, "name": "Jackson Joseph", "phone": "", "parish": "St.Antonys", "primaryDuty": "Cash Counter", "secondaryDuty": "Kitchen Rearrangement", "leaderRole": "Category Leader", "stages": [], "greenRooms": [], "foodItems": ["Cash Counter & Sales"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""},
-            {"id": 1792686398746, "name": "Jolly Shaji", "phone": "", "parish": "St.Antonys", "primaryDuty": "Food Preparation", "secondaryDuty": "", "leaderRole": "", "stages": [], "greenRooms": [], "foodItems": ["Biriyani"], "shift": "Saturday Full Day", "checkedIn": false, "couponClaimed": false, "notes": ""}
+            {id: 1, name: "John Joseph", parish: "St.Sebastian", phone: "7701089837", role: "Category Leader", duties: ["Food Preparation", "General Rearrangement", "Kappa Biriyani & Chicken Curry", "Biriyani"]},
+            {id: 2, name: "Jasmin Joseph", parish: "St.Jude", phone: "7909488384", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement", "Main Stage 1", "Sports Room Stage 2"]},
+            {id: 3, name: "Deepumon", parish: "St.Sebastian", phone: "7879728191", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement", "Class Room 1 Stage 3"]},
+            {id: 4, name: "Roshan Rapheal", parish: "St.Mary", phone: "7442903850", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement", "Class Room 4 Stage 6"]},
+            {id: 5, name: "Femi Joseph", parish: "St.Thomas", phone: "7482237458", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement", "Bristol Green 1"]},
+            {id: 6, name: "Shaji Varkey", parish: "St.Chavara", phone: "7532182639", role: "Category Leader", duties: ["Stage Squad", "General Rearrangement", "Food packing", "Newport Green 6"]},
+            {id: 7, name: "Roy Mathew", parish: "St.Jude", phone: "7448727488", role: "Category Leader", duties: ["Parking Team", "Stage Squad"]},
+            {id: 8, name: "Shinu Jackson", parish: "St.Antony's", phone: "7577738490", role: "Category Leader", duties: ["Food Service", "Cash Counter & Sales"]},
+            {id: 9, name: "Anita Philip", parish: "St.Alphonsa", phone: "7809714895", role: "Category Leader", duties: ["Judges Support", "Food for judges"]},
+            {id: 10, name: "Jasmin George", parish: "St.Mary", phone: "7838904708", role: "Category Leader", duties: ["Safeguarding", "Venue Arrangement"]},
+            {id: 11, name: "Jomy John", parish: "St.Antony's", phone: "7753821192", role: "Category Leader", duties: ["Registration", "Stage Squad", "Registration & tag distribution"]},
+            {id: 12, name: "Tom Loyied", parish: "St.Mary", phone: "7918393444", role: "Category Leader", duties: ["Food Preparation", "Snacks", "Food transportation"]},
+            {id: 13, name: "Xavier Chakku", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Food Preparation", "Food Service", "Biriyani"]},
+            {id: 14, name: "Rajumon Kuriakose", parish: "St.Sebastian", phone: "", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement"]},
+            {id: 15, name: "Thomas Mathew", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Stage Squad", "Green-room coordination", "Class Room 7 Stage 9"]},
+            {id: 16, name: "Shiny Aljo", parish: "Sacred Heart", phone: "7551708905", role: "Category Leader", duties: ["Stage Squad", "General Rearrangement", "Western Supermaer Green 9"]},
+            {id: 17, name: "Roy Sebastian", parish: "St.Joseph", phone: "", role: "Category Leader", duties: ["Judges Support", "General Rearrangement"]},
+            {id: 18, name: "Jackson Joseph", parish: "St.Antony", phone: "", role: "Category Leader", duties: ["Cash Counter", "Family unit leaders"]},
+            {id: 19, name: "George Sebastian", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Food Preparation", "Appam & Chicken Stew"]},
+            {id: 20, name: "Neuby Varghese", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["General Rearrangement", "Cleaning Supervision", "Bristol Green 1"]},
+            {id: 21, name: "Rex Philip", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Food Sale", "Thattukada"]},
+            {id: 22, name: "Chacko Varghese", parish: "St.Joseph", phone: "", role: "Category Leader", duties: ["Food Preparation", "Coffee / Tea", "Kitchen Rearrangement"]},
+            {id: 23, name: "Binu Jacob", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Food Preparation", "Pasta Tikka"]},
+            {id: 24, name: "Abin Manoj", parish: "St.Antony's", phone: "", role: "", duties: ["Cash Counter", "Food packing", "Food service", "General rearrangement"]},
+            {id: 25, name: "Albin Shibu", parish: "St.Theresa", phone: "", role: "", duties: ["Appam & Chicken Stew", "Snacks", "Food packing", "Food service", "General rearrangement"]},
+            {id: 26, name: "Aleena Vincent", parish: "Lourdes Matha", phone: "", role: "", duties: ["Food packing", "Food service", "General rearrangement"]},
+            {id: 27, name: "Anns Manuel", parish: "Lourdes Matha", phone: "", role: "", duties: ["Appam & Chicken Stew", "Food Preparation"]},
+            {id: 28, name: "Aravind Mohanan", parish: "St.Patric", phone: "", role: "", duties: ["Coffee / Tea", "Food Preparation"]},
+            {id: 29, name: "Bazil Kurian", parish: "St.Micheal", phone: "", role: "Category Leader", duties: ["Food Service", "Food packing", "General rearrangement", "Family unit leaders"]},
+            {id: 30, name: "Beenamol Thomas", parish: "Lourdes Matha", phone: "", role: "", duties: ["Stage Squad", "Venue Arrangement", "Class Room 1 Stage 3"]},
+            {id: 31, name: "Bijo", parish: "St.Micheal", phone: "", role: "", duties: ["Stage Squad", "Venue Arrangement", "Class Room 7 Stage 9"]},
+            {id: 32, name: "Colins Jacob", parish: "St.Joseph", phone: "", role: "", duties: ["Food Service", "Food packing", "General rearrangement", "Kitchen rearrangement"]},
+            {id: 33, name: "Danny George", parish: "St.Mary", phone: "", role: "", duties: ["Venue Arrangement", "General rearrangement"]},
+            {id: 34, name: "Dijo George", parish: "St.Jude", phone: "", role: "", duties: ["Parking Team", "Stage Squad", "Herefold Green 11"]},
+            {id: 35, name: "Jibin Thomas", parish: "St.Marys", phone: "", role: "Category Leader", duties: ["Transportation"]},
+            {id: 36, name: "Molly Roy", parish: "Devine Mercy", phone: "", role: "", duties: ["Food packing", "Judges Support"]},
+            {id: 37, name: "Shinto Thomas", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation", "Safeguarding"]}
         ];
 
         let volunteers = [];
         let isAdmin = false;
-        let currentTab = 'all';
-        let activeUserId = null;
-        let selectedCategory = 'Venue Arrangement';
+        let currentTab = 'members';
+        let expandedMemberId = null;
 
-        // Initialize Firebase Firestore sync & real-time snapshot listener
-        async function initSync() {
+        function initSync() {
             const syncBadge = document.getElementById("syncStatusBadge");
             if (window.db && window.isFirebaseConnected) {
-                syncBadge.textContent = "Live Firebase Cloud Sync Active";
-                syncBadge.className = "bg-emerald-500/30 border border-emerald-400 text-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block";
+                syncBadge.textContent = "Live Remote Cloud Synced";
+                syncBadge.className = "bg-emerald-500/30 border border-emerald-400 text-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full inline-block";
 
-                const docRef = doc(window.db, "kalotsavam_2026", "roster");
+                const docRef = doc(window.db, "kalotsavam_2026", "members_v2");
                 
-                // Real-time listener: updates automatically when any device makes changes
                 onSnapshot(docRef, async (docSnap) => {
                     if (docSnap.exists() && docSnap.data().volunteers) {
                         volunteers = docSnap.data().volunteers;
-                        localStorage.setItem("kalotsavam_volunteers_2026_v12", JSON.stringify(volunteers));
+                        localStorage.setItem("kalotsavam_members_2026_v2", JSON.stringify(volunteers));
                         populateParishFilter();
                         window.renderApp();
                     } else {
@@ -775,24 +377,20 @@
                         window.renderApp();
                     }
                 }, (error) => {
-                    console.warn("Firestore listener fallback to local storage:", error);
+                    console.warn("Firestore fallback to local storage:", error);
                     loadLocalVolunteers();
                 });
             } else {
                 syncBadge.textContent = "Offline / Local Storage Mode";
-                syncBadge.className = "bg-amber-500/20 border border-amber-400/40 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full hidden sm:inline-block";
+                syncBadge.className = "bg-amber-500/20 border border-amber-400/40 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full inline-block";
                 loadLocalVolunteers();
             }
         }
 
         function loadLocalVolunteers() {
-            const saved = localStorage.getItem("kalotsavam_volunteers_2026_v12");
+            const saved = localStorage.getItem("kalotsavam_members_2026_v2");
             if (saved) {
-                try {
-                    volunteers = JSON.parse(saved);
-                } catch(e) {
-                    volunteers = [...DEFAULT_VOLUNTEERS];
-                }
+                try { volunteers = JSON.parse(saved); } catch(e) { volunteers = [...DEFAULT_VOLUNTEERS]; }
             } else {
                 volunteers = [...DEFAULT_VOLUNTEERS];
             }
@@ -800,24 +398,20 @@
             window.renderApp();
         }
 
-        // Save changes to both LocalStorage and remote Firebase Firestore
         async function saveVolunteers() {
-            localStorage.setItem("kalotsavam_volunteers_2026_v12", JSON.stringify(volunteers));
-            
+            localStorage.setItem("kalotsavam_members_2026_v2", JSON.stringify(volunteers));
             if (window.db && window.isFirebaseConnected) {
                 try {
-                    const docRef = doc(window.db, "kalotsavam_2026", "roster");
+                    const docRef = doc(window.db, "kalotsavam_2026", "members_v2");
                     await setDoc(docRef, { volunteers: volunteers });
-                } catch(e) {
-                    console.error("Error saving to remote Firestore:", e);
-                }
+                } catch(e) { console.error("Firestore save error:", e); }
             }
             window.renderApp();
         }
 
         window.resetToDefaults = function() {
-            if (confirm("Reset all volunteer data and allocations back to original defaults?")) {
-                localStorage.removeItem("kalotsavam_volunteers_2026_v12");
+            if (confirm("Reset all member data and assignments back to original defaults?")) {
+                localStorage.removeItem("kalotsavam_members_2026_v2");
                 volunteers = [...DEFAULT_VOLUNTEERS];
                 saveVolunteers();
             }
@@ -867,14 +461,12 @@
                 btnText.textContent = "Lock Admin";
                 resetBtn.classList.remove("hidden");
                 addBtn.classList.remove("hidden");
-                document.querySelectorAll(".admin-col").forEach(el => el.classList.remove("hidden"));
             } else {
                 badge.innerHTML = `<i class="fa-solid fa-lock text-xs mr-1.5 text-amber-400"></i> Read-Only View`;
                 badge.className = "flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-900/80 text-amber-300 border border-amber-500/30";
                 btnText.textContent = "Admin Login";
                 resetBtn.classList.add("hidden");
                 addBtn.classList.add("hidden");
-                document.querySelectorAll(".admin-col").forEach(el => el.classList.add("hidden"));
             }
             window.renderApp();
         }
@@ -895,7 +487,7 @@
             if (targetContent) targetContent.classList.remove("hidden");
 
             const filterSec = document.getElementById("filterSection");
-            if (tabId === 'all') filterSec.classList.remove("hidden");
+            if (tabId === 'members') filterSec.classList.remove("hidden");
             else filterSec.classList.add("hidden");
 
             window.renderApp();
@@ -906,720 +498,230 @@
             if (!select) return;
             const parishes = [...new Set(volunteers.map(v => v.parish))].filter(p => p).sort();
             select.innerHTML = `<option value="">All Parishes / Units (${parishes.length})</option>`;
-            parishes.forEach(p => {
-                select.innerHTML += `<option value="${p}">${p}</option>`;
-            });
+            parishes.forEach(p => { select.innerHTML += `<option value="${p}">${p}</option>`; });
         }
-
-        function populateExistingVolunteerDropdown() {
-            const select = document.getElementById("formSelectExisting");
-            if (!select) return;
-            const sorted = [...volunteers].sort((a,b) => a.name.localeCompare(b.name));
-            let html = `<option value="">-- Choose an Existing Volunteer from Roster --</option>`;
-            sorted.forEach(v => {
-                html += `<option value="${v.id}">${v.name} (${v.parish || 'No Parish'}) - Primary: ${v.primaryDuty}</option>`;
-            });
-            select.innerHTML = html;
-        }
-
-        window.onSelectExistingVolunteer = function(idStr) {
-            if (!idStr) return;
-            const id = parseInt(idStr);
-            openEditModal(id);
-        };
 
         window.getFilteredVolunteers = function() {
-            const searchInputEl = document.getElementById("searchInput");
-            const dutyFilterEl = document.getElementById("dutyFilter");
-            const parishFilterEl = document.getElementById("parishFilter");
-            const statusFilterEl = document.getElementById("statusFilter");
-
-            const search = searchInputEl ? searchInputEl.value.trim().toLowerCase() : "";
-            const duty = dutyFilterEl ? dutyFilterEl.value.trim().toLowerCase() : "";
-            const parish = parishFilterEl ? parishFilterEl.value.trim().toLowerCase() : "";
-            const status = statusFilterEl ? statusFilterEl.value : "";
+            const search = document.getElementById("searchInput").value.trim().toLowerCase();
+            const duty = document.getElementById("dutyFilter").value.trim().toLowerCase();
+            const parish = document.getElementById("parishFilter").value.trim().toLowerCase();
 
             return volunteers.filter(v => {
                 const name = (v.name || "").toLowerCase();
                 const phone = (v.phone || "").toString();
-                const vParish = (v.parish || "").toLowerCase().replace(/['\s]/g, "");
-                const targetParish = parish.replace(/['\s]/g, "");
+                const vParish = (v.parish || "").toLowerCase();
+                const dutiesStr = (v.duties || []).join(" ").toLowerCase();
 
-                const primaryDuty = (v.primaryDuty || "").toLowerCase();
-                const secondaryDuty = (v.secondaryDuty || "").toLowerCase();
-                const leaderRole = (v.leaderRole || "").toLowerCase();
-                const foodItemsStr = (v.foodItems || []).join(" ").toLowerCase();
+                const matchesSearch = !search || name.includes(search) || phone.includes(search) || vParish.includes(search) || dutiesStr.includes(search);
+                const matchesDuty = !duty || dutiesStr.includes(duty);
+                const matchesParish = !parish || vParish.includes(parish);
 
-                const matchesSearch = !search || 
-                    name.includes(search) || 
-                    phone.includes(search) || 
-                    vParish.includes(search) ||
-                    primaryDuty.includes(search) ||
-                    secondaryDuty.includes(search) ||
-                    leaderRole.includes(search);
-
-                const matchesDuty = !duty || 
-                    primaryDuty.includes(duty) || 
-                    secondaryDuty.includes(duty) ||
-                    foodItemsStr.includes(duty);
-
-                const matchesParish = !targetParish || 
-                    vParish === targetParish || 
-                    vParish.includes(targetParish);
-
-                let matchesStatus = true;
-                if (status === 'leadersOnly') matchesStatus = !!v.leaderRole;
-                else if (status === 'checkedIn') matchesStatus = v.checkedIn;
-                else if (status === 'notCheckedIn') matchesStatus = !v.checkedIn;
-                else if (status === 'couponClaimed') matchesStatus = v.couponClaimed;
-                else if (status === 'couponPending') matchesStatus = !v.couponClaimed;
-
-                return matchesSearch && matchesDuty && matchesParish && matchesStatus;
+                return matchesSearch && matchesDuty && matchesParish;
             });
         };
 
         window.renderApp = function() {
-            updateDashboardStats();
+            document.getElementById("count-members").textContent = volunteers.length;
 
-            if (currentTab === 'all') renderAllTable();
-            else if (currentTab === 'stages') renderStagesAndGreenRooms();
-            else if (currentTab === 'categories') renderCategoryView();
-            else if (currentTab === 'foodprep') renderFoodPrepBreakdowns();
-
-            if (isAdmin) {
-                document.querySelectorAll(".admin-col").forEach(el => el.classList.remove("hidden"));
-            }
+            if (currentTab === 'members') renderMemberCards();
+            else if (currentTab === 'categories') renderCategoryBreakdown();
         };
 
-        function updateDashboardStats() {
-            document.getElementById("statTotal").textContent = volunteers.length;
-            document.getElementById("count-all").textContent = volunteers.length;
-            
-            const checkedInCount = volunteers.filter(v => v.checkedIn).length;
-            document.getElementById("statCheckedIn").textContent = checkedInCount;
-            const pct = volunteers.length ? Math.round((checkedInCount / volunteers.length) * 100) : 0;
-            document.getElementById("statCheckedInPct").textContent = `(${pct}%)`;
-
-            document.getElementById("statCoupons").textContent = volunteers.filter(v => v.couponClaimed).length;
-            document.getElementById("statStageAlloc").textContent = volunteers.filter(v => (v.stages && v.stages.length > 0) || (v.greenRooms && v.greenRooms.length > 0)).length;
-            document.getElementById("statFoodPrep").textContent = volunteers.filter(v => v.primaryDuty.includes("Food") || (v.secondaryDuty && v.secondaryDuty.includes("Food"))).length;
-        }
-
-        function renderAllTable() {
+        function renderMemberCards() {
             const list = window.getFilteredVolunteers();
-            const tbody = document.getElementById("volunteerTableBody");
+            const grid = document.getElementById("memberCardsGrid");
             const empty = document.getElementById("emptyState");
 
-            if (!tbody) return;
+            if (!grid) return;
 
             if (list.length === 0) {
-                tbody.innerHTML = "";
-                if (empty) empty.classList.remove("hidden");
+                grid.innerHTML = "";
+                empty.classList.remove("hidden");
                 return;
             }
-            if (empty) empty.classList.add("hidden");
+            empty.classList.add("hidden");
 
-            tbody.innerHTML = list.map(v => {
-                const stageBadges = (v.stages || []).map(s => `<span class="bg-blue-100 text-blue-800 text-[10px] font-extrabold px-1.5 py-0.5 rounded">Stage ${s}</span>`).join(" ");
-                const grBadges = (v.greenRooms || []).map(g => `<span class="bg-purple-100 text-purple-800 text-[10px] font-extrabold px-1.5 py-0.5 rounded">GR ${g}</span>`).join(" ");
-                const foodBadges = (v.foodItems || []).map(f => `<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded">${f}</span>`).join(" ");
+            grid.innerHTML = list.map(v => {
+                const isExpanded = expandedMemberId === v.id;
+                const roleBadge = v.role === "Category Leader" 
+                    ? `<span class="bg-amber-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded-full inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-crown text-[9px]"></i> Category Leader</span>` 
+                    : `<span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-full">Standard Volunteer</span>`;
 
-                const leaderBadge = v.leaderRole ? `<span class="badge-leader inline-flex items-center gap-1 bg-amber-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm"><i class="fa-solid fa-crown text-[9px]"></i> ${v.leaderRole}</span>` : '';
+                const dutiesBadges = (v.duties || []).map(d => `<span class="bg-brand-50 text-brand-900 border border-brand-200 text-xs font-bold px-2.5 py-1 rounded-lg">${d}</span>`).join(" ");
+
+                // Find teammates working in any of the same duties
+                let teammateHtml = "";
+                if (isExpanded) {
+                    const teammates = volunteers.filter(m => m.id !== v.id && m.duties.some(d => v.duties.includes(d)));
+                    teammateHtml = `
+                        <div class="mt-3 pt-3 border-t border-slate-100 space-y-2 bg-slate-50 p-3 rounded-xl">
+                            <p class="text-xs font-black text-slate-700 flex items-center gap-1.5">
+                                <i class="fa-solid fa-users text-brand-700"></i> Teammates Sharing Same Duties (${teammates.length})
+                            </p>
+                            <div class="space-y-1.5 max-h-40 overflow-y-auto">
+                                ${teammates.map(m => `
+                                    <div class="bg-white p-2 rounded border border-slate-200 text-xs flex justify-between items-center">
+                                        <div>
+                                            <span class="font-extrabold text-slate-900">${m.name}</span>
+                                            <span class="text-[10px] text-slate-500 block">${m.parish || 'No Parish'} • ${m.role || 'Volunteer'}</span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-1 max-w-[150px] justify-end">
+                                            ${m.duties.filter(d => v.duties.includes(d)).map(d => `<span class="bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded">${d}</span>`).join("")}
+                                        </div>
+                                    </div>
+                                `).join("") || '<p class="text-slate-400 text-xs italic">No other teammates found for these duties.</p>'}
+                            </div>
+                        </div>
+                    `;
+                }
 
                 return `
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="p-3.5">
-                            <button onclick="openUserModal(${v.id})" class="font-extrabold text-brand-700 hover:text-brand-900 hover:underline text-left flex items-center gap-1.5">
-                                ${v.name} <i class="fa-solid fa-circle-info text-[10px] text-slate-400"></i>
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col justify-between space-y-3 transition hover:shadow-md">
+                        <div>
+                            <div class="flex justify-between items-start gap-2">
+                                <div>
+                                    <h3 class="font-extrabold text-slate-900 text-base">${v.name}</h3>
+                                    <p class="text-xs text-slate-500 font-semibold mt-0.5"><i class="fa-solid fa-church text-brand-700 mr-1"></i> ${v.parish || 'Parish N/A'} • <i class="fa-solid fa-phone text-slate-400 mr-1"></i> ${v.phone || 'Phone N/A'}</p>
+                                </div>
+                                <div>${roleBadge}</div>
+                            </div>
+
+                            <div class="mt-3 space-y-1.5">
+                                <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Assigned Duties & Jobs:</p>
+                                <div class="flex flex-wrap gap-1.5">
+                                    ${dutiesBadges || '<span class="text-xs text-slate-400 italic">No duties assigned</span>'}
+                                </div>
+                            </div>
+
+                            ${teammateHtml}
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 flex justify-between items-center">
+                            <button onclick="toggleExpandMember(${v.id})" class="text-xs font-bold text-brand-700 hover:text-brand-900 flex items-center gap-1">
+                                <i class="fa-solid ${isExpanded ? 'fa-chevron-up' : 'fa-chevron-down'}"></i> ${isExpanded ? 'Hide Teammates' : 'Expand Teammates'}
                             </button>
-                            <div class="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
-                                <span><i class="fa-solid fa-phone text-[10px] text-slate-400"></i> ${v.phone || 'N/A'}</span>
-                            </div>
-                        </td>
-                        <td class="p-3.5 font-medium text-slate-700">
-                            <span class="bg-slate-100 text-slate-700 text-xs px-2 py-1 rounded-md font-semibold border border-slate-200/80">${v.parish}</span>
-                        </td>
-                        <td class="p-3.5 space-y-1">
-                            <div class="flex flex-wrap items-center gap-1">
-                                <span class="bg-brand-100 text-brand-900 font-extrabold text-xs px-2 py-0.5 rounded border border-brand-200">${v.primaryDuty}</span>
-                                ${v.secondaryDuty ? `<span class="bg-indigo-50 text-indigo-700 font-bold text-xs px-2 py-0.5 rounded border border-indigo-200">+ ${v.secondaryDuty}</span>` : ''}
-                                ${leaderBadge}
-                            </div>
-                            <div class="text-[11px] text-slate-500 font-medium">Shift: ${v.shift || 'Full Day'}</div>
-                            ${v.notes ? `<div class="text-[11px] text-slate-400 italic">"${v.notes}"</div>` : ''}
-                        </td>
-                        <td class="p-3.5">
-                            <div class="flex flex-wrap gap-1">
-                                ${stageBadges || grBadges || foodBadges ? `${stageBadges} ${grBadges} ${foodBadges}` : `<span class="text-slate-400 text-xs italic">General Duty</span>`}
-                            </div>
-                        </td>
-                        <td class="p-3.5 text-center">
-                            <button onclick="toggleAttendance(${v.id})" ${!isAdmin ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 mx-auto ${v.checkedIn ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-slate-100 text-slate-500 border border-slate-200 hover:bg-slate-200'}">
-                                <i class="fa-solid ${v.checkedIn ? 'fa-circle-check text-emerald-600' : 'fa-circle-dot text-slate-400'}"></i>
-                                ${v.checkedIn ? 'Present' : 'Pending'}
-                            </button>
-                        </td>
-                        <td class="p-3.5 text-center">
-                            <button onclick="toggleCoupon(${v.id})" ${!isAdmin ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 mx-auto ${v.couponClaimed ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-slate-100 text-slate-500 border border-slate-200 hover:bg-slate-200'}">
-                                <i class="fa-solid ${v.couponClaimed ? 'fa-utensils text-amber-600' : 'fa-ticket text-slate-400'}"></i>
-                                ${v.couponClaimed ? 'Issued' : 'Issue'}
-                            </button>
-                        </td>
-                        <td class="p-3.5 text-right admin-col ${!isAdmin ? 'hidden' : ''}">
-                            <div class="flex items-center justify-end gap-1">
-                                <button onclick="openEditModal(${v.id})" class="p-1.5 text-brand-700 hover:bg-brand-50 rounded-lg transition" title="Edit Volunteer"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button onclick="deleteVolunteer(${v.id})" class="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Delete Volunteer"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
+                            ${isAdmin ? `
+                                <div class="flex items-center gap-1">
+                                    <button onclick="openEditModal(${v.id})" class="p-1.5 bg-brand-50 text-brand-700 hover:bg-brand-100 rounded-lg transition" title="Edit Job / Role"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button onclick="deleteVolunteer(${v.id})" class="p-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg transition" title="Delete Member"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
                 `;
             }).join("");
         }
 
-        function renderStagesAndGreenRooms() {
-            const stagesContainer = document.getElementById("stagesGrid");
-            const grContainer = document.getElementById("greenRoomsGrid");
-
-            if (!stagesContainer || !grContainer) return;
-
-            let stageHtml = "";
-            for (let i = 1; i <= 12; i++) {
-                const assigned = volunteers.filter(v => v.stages && v.stages.includes(i));
-                const leader = assigned.find(v => (v.leaderRole && v.leaderRole.includes("Stage")) || v.leaderRole === "Category Leader");
-
-                stageHtml += `
-                    <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-2">
-                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                            <div class="flex items-center gap-2">
-                                <span class="w-7 h-7 rounded-lg bg-blue-600 text-white font-extrabold text-xs flex items-center justify-center">${i}</span>
-                                <h4 class="font-extrabold text-slate-900 text-sm">Stage ${i}</h4>
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <span class="text-xs bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">${assigned.length} Allocated</span>
-                                <button onclick="assignVolunteerToStage(${i})" class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-black px-2 py-0.5 rounded-lg transition admin-col ${!isAdmin ? 'hidden' : ''}">+ Assign</button>
-                            </div>
-                        </div>
-                        <div class="space-y-1.5 my-1 flex-1">
-                            ${leader ? `<div class="bg-amber-50 border border-amber-200 p-1.5 rounded-lg text-xs flex items-center gap-1.5"><i class="fa-solid fa-crown text-amber-600"></i> <div><span class="font-extrabold text-slate-900">${leader.name}</span> <span class="text-[10px] text-amber-700 font-bold block">(Stage Leader)</span></div></div>` : ''}
-                            <div class="text-xs space-y-1 max-h-32 overflow-y-auto pr-1">
-                                ${assigned.map(v => `
-                                    <div class="flex justify-between items-center bg-slate-50 p-1.5 rounded border border-slate-100 text-slate-800 font-medium">
-                                        <div>
-                                            <button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900 text-left block">${v.name}</button>
-                                            <span class="text-[10px] text-slate-400 block">${v.parish}</span>
-                                        </div>
-                                        <div class="flex items-center gap-1 admin-col ${!isAdmin ? 'hidden' : ''}">
-                                            <button onclick="openEditModal(${v.id})" class="text-slate-500 hover:text-brand-700 p-1"><i class="fa-solid fa-pen text-[11px]"></i></button>
-                                            <button onclick="removeVolunteerFromStage(${v.id}, ${i})" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-xmark text-xs"></i></button>
-                                        </div>
-                                    </div>
-                                `).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            stagesContainer.innerHTML = stageHtml;
-
-            let grHtml = "";
-            for (let i = 1; i <= 12; i++) {
-                const assigned = volunteers.filter(v => v.greenRooms && v.greenRooms.includes(i));
-                const leader = assigned.find(v => (v.leaderRole && v.leaderRole.includes("Green Room")) || v.leaderRole === "Category Leader");
-
-                grHtml += `
-                    <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-2">
-                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                            <div class="flex items-center gap-2">
-                                <span class="w-7 h-7 rounded-lg bg-purple-600 text-white font-extrabold text-xs flex items-center justify-center">${i}</span>
-                                <h4 class="font-extrabold text-slate-900 text-sm">Green Room ${i}</h4>
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <span class="text-xs bg-purple-50 text-purple-700 font-bold px-2 py-0.5 rounded-full">${assigned.length} Allocated</span>
-                                <button onclick="assignVolunteerToGreenRoom(${i})" class="text-xs bg-purple-600 hover:bg-purple-700 text-white font-black px-2 py-0.5 rounded-lg transition admin-col ${!isAdmin ? 'hidden' : ''}">+ Assign</button>
-                            </div>
-                        </div>
-                        <div class="space-y-1.5 my-1 flex-1">
-                            ${leader ? `<div class="bg-amber-50 border border-amber-200 p-1.5 rounded-lg text-xs flex items-center gap-1.5"><i class="fa-solid fa-crown text-amber-600"></i> <div><span class="font-extrabold text-slate-900">${leader.name}</span> <span class="text-[10px] text-amber-700 font-bold block">(Green Room Leader)</span></div></div>` : ''}
-                            <div class="text-xs space-y-1 max-h-32 overflow-y-auto pr-1">
-                                ${assigned.map(v => `
-                                    <div class="flex justify-between items-center bg-slate-50 p-1.5 rounded border border-slate-100 text-slate-800 font-medium">
-                                        <div>
-                                            <button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900 text-left block">${v.name}</button>
-                                            <span class="text-[10px] text-slate-400 block">${v.parish}</span>
-                                        </div>
-                                        <div class="flex items-center gap-1 admin-col ${!isAdmin ? 'hidden' : ''}">
-                                            <button onclick="openEditModal(${v.id})" class="text-slate-500 hover:text-brand-700 p-1"><i class="fa-solid fa-pen text-[11px]"></i></button>
-                                            <button onclick="removeVolunteerFromGreenRoom(${v.id}, ${i})" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-xmark text-xs"></i></button>
-                                        </div>
-                                    </div>
-                                `).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned.</p>'}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            grContainer.innerHTML = grHtml;
-        }
-
-        window.assignVolunteerToStage = function(stageNum) {
-            if (!isAdmin) {
-                alert("Please click 'Admin Login' at the top right to unlock editing rights.");
-                return;
-            }
-            openAddModal();
-            document.getElementById("formPrimaryDuty").value = "Stage Squad";
-            setTimeout(() => {
-                const checkboxes = document.querySelectorAll('input[name="modalStage"]');
-                checkboxes.forEach(cb => {
-                    if (parseInt(cb.value) === stageNum) cb.checked = true;
-                });
-            }, 100);
+        window.toggleExpandMember = function(id) {
+            expandedMemberId = expandedMemberId === id ? null : id;
+            renderMemberCards();
         };
 
-        window.removeVolunteerFromStage = function(volId, stageNum) {
-            if (!isAdmin) return;
-            const v = volunteers.find(vol => vol.id === volId);
-            if (v && v.stages) {
-                v.stages = v.stages.filter(s => s !== stageNum);
-                saveVolunteers();
-            }
-        };
+        function renderCategoryBreakdown() {
+            const grid = document.getElementById("categoryBreakdownGrid");
+            if (!grid) return;
 
-        window.assignVolunteerToGreenRoom = function(grNum) {
-            if (!isAdmin) {
-                alert("Please click 'Admin Login' at the top right to unlock editing rights.");
-                return;
-            }
-            openAddModal();
-            document.getElementById("formPrimaryDuty").value = "Stage Squad";
-            setTimeout(() => {
-                const checkboxes = document.querySelectorAll('input[name="modalGR"]');
-                checkboxes.forEach(cb => {
-                    if (parseInt(cb.value) === grNum) cb.checked = true;
-                });
-            }, 100);
-        };
+            grid.innerHTML = ALL_DUTIES.map(duty => {
+                const assignedMembers = volunteers.filter(v => v.duties && v.duties.includes(duty));
+                const leaders = assignedMembers.filter(v => v.role === "Category Leader");
 
-        window.removeVolunteerFromGreenRoom = function(volId, grNum) {
-            if (!isAdmin) return;
-            const v = volunteers.find(vol => vol.id === volId);
-            if (v && v.greenRooms) {
-                v.greenRooms = v.greenRooms.filter(g => g !== grNum);
-                saveVolunteers();
-            }
-        };
-
-        function renderCategoryButtons() {
-            const container = document.getElementById("categoryButtonsContainer");
-            if (!container) return;
-            container.innerHTML = ALL_CATEGORIES.map(cat => {
-                const count = volunteers.filter(v => v.primaryDuty === cat || v.secondaryDuty === cat).length;
-                const isActive = selectedCategory === cat;
                 return `
-                    <button onclick="selectCategory('${cat}')" class="p-3 rounded-xl border text-left transition flex flex-col justify-between shadow-sm ${isActive ? 'bg-brand-700 text-white border-brand-800 font-bold shadow' : 'bg-white text-slate-800 border-slate-200 hover:bg-slate-50 font-semibold'}">
-                        <span class="text-xs">${cat}</span>
-                        <span class="text-[10px] ${isActive ? 'text-gold-300' : 'text-slate-500'} mt-1 font-bold">${count} Members</span>
-                    </button>
-                `;
-            }).join("");
-        }
-
-        window.selectCategory = function(cat) {
-            selectedCategory = cat;
-            document.getElementById("addCatBtnName").textContent = cat;
-            renderCategoryButtons();
-            renderCategoryViewContent();
-        };
-
-        function renderCategoryView() {
-            document.getElementById("addCatBtnName").textContent = selectedCategory;
-            renderCategoryButtons();
-            renderCategoryViewContent();
-        }
-
-        function renderCategoryViewContent() {
-            const members = volunteers.filter(v => v.primaryDuty === selectedCategory || v.secondaryDuty === selectedCategory);
-            const leader = members.find(v => v.leaderRole);
-
-            document.getElementById("selectedCategoryTitle").textContent = selectedCategory;
-            document.getElementById("selectedCategoryCount").textContent = `${members.length} Volunteers`;
-
-            const leaderDiv = document.getElementById("selectedCategoryLeader");
-            if (leader) {
-                leaderDiv.innerHTML = `
-                    <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-crown text-amber-600 text-base"></i>
-                            <div>
-                                <span class="font-black text-slate-900 text-sm">${leader.name}</span>
-                                <span class="text-amber-800 font-bold block text-[11px]">Assigned Leader: ${leader.leaderRole}</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <button onclick="openUserModal(${leader.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-3 py-1.5 rounded-lg shadow-sm">View</button>
-                            <button onclick="openEditModal(${leader.id})" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-2.5 py-1.5 rounded-lg shadow-sm admin-col ${!isAdmin ? 'hidden' : ''}"><i class="fa-solid fa-pen"></i></button>
-                        </div>
-                    </div>
-                `;
-                leaderDiv.classList.remove("hidden");
-            } else {
-                leaderDiv.classList.add("hidden");
-            }
-
-            const membersGrid = document.getElementById("selectedCategoryMembers");
-            membersGrid.innerHTML = members.map(v => `
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center text-xs">
-                    <div>
-                        <button onclick="openUserModal(${v.id})" class="font-extrabold text-brand-700 hover:underline text-left">${v.name}</button>
-                        <p class="text-[11px] text-slate-500 font-medium">${v.parish} • ${v.phone || 'N/A'}</p>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="text-[10px] bg-white border border-slate-200 px-2 py-1 rounded font-semibold text-slate-700">${v.shift || 'Full Day'}</span>
-                        <button onclick="openEditModal(${v.id})" class="text-brand-700 hover:text-brand-900 p-1 admin-col ${!isAdmin ? 'hidden' : ''}"><i class="fa-solid fa-pen-to-square"></i></button>
-                    </div>
-                </div>
-            `).join("") || '<p class="text-slate-400 text-xs italic col-span-3 text-center py-4">No volunteers in this category.</p>';
-        }
-
-        function renderFoodPrepBreakdowns() {
-            const container = document.getElementById("foodPrepCategoriesGrid");
-            if (!container) return;
-            let html = "";
-            FOOD_PREP_ITEMS.forEach(item => {
-                const assigned = volunteers.filter(v => v.foodItems && v.foodItems.includes(item));
-                const leader = assigned.find(v => v.leaderRole && v.leaderRole !== "");
-
-                html += `
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3">
-                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                            <h4 class="font-black text-slate-900 text-sm flex items-center gap-2">
-                                <i class="fa-solid fa-bowl-food text-purple-600"></i> ${item}
-                            </h4>
-                            <div class="flex items-center gap-1.5">
-                                <span class="text-xs bg-purple-100 text-purple-900 font-bold px-2 py-0.5 rounded-full">${assigned.length} Team</span>
-                                <button onclick="openAddModalForFoodItem('${item.replace(/'/g, "\\'")}')" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold px-2 py-1 rounded shadow transition"><i class="fa-solid fa-user-plus"></i></button>
-                            </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col justify-between space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <h3 class="font-black text-slate-900 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-layer-group text-amber-600"></i> ${duty}
+                            </h3>
+                            <span class="text-xs bg-amber-100 text-amber-900 font-extrabold px-2.5 py-0.5 rounded-full">${assignedMembers.length} Members</span>
                         </div>
 
                         <div class="space-y-2 flex-1">
-                            ${leader ? `
-                                <div class="bg-amber-50 border border-amber-200 p-2 rounded-lg text-xs flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <i class="fa-solid fa-crown text-amber-600 text-sm"></i>
-                                        <div>
-                                            <span class="font-black text-slate-900">${leader.name}</span>
-                                            <span class="text-[10px] text-amber-800 font-extrabold block">Leader: ${leader.leaderRole}</span>
-                                        </div>
+                            ${leaders.length > 0 ? `
+                                <div class="bg-amber-50 border border-amber-200 p-2 rounded-xl text-xs space-y-1">
+                                    <span class="font-black text-amber-900 block flex items-center gap-1"><i class="fa-solid fa-crown text-amber-600"></i> Leaders / Coordinators:</span>
+                                    <div class="flex flex-wrap gap-1">
+                                        ${leaders.map(l => `<span class="bg-white border border-amber-300 text-slate-900 font-bold px-2 py-0.5 rounded">${l.name} (${l.parish})</span>`).join("")}
                                     </div>
-                                    <button onclick="openEditModal(${leader.id})" class="text-[10px] bg-amber-500 hover:bg-amber-400 text-slate-900 font-black px-2 py-1 rounded admin-col ${!isAdmin ? 'hidden' : ''}">Edit Leader</button>
                                 </div>
-                            ` : `
-                                <div class="bg-slate-50 border border-dashed border-slate-300 p-2 rounded-lg text-xs flex items-center justify-between">
-                                    <span class="text-slate-500 italic text-[11px]"><i class="fa-solid fa-crown text-slate-400 mr-1"></i> No Food Leader designated</span>
-                                    <button onclick="setFoodCategoryLeader('${item.replace(/'/g, "\\'")}')" class="text-[10px] bg-brand-700 hover:bg-brand-800 text-white font-bold px-2 py-1 rounded admin-col ${!isAdmin ? 'hidden' : ''}">+ Assign Leader</button>
-                                </div>
-                            `}
+                            ` : ''}
 
-                            <div class="text-xs space-y-1 max-h-36 overflow-y-auto pr-1">
-                                ${assigned.map(v => `
-                                    <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100 text-slate-800 font-medium">
+                            <div class="space-y-1 max-h-44 overflow-y-auto pr-1">
+                                ${assignedMembers.map(m => `
+                                    <div class="bg-slate-50 p-2 rounded-lg border border-slate-100 text-xs flex justify-between items-center">
                                         <div>
-                                            <button onclick="openUserModal(${v.id})" class="hover:underline font-bold text-slate-900">${v.name}</button>
-                                            <span class="text-[10px] text-slate-500 font-semibold block">${v.parish} ${v.leaderRole ? '• ' + v.leaderRole : ''}</span>
+                                            <span class="font-extrabold text-slate-900">${m.name}</span>
+                                            <span class="text-[10px] text-slate-500 block">${m.parish || 'No Parish'} ${m.role ? '• ' + m.role : ''}</span>
                                         </div>
-                                        <div class="flex items-center gap-1">
-                                            <button onclick="openEditModal(${v.id})" class="text-slate-600 hover:text-brand-700 p-1 admin-col ${!isAdmin ? 'hidden' : ''}"><i class="fa-solid fa-pen"></i></button>
-                                        </div>
+                                        ${isAdmin ? `
+                                            <button onclick="openEditModal(${m.id})" class="text-brand-700 hover:text-brand-900 p-1"><i class="fa-solid fa-pen text-[11px]"></i></button>
+                                        ` : ''}
                                     </div>
-                                `).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers designated yet.</p>'}
+                                `).join("") || '<p class="text-slate-400 text-xs italic py-2">No members assigned to this category.</p>'}
                             </div>
                         </div>
+
+                        ${isAdmin ? `
+                            <div class="pt-2 border-t border-slate-100 text-right">
+                                <button onclick="openAddModalForDuty('${duty.replace(/'/g, "\\'")}')" class="text-xs bg-brand-700 hover:bg-brand-800 text-white font-bold px-3 py-1.5 rounded-lg shadow transition">
+                                    <i class="fa-solid fa-plus mr-1"></i> Add Member to ${duty}
+                                </button>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
-            });
-            container.innerHTML = html;
+            }).join("");
         }
-
-        window.setFoodCategoryLeader = function(foodItem) {
-            if (!isAdmin) {
-                alert("Please click 'Admin Login' at the top right to unlock editing rights.");
-                return;
-            }
-            const assigned = volunteers.filter(v => v.foodItems && v.foodItems.includes(foodItem));
-            if (assigned.length === 0) {
-                alert(`Please add or assign volunteers to "${foodItem}" first before setting a leader.`);
-                openAddModalForFoodItem(foodItem);
-                return;
-            }
-
-            const volNames = assigned.map((v, index) => `${index + 1}. ${v.name} (${v.parish})`).join("\n");
-            const choice = prompt(`Select Food Leader for "${foodItem}":\n\nEnter the number of the volunteer:\n${volNames}`);
-            if (choice) {
-                const idx = parseInt(choice) - 1;
-                if (!isNaN(idx) && assigned[idx]) {
-                    assigned[idx].leaderRole = "Food Preparation Leader";
-                    saveVolunteers();
-                } else {
-                    alert("Invalid selection.");
-                }
-            }
-        };
-
-        window.openUserModal = function(id) {
-            const v = volunteers.find(vol => vol.id === id);
-            if (!v) return;
-            activeUserId = id;
-
-            document.getElementById("uModalName").textContent = v.name;
-            document.getElementById("uModalParish").textContent = `${v.parish} • ${v.phone || 'Phone N/A'}`;
-            
-            const leaderTag = document.getElementById("uModalLeaderTag");
-            if (v.leaderRole) {
-                leaderTag.textContent = v.leaderRole;
-                leaderTag.classList.remove("hidden");
-            } else {
-                leaderTag.classList.add("hidden");
-            }
-
-            document.getElementById("uModalAttendance").innerHTML = v.checkedIn ? `<span class="text-emerald-600"><i class="fa-solid fa-circle-check"></i> Checked In</span>` : `<span class="text-slate-400"><i class="fa-solid fa-circle-dot"></i> Not Checked In</span>`;
-            document.getElementById("uModalCoupon").innerHTML = v.couponClaimed ? `<span class="text-amber-600"><i class="fa-solid fa-ticket"></i> Coupon Issued</span>` : `<span class="text-slate-400"><i class="fa-solid fa-ticket"></i> Pending</span>`;
-
-            const dutyTeamsContainer = document.getElementById("uModalDutyTeams");
-            let html = "";
-
-            if (v.primaryDuty) {
-                const primaryCoworkers = volunteers.filter(m => m.id !== v.id && (m.primaryDuty === v.primaryDuty || m.secondaryDuty === v.primaryDuty));
-                html += `
-                    <div class="bg-brand-50/70 border border-brand-200 p-3.5 rounded-xl space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="font-black text-brand-900 text-xs flex items-center gap-1.5">
-                                <i class="fa-solid fa-briefcase text-brand-700"></i> Primary Duty: ${v.primaryDuty}
-                            </span>
-                            <span class="text-[10px] bg-brand-100 text-brand-900 font-extrabold px-2 py-0.5 rounded-full">${primaryCoworkers.length + 1} Teammates</span>
-                        </div>
-                        <p class="text-[11px] text-slate-600 font-medium">You are assigned to <b>${v.primaryDuty}</b> (Shift: ${v.shift || 'Full Day'}). Here are team members working alongside you:</p>
-                        <div class="bg-white rounded-lg border border-brand-100 p-2 space-y-1.5 max-h-40 overflow-y-auto">
-                            ${primaryCoworkers.map(m => `
-                                <div class="flex justify-between items-center text-xs py-1 px-1.5 hover:bg-slate-50 rounded">
-                                    <div class="flex items-center gap-1.5">
-                                        ${m.leaderRole ? '<i class="fa-solid fa-crown text-amber-500 text-[10px]"></i>' : '<i class="fa-solid fa-user text-slate-400 text-[10px]"></i>'}
-                                        <span class="font-bold text-slate-900">${m.name}</span>
-                                        <span class="text-[10px] text-slate-500">(${m.parish})</span>
-                                    </div>
-                                    <span class="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-600 font-medium">${m.shift || 'Full Day'}</span>
-                                </div>
-                            `).join("") || '<p class="text-slate-400 text-[11px] italic">No other co-workers in this primary duty.</p>'}
-                        </div>
-                    </div>
-                `;
-            }
-
-            if (v.secondaryDuty) {
-                const secondaryCoworkers = volunteers.filter(m => m.id !== v.id && (m.primaryDuty === v.secondaryDuty || m.secondaryDuty === v.secondaryDuty));
-                html += `
-                    <div class="bg-indigo-50/70 border border-indigo-200 p-3.5 rounded-xl space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="font-black text-indigo-900 text-xs flex items-center gap-1.5">
-                                <i class="fa-solid fa-plus text-indigo-700"></i> Secondary Duty: ${v.secondaryDuty}
-                            </span>
-                            <span class="text-[10px] bg-indigo-100 text-indigo-900 font-extrabold px-2 py-0.5 rounded-full">${secondaryCoworkers.length + 1} Teammates</span>
-                        </div>
-                        <p class="text-[11px] text-slate-600 font-medium">You also support <b>${v.secondaryDuty}</b>. Here are your teammates for this duty:</p>
-                        <div class="bg-white rounded-lg border border-indigo-100 p-2 space-y-1.5 max-h-36 overflow-y-auto">
-                            ${secondaryCoworkers.map(m => `
-                                <div class="flex justify-between items-center text-xs py-1 px-1.5 hover:bg-slate-50 rounded">
-                                    <div class="flex items-center gap-1.5">
-                                        ${m.leaderRole ? '<i class="fa-solid fa-crown text-amber-500 text-[10px]"></i>' : '<i class="fa-solid fa-user text-slate-400 text-[10px]"></i>'}
-                                        <span class="font-bold text-slate-900">${m.name}</span>
-                                        <span class="text-[10px] text-slate-500">(${m.parish})</span>
-                                    </div>
-                                    <span class="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-600 font-medium">${m.shift || 'Full Day'}</span>
-                                </div>
-                            `).join("") || '<p class="text-slate-400 text-[11px] italic">No other co-workers in this secondary duty.</p>'}
-                        </div>
-                    </div>
-                `;
-            }
-
-            if (v.stages && v.stages.length > 0) {
-                html += `
-                    <div class="bg-blue-50/70 border border-blue-200 p-3 rounded-xl text-xs space-y-1">
-                        <span class="font-black text-blue-900 block"><i class="fa-solid fa-masks-theater text-blue-600 mr-1"></i> Assigned Stages:</span>
-                        <div class="flex flex-wrap gap-1 mt-1">
-                            ${v.stages.map(s => `<span class="bg-blue-600 text-white font-extrabold px-2 py-0.5 rounded text-[11px]">Stage ${s}</span>`).join(" ")}
-                        </div>
-                    </div>
-                `;
-            }
-
-            if (v.greenRooms && v.greenRooms.length > 0) {
-                html += `
-                    <div class="bg-purple-50/70 border border-purple-200 p-3 rounded-xl text-xs space-y-1">
-                        <span class="font-black text-purple-900 block"><i class="fa-solid fa-door-closed text-purple-600 mr-1"></i> Assigned Green Rooms:</span>
-                        <div class="flex flex-wrap gap-1 mt-1">
-                            ${v.greenRooms.map(g => `<span class="bg-purple-600 text-white font-extrabold px-2 py-0.5 rounded text-[11px]">Green Room ${g}</span>`).join(" ")}
-                        </div>
-                    </div>
-                `;
-            }
-
-            if (v.foodItems && v.foodItems.length > 0) {
-                html += `
-                    <div class="bg-amber-50/70 border border-amber-200 p-3 rounded-xl text-xs space-y-1">
-                        <span class="font-black text-amber-900 block"><i class="fa-solid fa-utensils text-amber-600 mr-1"></i> Assigned Food Preparation & Sales Items:</span>
-                        <div class="flex flex-wrap gap-1 mt-1">
-                            ${v.foodItems.map(f => `<span class="bg-amber-600 text-white font-extrabold px-2 py-0.5 rounded text-[11px]">${f}</span>`).join(" ")}
-                        </div>
-                    </div>
-                `;
-            }
-
-            dutyTeamsContainer.innerHTML = html;
-            document.getElementById("uModalCommentInput").value = v.notes || "";
-            document.getElementById("userModal").classList.remove("hidden");
-        };
-
-        window.closeUserModal = function() {
-            document.getElementById("userModal").classList.add("hidden");
-            activeUserId = null;
-        };
-
-        window.saveUserComment = function() {
-            if (!activeUserId) return;
-            const v = volunteers.find(vol => vol.id === activeUserId);
-            if (v) {
-                v.notes = document.getElementById("uModalCommentInput").value.trim();
-                saveVolunteers();
-                closeUserModal();
-            }
-        };
-
-        window.toggleAttendance = function(id) {
-            if (!isAdmin) return;
-            const v = volunteers.find(vol => vol.id === id);
-            if (v) { v.checkedIn = !v.checkedIn; saveVolunteers(); }
-        };
-
-        window.toggleCoupon = function(id) {
-            if (!isAdmin) return;
-            const v = volunteers.find(vol => vol.id === id);
-            if (v) { v.couponClaimed = !v.couponClaimed; saveVolunteers(); }
-        };
 
         window.deleteVolunteer = function(id) {
             if (!isAdmin) return;
-            if (confirm("Are you sure you want to delete this volunteer?")) {
+            if (confirm("Are you sure you want to delete this member?")) {
                 volunteers = volunteers.filter(v => v.id !== id);
                 saveVolunteers();
             }
         };
 
-        window.openAddModal = function() {
-            if (!isAdmin) return;
-            populateExistingVolunteerDropdown();
-            document.getElementById("modalTitle").textContent = "Add or Assign Volunteer";
-            document.getElementById("formSelectExisting").value = "";
+        window.openAddModal = function(dutyPreset = null) {
+            if (!isAdmin) {
+                alert("Please click 'Admin Login' at the top right to unlock editing rights.");
+                return;
+            }
+            document.getElementById("modalTitle").textContent = dutyPreset ? `Add Member to: ${dutyPreset}` : "Add New Member";
             document.getElementById("formVolId").value = "";
             document.getElementById("formName").value = "";
             document.getElementById("formParish").value = "";
             document.getElementById("formPhone").value = "";
             document.getElementById("formLeaderRole").value = "";
-            document.getElementById("formPrimaryDuty").value = "Venue Arrangement";
-            document.getElementById("formSecondaryDuty").value = "";
-            document.getElementById("formShift").value = "Saturday Full Day";
-            document.getElementById("formNotes").value = "";
-            document.getElementById("formCheckedIn").value = "false";
-            document.getElementById("formCouponClaimed").value = "false";
 
-            renderStageCheckboxes([]);
-            renderGreenRoomCheckboxes([]);
-            renderFoodPrepCheckboxes([]);
-
+            renderDutiesCheckboxes(dutyPreset ? [dutyPreset] : []);
             document.getElementById("volunteerModal").classList.remove("hidden");
         };
 
-        window.openAddModalForCategory = function(category) {
-            if (!isAdmin) {
-                alert("Please click 'Admin Login' at the top right to unlock editing and adding rights.");
-                return;
-            }
-            openAddModal();
-            document.getElementById("formPrimaryDuty").value = category;
-        };
-
-        window.openAddModalForFoodItem = function(foodItem) {
-            if (!isAdmin) {
-                alert("Please click 'Admin Login' at the top right to unlock editing and adding rights.");
-                return;
-            }
-            openAddModal();
-            document.getElementById("formPrimaryDuty").value = "Food Preparation";
-            setTimeout(() => {
-                const checkboxes = document.querySelectorAll('input[name="modalFoodItem"]');
-                checkboxes.forEach(cb => {
-                    if (cb.value === foodItem) cb.checked = true;
-                });
-            }, 100);
+        window.openAddModalForDuty = function(duty) {
+            openAddModal(duty);
         };
 
         window.openEditModal = function(id) {
             if (!isAdmin) return;
-            populateExistingVolunteerDropdown();
             const v = volunteers.find(vol => vol.id === id);
             if (!v) return;
 
-            document.getElementById("modalTitle").textContent = `Edit Allocations: ${v.name}`;
-            document.getElementById("formSelectExisting").value = v.id;
+            document.getElementById("modalTitle").textContent = `Edit Member: ${v.name}`;
             document.getElementById("formVolId").value = v.id;
             document.getElementById("formName").value = v.name;
             document.getElementById("formParish").value = v.parish;
             document.getElementById("formPhone").value = v.phone || '';
-            document.getElementById("formLeaderRole").value = v.leaderRole || '';
-            document.getElementById("formPrimaryDuty").value = v.primaryDuty;
-            document.getElementById("formSecondaryDuty").value = v.secondaryDuty || '';
-            document.getElementById("formShift").value = v.shift || '';
-            document.getElementById("formNotes").value = v.notes || '';
-            document.getElementById("formCheckedIn").value = v.checkedIn ? "true" : "false";
-            document.getElementById("formCouponClaimed").value = v.couponClaimed ? "true" : "false";
+            document.getElementById("formLeaderRole").value = v.role || '';
 
-            renderStageCheckboxes(v.stages || []);
-            renderGreenRoomCheckboxes(v.greenRooms || []);
-            renderFoodPrepCheckboxes(v.foodItems || []);
-
+            renderDutiesCheckboxes(v.duties || []);
             document.getElementById("volunteerModal").classList.remove("hidden");
         };
 
-        function renderStageCheckboxes(selectedStages) {
-            const container = document.getElementById("stageCheckboxes");
+        function renderDutiesCheckboxes(selectedDuties) {
+            const container = document.getElementById("modalDutiesCheckboxes");
             if (!container) return;
-            let html = "";
-            for (let i = 1; i <= 12; i++) {
-                const checked = selectedStages.includes(i) ? "checked" : "";
-                html += `<label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded border border-blue-200 cursor-pointer font-bold text-blue-900"><input type="checkbox" name="modalStage" value="${i}" ${checked} class="rounded text-blue-600 focus:ring-blue-500"> Stage ${i}</label>`;
-            }
-            container.innerHTML = html;
-        }
-
-        function renderGreenRoomCheckboxes(selectedGRs) {
-            const container = document.getElementById("greenRoomCheckboxes");
-            if (!container) return;
-            let html = "";
-            for (let i = 1; i <= 12; i++) {
-                const checked = selectedGRs.includes(i) ? "checked" : "";
-                html += `<label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded border border-purple-200 cursor-pointer font-bold text-purple-900"><input type="checkbox" name="modalGR" value="${i}" ${checked} class="rounded text-purple-600 focus:ring-purple-500"> GR ${i}</label>`;
-            }
-            container.innerHTML = html;
-        }
-
-        function renderFoodPrepCheckboxes(selectedFood) {
-            const container = document.getElementById("foodPrepCheckboxes");
-            if (!container) return;
-            let html = "";
-            FOOD_PREP_ITEMS.forEach(item => {
-                const checked = selectedFood.includes(item) ? "checked" : "";
-                html += `<label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded border border-amber-200 cursor-pointer font-semibold text-amber-900"><input type="checkbox" name="modalFoodItem" value="${item}" ${checked} class="rounded text-amber-600 focus:ring-amber-500"> ${item}</label>`;
-            });
-            container.innerHTML = html;
+            container.innerHTML = ALL_DUTIES.map(duty => {
+                const checked = selectedDuties.includes(duty) ? "checked" : "";
+                return `<label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded border border-slate-200 cursor-pointer font-semibold text-slate-800"><input type="checkbox" name="modalDuty" value="${duty}" ${checked} class="rounded text-brand-600 focus:ring-brand-500"> ${duty}</label>`;
+            }).join("");
         }
 
         window.closeVolunteerModal = function() {
@@ -1631,25 +733,15 @@
             if (!isAdmin) return;
 
             const id = document.getElementById("formVolId").value;
-            const selectedStages = Array.from(document.querySelectorAll('input[name="modalStage"]:checked')).map(cb => parseInt(cb.value));
-            const selectedGRs = Array.from(document.querySelectorAll('input[name="modalGR"]:checked')).map(cb => parseInt(cb.value));
-            const selectedFood = Array.from(document.querySelectorAll('input[name="modalFoodItem"]:checked')).map(cb => cb.value);
+            const selectedDuties = Array.from(document.querySelectorAll('input[name="modalDuty"]:checked')).map(cb => cb.value);
 
             const volData = {
                 id: id ? parseInt(id) : Date.now(),
                 name: document.getElementById("formName").value.trim(),
                 parish: document.getElementById("formParish").value.trim(),
                 phone: document.getElementById("formPhone").value.trim(),
-                leaderRole: document.getElementById("formLeaderRole").value,
-                primaryDuty: document.getElementById("formPrimaryDuty").value,
-                secondaryDuty: document.getElementById("formSecondaryDuty").value,
-                shift: document.getElementById("formShift").value.trim(),
-                notes: document.getElementById("formNotes").value.trim(),
-                checkedIn: document.getElementById("formCheckedIn").value === "true",
-                couponClaimed: document.getElementById("formCouponClaimed").value === "true",
-                stages: selectedStages,
-                greenRooms: selectedGRs,
-                foodItems: selectedFood
+                role: document.getElementById("formLeaderRole").value,
+                duties: selectedDuties
             };
 
             if (id) {
@@ -1665,26 +757,22 @@
         };
 
         window.exportCSV = function() {
-            let csv = "ID,Full Name,Phone,Parish,Primary Duty,Secondary Duty,Leadership Role,Stages Assigned,Green Rooms Assigned,Food Items Assigned,Shift,Attendance,Food Coupon,Notes\n";
+            let csv = "ID,Full Name,Parish,Phone,Role,Assigned Duties\n";
             volunteers.forEach(v => {
-                const stages = (v.stages || []).join("; ");
-                const grs = (v.greenRooms || []).join("; ");
-                const foods = (v.foodItems || []).join("; ");
-                csv += `"${v.id}","${v.name}","${v.phone || ''}","${v.parish}","${v.primaryDuty}","${v.secondaryDuty || ''}","${v.leaderRole || ''}","${stages}","${grs}","${foods}","${v.shift || ''}","${v.checkedIn ? 'Present' : 'Pending'}","${v.couponClaimed ? 'Issued' : 'Pending'}","${v.notes || ''}"\n`;
+                const dutiesStr = (v.duties || []).join("; ");
+                csv += `"${v.id}","${v.name}","${v.parish}","${v.phone || ''}","${v.role || 'Standard Volunteer'}","${dutiesStr}"\n`;
             });
 
             const blob = new Blob([csv], { type: "text/csv" });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.setAttribute("href", url);
-            a.setAttribute("download", `CSMEGB_Kalotsavam_Volunteers_2026.csv`);
+            a.setAttribute("download", `CSMEGB_Kalotsavam_Members_2026.csv`);
             a.click();
         };
 
-        // Initialize Firebase synchronization on startup
         document.addEventListener("DOMContentLoaded", () => {
             initSync();
-            renderCategoryButtons();
         });
     </script>
 </body>
