@@ -1,239 +1,3 @@
-```python
-import pandas as pd
-
-# Check files in current directory
-import os
-print("Files in workspace:", os.listdir('.'))
-
-excel_path = 'Volunteer_Category_Lists_Deduplicated_3.xlsx'
-csv_path = 'CSMEGB_Kalotsavam_Volunteers_2026-5_2.csv'
-
-xls = pd.ExcelFile(excel_path)
-print("Excel Sheets:", xls.sheet_names)
-
-df_csv = pd.read_csv(csv_path)
-print("CSV shape:", df_csv.shape)
-print("CSV columns:", df_csv.columns.tolist())
-print(df_csv.head())
-
-
-```
-
-```text
-Files in workspace: ['CSMEGB_Kalotsavam_Volunteers_2026-5.csv', 'Volunteer_Category_Lists_Deduplicated.xlsx', 'input_file_0.png']
-
-
-```
-
-```python
-# Find exact filenames in workspace
-files = os.listdir('.')
-excel_file = [f for f in files if f.endswith('.xlsx')][0]
-csv_file = [f for f in files if f.endswith('.csv')][0]
-
-print(f"Using Excel: {excel_file}")
-print(f"Using CSV: {csv_file}")
-
-xls = pd.ExcelFile(excel_file)
-print("Excel Sheets:", len(xls.sheet_names), "sheets.")
-
-df_csv = pd.read_csv(csv_file)
-print("CSV row count:", len(df_csv))
-print(df_csv.head(3))
-
-
-```
-
-```text
-Using Excel: Volunteer_Category_Lists_Deduplicated.xlsx
-Using CSV: CSMEGB_Kalotsavam_Volunteers_2026-5.csv
-Excel Sheets: 57 sheets.
-CSV row count: 121
-   ID                  Full Name       Phone        Parish      Primary Duty         Secondary Duty           Leadership Role Stages Assigned Green Rooms Assigned                       Food Items Assigned              Shift Attendance Food Coupon                                                                       Notes
-0   1                John Joseph  7701089837  St.Sebastian  Food Preparation  General Rearrangement   Food Preparation Leader             NaN                  NaN            Kappa Biriyani & Chicken Curry  Saturday Full Day    Pending     Pending                                                         Food Committee Lead
-1   2  Shiju Thettayil Vakkachan  7918393444       St.Mary  Food Preparation  General Rearrangement                       NaN             NaN                  NaN  Biriyani; Kappa Biriyani & Chicken Curry  Saturday Full Day    Pending     Pending                                                                         NaN
-2   3              Jasmin Joseph  7909488384       St.Jude       Stage Squad      Venue Arrangement  Stage Arrangement Leader            1; 2                   12                                       NaN  Saturday Full Day    Pending     Pending  Stage Arrangement Leader - Main Stage 1, Sports Room Stage 2 & Stage 11/12
-
-
-```
-
-```python
-# Let's inspect "All event volunteers" and "Unique Volunteers" in Excel to cross-match with CSV (121 volunteers)
-df_excel_all = pd.read_excel(excel_file, sheet_name='All event volunteers')
-print("Excel 'All event volunteers' shape:", df_excel_all.shape)
-
-# Let's see how Excel sheets map stage & green room assignments
-stage_sheets = [s for s in xls.sheet_names if 'Stage' in s or 'Green' in s]
-print("Stage/Green Room sheets in Excel:", stage_sheets[:10])
-
-# Let's examine one stage assignment sheet
-df_stage1 = pd.read_excel(excel_file, sheet_name=stage_sheets[0])
-print("\nSample stage sheet structure:")
-print(df_stage1)
-
-
-```
-
-```text
-Excel 'All event volunteers' shape: (122, 4)
-Stage/Green Room sheets in Excel: ['Stage - Green-room assignment –', 'Stage - Green-room assignment 2', 'Stage - Green-room assignment 3', 'Stage - Green-room assignment 4', 'Stage - Green-room assignment 5', 'Stage - Green-room assignment 6', 'Stage - Green-room assignment 7', 'Stage - Green-room assignment 8', 'Stage - Green-room assignment 9', 'Stage - Green-room assignmen 10']
-
-Sample stage sheet structure:
-  STAGE / GREEN-ROOM ASSIGNMENT – MAIN STAGE  1      Unnamed: 1                         Unnamed: 2               Unnamed: 3
-0                                          Role  Volunteer name  Assignment / unit / source detail  Original name(s) merged
-1                                        LEADER   Jasmin Joseph                   Lead/coordinator            Jasmin Joseph
-2                                        Member    Rojis George                        Team member             Rojis George
-3                                        Member     Tijo Antony                        Team member              Tijo Antony
-4                                        Member           Joshy                        Team member                    Joshy
-
-
-```
-
-```python
-# Let's write a python script to parse all stage/green room assignments from Excel sheets
-stage_green_allocations = {}
-
-for sheet in stage_sheets:
-    df_s = pd.read_excel(excel_file, sheet_name=sheet)
-    title = df_s.columns[0]
-    # Header is in row 0
-    df_s.columns = ['Role', 'Name', 'Detail', 'MergedName']
-    df_s = df_s.iloc[1:].dropna(subset=['Name'])
-    
-    stage_green_allocations[title] = []
-    for _, row in df_s.iterrows():
-        stage_green_allocations[title].append({
-            'Role': row['Role'],
-            'Name': row['Name'],
-            'Detail': row['Detail']
-        })
-
-for k, v in list(stage_green_allocations.items())[:5]:
-    print(f"=== {k} ===")
-    for item in v:
-        print(f"  {item['Role']}: {item['Name']}")
-
-
-```
-
-```text
-=== STAGE / GREEN-ROOM ASSIGNMENT – MAIN STAGE  1 ===
-  LEADER: Jasmin Joseph
-  Member: Rojis George
-  Member: Tijo Antony
-  Member: Joshy
-=== STAGE / GREEN-ROOM ASSIGNMENT – SPORTS ROOM STAGE 2 ===
-  LEADER: Jasmin Joseph
-  Member: Rojis George
-  Member: Tijo Antony
-  Member: Joshy
-=== STAGE / GREEN-ROOM ASSIGNMENT – CLASS ROOM 1 STAGE 3 ===
-  LEADER: Deepumon
-  Member: Rajumon Kuriakose
-  Member: Karol Thomas
-  Member: Beenamol Thomas
-=== STAGE / GREEN-ROOM ASSIGNMENT – CLASS ROOM 2 STAGE 4 ===
-  LEADER: Deepumon
-  Member: Rajumon Kuriakose
-  Member: Karol Thomas
-  Member: Beenamol Thomas
-=== STAGE / GREEN-ROOM ASSIGNMENT – CLASS ROOM 3 STAGE 5 ===
-  LEADER: Deepumon
-  Member: Rajumon Kuriakose
-  Member: Karol Thomas
-  Member: Beenamol Thomas
-
-
-```
-
-```python
-# Let's inspect all 121 volunteers in CSV and merge duties from Excel where available
-print("CSV Total rows:", len(df_csv))
-
-# Check CSV columns
-print(df_csv.columns.tolist())
-
-# Clean CSV data into JSON array for embedding into Web App
-import json
-
-volunteers_json = df_csv.to_dict(orient='records')
-
-# Standardize field names & NaN handling
-for v in volunteers_json:
-    for k, val in list(v.items()):
-        if pd.isna(val):
-            v[k] = ""
-    # Ensure Stages, Green Rooms, Food Items are arrays or clean strings
-    stages_str = str(v.get('Stages Assigned', ''))
-    v['stages'] = [int(s.strip()) for s in stages_str.split(';') if s.strip().isdigit()]
-    
-    gr_str = str(v.get('Green Rooms Assigned', ''))
-    v['greenRooms'] = [int(g.strip()) for g in gr_str.split(';') if g.strip().isdigit()]
-    
-    food_str = str(v.get('Food Items Assigned', ''))
-    v['foodItems'] = [f.strip() for f in food_str.split(';') if f.strip()]
-
-print("Processed sample volunteer:")
-print(json.dumps(volunteers_json[0], indent=2))
-
-
-```
-
-```text
-CSV Total rows: 121
-['ID', 'Full Name', 'Phone', 'Parish', 'Primary Duty', 'Secondary Duty', 'Leadership Role', 'Stages Assigned', 'Green Rooms Assigned', 'Food Items Assigned', 'Shift', 'Attendance', 'Food Coupon', 'Notes']
-Processed sample volunteer:
-{
-  "ID": 1,
-  "Full Name": "John Joseph",
-  "Phone": "7701089837",
-  "Parish": "St.Sebastian",
-  "Primary Duty": "Food Preparation",
-  "Secondary Duty": "General Rearrangement",
-  "Leadership Role": "Food Preparation Leader",
-  "Stages Assigned": "",
-  "Green Rooms Assigned": "",
-  "Food Items Assigned": "Kappa Biriyani & Chicken Curry",
-  "Shift": "Saturday Full Day",
-  "Attendance": "Pending",
-  "Food Coupon": "Pending",
-  "Notes": "Food Committee Lead",
-  "stages": [],
-  "greenRooms": [],
-  "foodItems": [
-    "Kappa Biriyani & Chicken Curry"
-  ]
-}
-
-
-```
-
-Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`** (for accurate category/stage/green room allocations) and **`CSMEGB_Kalotsavam_Volunteers_2026-5_2.csv`** (for the master roster of all **121 volunteers**), here is the analysis and the updated, standalone **`index.html`** application.
-
----
-
-### Key Data & Structural Updates Implemented
-
-1. **Complete Roster of 121 Volunteers**: Contains all 121 volunteers directly integrated from the CSV master list, merging duty assignments from the Excel sheets.
-2. **Individual Tables for ALL 12 Stages & ALL 12 Green Rooms**:
-* **Stages 1 to 12**: Each stage has its own dedicated card/table showing assigned leaders and stage squad members (e.g., *Main Stage 1*, *Sports Room Stage 2*, *Class Room Stages 3 to 8*, etc.).
-* **Green Rooms 1 to 12**: Every individual green room (e.g., *Bristol Green Room 1*, *Cardiff Green Room 2*, *Gloucester Green Room 3*, *Western-super-Mare Green Room 9*, etc.) features a separate, dedicated table with assigned volunteers.
-
-
-3. **Bracketed Parish/Unit Display**: Every volunteer’s name is clearly formatted with their parish/unit in brackets (e.g., `John Joseph (St.Sebastian)`) across all views, search results, and stage tables.
-4. **Header Total Volunteer Counter**: Prominently displays **121 Registered Volunteers** right on the header and banner.
-5. **Admin Controls & Category Customization**:
-* Admins can create custom duty categories.
-* Admins can assign volunteers directly to any category using a quick dropdown selection.
-* Full search capability by volunteer name, unit, stage, or duty assignment.
-
-
-
----
-
-### Complete Single-File `index.html` Code
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -314,7 +78,6 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
                 </div>
 
                 <div class="flex items-center space-x-3">
-                    <!-- TOTAL VOLUNTEERS BADGE -->
                     <div class="bg-white/10 border border-gold-400/30 rounded-xl px-3 py-1.5 text-center shadow-inner">
                         <span class="text-[9px] uppercase font-bold text-gold-300 block tracking-wider">Total Volunteers</span>
                         <span id="headerTotalCount" class="text-base sm:text-lg font-black text-white leading-none">121</span>
@@ -345,8 +108,8 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
                         </span>
                         <span class="text-xs text-gold-300 font-semibold"><i class="fa-solid fa-users text-gold-400 mr-1"></i> <span id="bannerTotalCount">121</span> Active Volunteers</span>
                     </div>
-                    <h2 class="text-xl sm:text-2xl font-black text-white">Volunteer & Stage Allocation Portal</h2>
-                    <p class="text-rose-100 text-xs sm:text-sm mt-1">Search any volunteer name to see where they are allocated across stages, green rooms, and food teams.</p>
+                    <h2 class="text-xl sm:text-2xl font-black text-white">Volunteer & Duty Allocation Portal</h2>
+                    <p class="text-rose-100 text-xs sm:text-sm mt-1">Search any volunteer name to see where they are allocated across operational duties, food teams, stages, and green rooms.</p>
                 </div>
 
                 <div class="flex flex-wrap gap-2">
@@ -354,10 +117,10 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
                         <i class="fa-solid fa-file-csv text-gold-400 text-sm"></i> Export CSV
                     </button>
                     <button id="adminAddCatBtn" onclick="openAddCategoryModal()" class="hidden bg-amber-500 hover:bg-amber-400 text-slate-900 text-xs px-3 py-2 rounded-lg font-black transition flex items-center gap-1.5 shadow">
-                        <i class="fa-solid fa-folder-plus"></i> + Add Category
+                        <i class="fa-solid fa-folder-plus"></i> + Add Duty
                     </button>
                     <button id="addVolunteerBtn" onclick="openAddModal()" class="hidden bg-gold-500 hover:bg-gold-400 text-brand-900 text-xs px-3 py-2 rounded-lg font-black transition flex items-center gap-1.5 shadow">
-                        <i class="fa-solid fa-user-plus"></i> + Add Volunteer
+                        <i class="fa-solid fa-user-plus"></i> + Add / Edit Volunteer
                     </button>
                     <button id="resetBtn" onclick="resetToDefaults()" class="hidden bg-rose-900/60 hover:bg-rose-900 text-rose-200 border border-rose-500/30 text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1">
                         <i class="fa-solid fa-rotate-left text-xs"></i> Reset
@@ -379,7 +142,7 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
                     <i class="fa-solid fa-door-closed mr-1.5 text-purple-600"></i> Green Rooms (1 - 12)
                 </button>
                 <button onclick="switchTab('categories')" id="tab-categories" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
-                    <i class="fa-solid fa-layer-group mr-1.5 text-amber-600"></i> Duty Categories
+                    <i class="fa-solid fa-layer-group mr-1.5 text-amber-600"></i> Duty Categories & Menu
                 </button>
             </nav>
         </div>
@@ -394,7 +157,7 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
 
                 <div>
                     <select id="dutyFilter" onchange="renderApp()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700 font-medium">
-                        <option value="">All Duty Categories</option>
+                        <option value="">All Duties & Food Items</option>
                     </select>
                 </div>
 
@@ -415,7 +178,7 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
             </div>
         </div>
 
-        <!-- TAB CONTENT 2: STAGES (SEPARATE TABLES FOR STAGE 1 - 12) -->
+        <!-- TAB CONTENT 2: STAGES -->
         <div id="content-stages" class="tab-content hidden space-y-6">
             <div class="bg-blue-50/80 border border-blue-200 p-4 rounded-xl text-xs sm:text-sm text-blue-900">
                 <p class="font-bold"><i class="fa-solid fa-masks-theater text-blue-600 mr-1.5"></i> Individual Stage Tables (Stage 1 to Stage 12)</p>
@@ -424,7 +187,7 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="stagesTablesGrid"></div>
         </div>
 
-        <!-- TAB CONTENT 3: GREEN ROOMS (SEPARATE TABLES FOR GR 1 - 12) -->
+        <!-- TAB CONTENT 3: GREEN ROOMS -->
         <div id="content-greenrooms" class="tab-content hidden space-y-6">
             <div class="bg-purple-50/80 border border-purple-200 p-4 rounded-xl text-xs sm:text-sm text-purple-900">
                 <p class="font-bold"><i class="fa-solid fa-door-closed text-purple-600 mr-1.5"></i> Individual Green Room Tables (Green Room 1 to 12)</p>
@@ -433,12 +196,12 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="greenRoomsTablesGrid"></div>
         </div>
 
-        <!-- TAB CONTENT 4: DUTY CATEGORIES -->
+        <!-- TAB CONTENT 4: DUTY CATEGORIES & MENU -->
         <div id="content-categories" class="tab-content hidden space-y-6">
             <div class="bg-amber-50/80 border border-amber-200 p-4 rounded-xl text-xs sm:text-sm text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <p class="font-bold"><i class="fa-solid fa-layer-group text-amber-600 mr-1.5"></i> Duty Category Selection & Dropdown Allocation</p>
-                    <p class="text-amber-800 text-xs mt-0.5">Select any category to view allocated volunteers or assign new members from the dropdown.</p>
+                    <p class="font-bold"><i class="fa-solid fa-layer-group text-amber-600 mr-1.5"></i> Duty Category & Food Menu Allocations</p>
+                    <p class="text-amber-800 text-xs mt-0.5">Select any duty category or food item below to view assigned volunteers or allocate new ones.</p>
                 </div>
             </div>
 
@@ -459,7 +222,7 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
                             <option value="">-- Choose Volunteer --</option>
                         </select>
                         <button onclick="assignSelectedVolunteerToCategory()" class="bg-brand-700 hover:bg-brand-800 text-white font-black text-xs px-3 py-1.5 rounded-lg shadow transition whitespace-nowrap">
-                            + Add to Category
+                            + Add to Selected Duty
                         </button>
                     </div>
                 </div>
@@ -504,40 +267,48 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
     <div id="addCategoryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
-                <h3 class="text-lg font-extrabold text-slate-900"><i class="fa-solid fa-folder-plus text-amber-600 mr-2"></i> Add New Category</h3>
+                <h3 class="text-lg font-extrabold text-slate-900"><i class="fa-solid fa-folder-plus text-amber-600 mr-2"></i> Add Custom Duty Category</h3>
                 <button onclick="closeAddCategoryModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form onsubmit="handleAddCategorySubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Category Name</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Duty Name</label>
                     <input type="text" id="newCategoryInput" required placeholder="e.g. Refreshments Squad, Parking Lead..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                 </div>
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
                     <button type="button" onclick="closeAddCategoryModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition">Cancel</button>
-                    <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition shadow-md">Create Category</button>
+                    <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition shadow-md">Create Duty</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: ADD / EDIT VOLUNTEER -->
+    <!-- MODAL: MANAGE VOLUNTEER (WITH EXACT FOOD & OPERATIONAL CHECKBOXES) -->
     <div id="volunteerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 max-h-[92vh] overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[92vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
-                <h3 id="modalTitle" class="text-lg font-extrabold text-slate-900">Edit Volunteer Allocations</h3>
+                <h3 id="modalTitle" class="text-lg font-extrabold text-slate-900">Manage Volunteer Allocations</h3>
                 <button onclick="closeVolunteerModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="volunteerForm" onsubmit="handleVolunteerFormSubmit(event)" class="space-y-4">
                 <input type="hidden" id="formVolId">
                 
+                <!-- NAME & PARISH DROPDOWNS -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
-                        <input type="text" id="formName" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Volunteer Name</label>
+                        <select id="formNameDropdown" onchange="handleNameDropdownChange(this)" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold text-slate-800">
+                            <!-- Populated dynamically -->
+                        </select>
+                        <input type="text" id="formNameCustom" placeholder="Enter new volunteer full name..." class="hidden w-full mt-2 px-3 py-2 border border-amber-300 bg-amber-50 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
+
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Parish / Unit Name</label>
-                        <input type="text" id="formParish" placeholder="e.g. St.Mary" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Unit / Parish Name</label>
+                        <select id="formParishDropdown" onchange="handleParishDropdownChange(this)" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold text-slate-800">
+                            <!-- Populated dynamically -->
+                        </select>
+                        <input type="text" id="formParishCustom" placeholder="Enter new parish/unit name..." class="hidden w-full mt-2 px-3 py-2 border border-amber-300 bg-amber-50 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
                 </div>
 
@@ -546,31 +317,42 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
                         <label class="block text-xs font-bold text-slate-700 mb-1">Phone Number</label>
                         <input type="text" id="formPhone" placeholder="07xxxxxxxxx" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
+
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Leadership Role</label>
-                        <input type="text" id="formLeaderRole" placeholder="e.g. Stage Arrangement Leader" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold">
+                        <select id="formRoleDropdown" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold text-slate-800">
+                            <!-- Populated dynamically -->
+                        </select>
                     </div>
                 </div>
 
+                <!-- FOOD MENU CHECKBOXES -->
+                <div class="space-y-2 bg-amber-50/70 p-3.5 rounded-xl border border-amber-200">
+                    <label class="block text-xs font-black text-amber-900 flex items-center gap-1.5">
+                        <i class="fa-solid fa-utensils text-amber-600"></i> Food Menu Items Checkboxes:
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs" id="modalFoodCheckboxes"></div>
+                </div>
+
+                <!-- OPERATIONAL DUTY CATEGORIES CHECKBOXES -->
+                <div class="space-y-2 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <label class="block text-xs font-black text-slate-900 flex items-center gap-1.5">
+                        <i class="fa-solid fa-list-check text-brand-700"></i> Operational Duty Categories Checkboxes:
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs" id="modalDutyCheckboxes"></div>
+                </div>
+
+                <!-- STAGES & GREEN ROOMS CHECKBOXES -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Primary Duty Category</label>
-                        <input type="text" id="formPrimaryDuty" placeholder="Primary duty..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold">
+                    <div class="space-y-2 bg-blue-50/60 p-3 rounded-xl border border-blue-200">
+                        <label class="block text-xs font-black text-blue-900">Assign Stages (1 - 12):</label>
+                        <div class="grid grid-cols-3 sm:grid-cols-4 gap-1.5 text-xs" id="modalStageCheckboxes"></div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Secondary Duty Category</label>
-                        <input type="text" id="formSecondaryDuty" placeholder="Secondary duty..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-semibold">
+
+                    <div class="space-y-2 bg-purple-50/60 p-3 rounded-xl border border-purple-200">
+                        <label class="block text-xs font-black text-purple-900">Assign Green Rooms (1 - 12):</label>
+                        <div class="grid grid-cols-3 sm:grid-cols-4 gap-1.5 text-xs" id="modalGRCheckboxes"></div>
                     </div>
-                </div>
-
-                <div class="space-y-2 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                    <label class="block text-xs font-black text-slate-900">Assign Stages (1 - 12):</label>
-                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-xs" id="modalStageCheckboxes"></div>
-                </div>
-
-                <div class="space-y-2 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                    <label class="block text-xs font-black text-slate-900">Assign Green Rooms (1 - 12):</label>
-                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-xs" id="modalGRCheckboxes"></div>
                 </div>
 
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
@@ -587,144 +369,174 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
 
         const ADMIN_HASH_KEY = "a2Fsb3RzYXZhbTIwMjY=";
 
+        // EXACT OPERATIONAL DUTIES LIST
         let categoriesList = [
-            "Food Preparation", "Food Packing", "Food Service", "Cash Counter",
-            "Stage Squad", "Parking Team", "Transportation", "Registration",
-            "Safeguarding", "General Rearrangement", "Venue Arrangement",
-            "Cleaning Supervision", "Judges Support", "Coffee / Tea",
-            "Appam & Chicken Stew", "Kappa Biriyani & Chicken Curry", "Biriyani",
-            "Thattukada", "Snacks", "Pasta Tikka", "Water & Drinks"
+            "Food Preparation",
+            "Food Packing",
+            "Food Service",
+            "Cash Counter",
+            "Stage / Greenroom Squad",
+            "Parking Team",
+            "Transportation",
+            "Registration",
+            "Safeguarding / Firstaid",
+            "30th Rearrangement",
+            "Kitchen rearrangement",
+            "30th Venue Arrangement",
+            "Cleaning Supervision",
+            "Judges Support",
+            "Priest Support"
+        ];
+
+        // EXACT FOOD MENU ITEMS LIST
+        let foodMenuItems = [
+            "Kappa Biriyani",
+            "Chicken Curry",
+            "Biriyani",
+            "Appam & Chicken Stew",
+            "Coffee / Tea",
+            "Pasta Tikka",
+            "Thattukada",
+            "Snacks",
+            "Cash Counter",
+            "Food Counter",
+            "Drinks & Packed snacks"
+        ];
+
+        let rolesList = [
+            "Standard Volunteer", "Category Leader", "Stage Arrangement Leader",
+            "Green Room Leader", "Food Preparation Leader", "Food Service Leader",
+            "Parking Leader", "Judges Hospitality Lead", "Transportation Leader", "Family Unit Leader"
         ];
 
         // Master Roster of ALL 121 Volunteers
         const DEFAULT_VOLUNTEERS = [
-            {id: 1, name: "John Joseph", parish: "St.Sebastian", phone: "7701089837", role: "Food Preparation Leader", primaryDuty: "Food Preparation", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [], foodItems: ["Kappa Biriyani & Chicken Curry"], notes: "Food Committee Lead"},
-            {id: 2, name: "Shiju Thettayil Vakkachan", parish: "St.Mary", phone: "7918393444", role: "", primaryDuty: "Food Preparation", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [], foodItems: ["Biriyani", "Kappa Biriyani & Chicken Curry"], notes: ""},
-            {id: 3, name: "Jasmin Joseph", parish: "St.Jude", phone: "7909488384", role: "Stage Arrangement Leader", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [1, 2], greenRooms: [12], foodItems: [], notes: "Main Stage 1 & Stage 2 Lead"},
-            {id: 4, name: "Deepumon", parish: "St.Sebastian", phone: "7879728191", role: "Stage Arrangement Leader", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [3, 4, 5], greenRooms: [], foodItems: [], notes: "Stages 3, 4, 5 Lead"},
-            {id: 5, name: "Roshan Rapheal", parish: "St.Mary", phone: "7442903850", role: "Stage Arrangement Leader", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [6, 7, 8], greenRooms: [], foodItems: [], notes: "Stages 6, 7, 8 Lead"},
-            {id: 6, name: "Vargheese Scaria", parish: "St.Sebastian", phone: "7909723108", role: "Stage Arrangement Leader", primaryDuty: "Stage Squad", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [], foodItems: ["Kappa Biriyani & Chicken Curry", "Biriyani"], notes: "Kitchen rearrangement"},
-            {id: 7, name: "Femi Joseph", parish: "St.Thomas", phone: "7482237458", role: "Stage Arrangement Leader", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [], greenRooms: [1, 2, 3], notes: "Bristol, Cardiff, Gloucester Green Rooms"},
-            {id: 8, name: "Shaji Varkey", parish: "St.Chavara", phone: "7532182639", role: "Category Leader", primaryDuty: "Stage Squad", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [6, 7, 8], notes: "Newport, Swansea, Exeter Green Rooms Lead"},
-            {id: 9, name: "Shiny Aljo", parish: "Sacred Heart", phone: "7551708905", role: "", primaryDuty: "Stage Squad", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [9, 10, 11], notes: "Weston, Taunton, Hereford Green Rooms Lead"},
-            {id: 10, name: "Roy Mathew", parish: "St.Jude", phone: "7448727488", role: "Parking Leader", primaryDuty: "Parking Team", secondaryDuty: "Stage Squad", stages: [], greenRooms: [], notes: "Parking Team Lead"},
-            {id: 11, name: "Shinu Jackson", parish: "St.Antony's", phone: "7577738490", role: "Food Service Leader", primaryDuty: "Food Service", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Cash Counter & Sales"], notes: "Cash Counter Lead"},
-            {id: 12, name: "Rohith Shiju", parish: "St.Mary", phone: "7881144662", role: "", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [], foodItems: ["Cash Counter & Sales"], notes: "Cash Counter Lead"},
-            {id: 13, name: "Anita Philip", parish: "St.Alphonsa", phone: "7809714895", role: "Category Leader", primaryDuty: "Judges Support", secondaryDuty: "", stages: [], greenRooms: [], notes: "Judges Food & Hospitality Lead"},
-            {id: 14, name: "Jasmin George", parish: "St.Mary", phone: "7838904708", role: "Category Leader", primaryDuty: "Safeguarding", secondaryDuty: "Venue Arrangement", stages: [], greenRooms: [], notes: "Safeguarding Lead"},
-            {id: 15, name: "Jomy John", parish: "St.Antony's", phone: "7753821192", role: "Category Leader", primaryDuty: "Registration", secondaryDuty: "Stage Squad", stages: [], greenRooms: [6, 7, 8], notes: "Registration Lead"},
-            {id: 16, name: "Tom Loyied", parish: "St.Mary", phone: "7918393444", role: "Food Preparation Leader", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Snacks (Vada / Bonda / Banana Fry)"], notes: "Snacks Lead"},
-            {id: 17, name: "Xavier Chakku", parish: "St.Mary", phone: "", role: "Food Preparation Leader", primaryDuty: "Food Preparation", secondaryDuty: "Food Service", stages: [], greenRooms: [], foodItems: ["Biriyani"], notes: "Biriyani Lead"},
-            {id: 18, name: "Rajumon Kuriakose", parish: "St.Sebastian", phone: "", role: "Stage Arrangement Leader", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [3, 4, 5], greenRooms: [], notes: "Stage Squad 3, 4, 5"},
-            {id: 19, name: "Karol Thomas", parish: "St.Sebastian", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [3, 4, 5], greenRooms: [], notes: ""},
-            {id: 20, name: "Beenamol Thomas", parish: "Lourdes Matha", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [3, 4, 5], greenRooms: [], notes: ""},
-            {id: 21, name: "Roshan Raphel", parish: "St.Mary", phone: "", role: "Stage Arrangement Leader", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [6, 7, 8], greenRooms: [], notes: ""},
-            {id: 22, name: "Shelton Mathew", parish: "St.Mary", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [6, 7, 8], greenRooms: [], notes: ""},
-            {id: 23, name: "Roy Joseph", parish: "St.Mary", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [6, 7, 8], greenRooms: [], notes: ""},
-            {id: 24, name: "George Joseph", parish: "St.Mary", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [6, 7, 8], greenRooms: [], notes: ""},
-            {id: 25, name: "Thomas Mathew", parish: "St.Mary", phone: "", role: "Green Room Leader", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [9], greenRooms: [4, 5], notes: "Stage 9 & Bath, Bari Green Rooms Lead"},
-            {id: 26, name: "Lalamma Thomas", parish: "St.Mary", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "", stages: [9], greenRooms: [4, 5], notes: ""},
-            {id: 27, name: "Bijo", parish: "St.Micheal", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "Venue Arrangement", stages: [9], greenRooms: [4, 5], notes: ""},
-            {id: 28, name: "Joju George", parish: "St.Thomas", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "", stages: [], greenRooms: [1, 2, 3], notes: ""},
-            {id: 29, name: "Neuby Varghese", parish: "St.Mary", phone: "", role: "", primaryDuty: "Cleaning Supervision", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [1, 2, 3], notes: "Cleaning Lead"},
-            {id: 30, name: "Gimy Gracias", parish: "St.Thomas", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "", stages: [], greenRooms: [1, 2, 3], notes: ""},
-            {id: 31, name: "Sinson George", parish: "St.Chavara", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "", stages: [], greenRooms: [6, 7, 8], notes: ""},
-            {id: 32, name: "Prabhu Plappallil James", parish: "St.Chavara", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "", stages: [], greenRooms: [6, 7, 8], notes: ""},
-            {id: 33, name: "Dijo George", parish: "St.Jude", phone: "", role: "", primaryDuty: "Parking Team", secondaryDuty: "Stage Squad", stages: [], greenRooms: [9, 10, 11], notes: ""},
-            {id: 34, name: "Jijo Augustine", parish: "Sacred Heart", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "", stages: [], greenRooms: [9, 10, 11], notes: ""},
-            {id: 35, name: "Shiju K Paul", parish: "Sacred Heart", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "", stages: [], greenRooms: [9, 10, 11], notes: ""},
-            {id: 36, name: "Rojis George", parish: "St.Jude", phone: "", role: "", primaryDuty: "Cleaning Supervision", secondaryDuty: "Stage Squad", stages: [1, 2], greenRooms: [12], notes: ""},
-            {id: 37, name: "Tijo Antony", parish: "St.Jude", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "", stages: [1, 2], greenRooms: [12], notes: ""},
-            {id: 38, name: "Joshy", parish: "St.Jude", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "", stages: [1, 2], greenRooms: [12], notes: ""},
-            {id: 39, name: "Tom George", parish: "St.Jude", phone: "", role: "Parking Leader", primaryDuty: "Parking Team", secondaryDuty: "", stages: [], greenRooms: [], notes: "Parking Co-Lead"},
-            {id: 40, name: "Shibi Jose", parish: "St.Jude", phone: "", role: "", primaryDuty: "Parking Team", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 41, name: "George Nikolovoas", parish: "St.Jude", phone: "", role: "", primaryDuty: "Parking Team", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 42, name: "Rex Philip", parish: "St.Mary", phone: "", role: "Food Preparation Leader", primaryDuty: "Food Sale", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], notes: "Thattukada Lead"},
-            {id: 43, name: "Rex", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Sale", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 44, name: "Jibin", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Sale", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 45, name: "Linson", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Packing", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Thattu Dosa & Club Sandwich (with Thakkali Chutney & Sambar)"], notes: ""},
-            {id: 46, name: "Chacko Varghese", parish: "St.Joseph", phone: "", role: "Food Preparation Leader", primaryDuty: "Food Preparation", secondaryDuty: "Kitchen Rearrangement", stages: [], greenRooms: [], foodItems: ["Coffee / Tea"], notes: "Coffee / Tea Lead"},
-            {id: 47, name: "Aravind Mohanan", parish: "St.Patric", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Coffee / Tea"], notes: ""},
-            {id: 48, name: "George Sebastian", parish: "St.Mary", phone: "", role: "Food Preparation Leader", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Appam & Chicken Stew"], notes: "Appam & Stew Lead"},
-            {id: 49, name: "Sebiyachan Poulo", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Appam & Chicken Stew"], notes: ""},
-            {id: 50, name: "Shibu K Joseph", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "Safeguarding", stages: [], greenRooms: [], foodItems: ["Appam & Chicken Stew"], notes: ""},
-            {id: 51, name: "Metty Thomas", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Appam & Chicken Stew"], notes: ""},
-            {id: 52, name: "Binu Jacob", parish: "St.Mary", phone: "", role: "Food Preparation Leader", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Pasta Tikka"], notes: "Pasta Tikka Lead"},
-            {id: 53, name: "Saji Mathew", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Pasta Tikka"], notes: ""},
-            {id: 54, name: "Jessica Vadhyanath", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Sale", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Water, Fizzy Drinks & Packet Snacks"], notes: ""},
-            {id: 55, name: "Jackson Joseph", parish: "St.Antony", phone: "", role: "Category Leader", primaryDuty: "Cash Counter", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Cash Counter & Sales"], notes: "Cash Counter Lead"},
-            {id: 56, name: "Abin Manoj", parish: "St.Antony's", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "Food Service", stages: [], greenRooms: [], foodItems: ["Cash Counter & Sales"], notes: ""},
-            {id: 57, name: "Roy Sebastian", parish: "St.Joseph", phone: "", role: "Judges Hospitality Lead", primaryDuty: "General Rearrangement", secondaryDuty: "Judges Support", stages: [], greenRooms: [], notes: "Judges Support Co-Lead"},
-            {id: 58, name: "Molly Roy", parish: "Devine Mercy", phone: "", role: "", primaryDuty: "Food Packing", secondaryDuty: "Judges Support", stages: [], greenRooms: [], notes: ""},
-            {id: 59, name: "Jibin Thomas", parish: "St.Marys", phone: "", role: "Transportation Leader", primaryDuty: "Transportation", secondaryDuty: "", stages: [], greenRooms: [], notes: "Transportation Lead"},
-            {id: 60, name: "Joel Arikkat", parish: "St.Vincent", phone: "", role: "", primaryDuty: "Transportation", secondaryDuty: "Food Packing", stages: [], greenRooms: [], notes: ""},
-            {id: 61, name: "Harry Arikkat", parish: "St.Vincent", phone: "", role: "", primaryDuty: "Transportation", secondaryDuty: "Food Packing", stages: [], greenRooms: [], notes: ""},
-            {id: 62, name: "Shiny Sebastian", parish: "St.Mary", phone: "", role: "", primaryDuty: "Registration", secondaryDuty: "", stages: [], greenRooms: [], notes: "Registration Team"},
-            {id: 63, name: "Shinto Thomas", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "Safeguarding", stages: [], greenRooms: [], notes: ""},
-            {id: 64, name: "Albin Shibu", parish: "St.Theresa", phone: "", role: "", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [], foodItems: ["Appam & Chicken Stew", "Snacks (Vada / Bonda / Banana Fry)"], notes: ""},
-            {id: 65, name: "Aleena Vincent", parish: "Lourdes Matha", phone: "", role: "", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [], notes: ""},
-            {id: 66, name: "Anns Manuel", parish: "Lourdes Matha", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Appam & Chicken Stew"], notes: ""},
-            {id: 67, name: "Bazil Kurian", parish: "St.Micheal", phone: "", role: "Category Leader", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [], notes: ""},
-            {id: 68, name: "Colins Jacob", parish: "St.Joseph", phone: "", role: "", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [], notes: "Kitchen Re-arrangement"},
-            {id: 69, name: "Danny George", parish: "St.Mary", phone: "", role: "", primaryDuty: "Venue Arrangement", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [], notes: ""},
-            {id: 70, name: "Gigy John", parish: "St.Sebastian", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Kappa Biriyani & Chicken Curry"], notes: ""},
-            {id: 71, name: "Binu", parish: "St.Sebastian", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Kappa Biriyani & Chicken Curry"], notes: ""},
-            {id: 72, name: "Jinto Joseph", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Snacks (Vada / Bonda / Banana Fry)"], notes: ""},
-            {id: 73, name: "Robin Varghese", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Snacks (Vada / Bonda / Banana Fry)"], notes: ""},
-            {id: 74, name: "Jojy Thomas", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Snacks (Vada / Bonda / Banana Fry)"], notes: ""},
-            {id: 75, name: "Jolly Saji", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Biriyani"], notes: ""},
-            {id: 76, name: "George Tharakan", parish: "Devine Mercy", phone: "", role: "", primaryDuty: "Food Packing", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 77, name: "Siju", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Coffee / Tea", "Appam & Chicken Stew"], notes: ""},
-            {id: 78, name: "SMYM Team", parish: "Youth Wing", phone: "", role: "", primaryDuty: "Prize Distribution", secondaryDuty: "", stages: [], greenRooms: [], notes: "Prize Distribution Team"},
-            {id: 79, name: "Mathew Thomas", parish: "St.Alphonsa", phone: "", role: "Family Unit Leader", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: "Unit Lead St.Alphonsa"},
-            {id: 80, name: "Manoj", parish: "St.Augustin", phone: "", role: "Family Unit Leader", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: "Unit Lead St.Augustin"},
-            {id: 81, name: "Benni", parish: "St.Chavara", phone: "", role: "Family Unit Leader", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: "Unit Lead St.Chavara"},
-            {id: 82, name: "Mathews Manuel", parish: "St.Joseph", phone: "", role: "", primaryDuty: "Kitchen Rearrangement", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [], notes: "Kitchen Rearrangement"},
-            {id: 83, name: "Christy Francis", parish: "St.Joseph", phone: "", role: "", primaryDuty: "Food Service", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 84, name: "Santhosh Kachappilly", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Service", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 85, name: "Linta Joseph", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Service", secondaryDuty: "General Rearrangement", stages: [], greenRooms: [], notes: ""},
-            {id: 86, name: "Sam Joy Junnel", parish: "St.Mary", phone: "", role: "", primaryDuty: "Cash Counter", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 87, name: "Jolly Shaji", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 88, name: "Asha Varghese", parish: "St.Sebastian", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Kappa Biriyani & Chicken Curry"], notes: ""},
-            {id: 89, name: "Augustin", parish: "St.Augustin", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 90, name: "Noychen Augustine", parish: "St.Mary", phone: "", role: "Food Service Leader", primaryDuty: "Food Service", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 91, name: "Biju Varghese", parish: "St.Joseph", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 92, name: "Cyril Thomas", parish: "St.Thomas", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 93, name: "Dominic Savio", parish: "St.Mary", phone: "", role: "", primaryDuty: "Venue Arrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 94, name: "Eldho Paul", parish: "St.Mary", phone: "", role: "", primaryDuty: "Venue Arrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 95, name: "Francis Xavier", parish: "St.Xavier", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 96, name: "Georgekutty", parish: "St.Joseph", phone: "", role: "", primaryDuty: "Food Packing", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 97, name: "Haris K", parish: "St.Mary", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 98, name: "Jacob Varghese", parish: "St.Mary", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 99, name: "Joby John", parish: "St.Jude", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 100, name: "Justin Joseph", parish: "St.Joseph", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 101, name: "Kiran Jose", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Service", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 102, name: "Lijo Thomas", parish: "St.Thomas", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 103, name: "Martin P", parish: "St.Mary", phone: "", role: "", primaryDuty: "Venue Arrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 104, name: "Nebu George", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Service", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 105, name: "Paulson K", parish: "St.Mary", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 106, name: "Rijosh Thomas", parish: "St.Thomas", phone: "", role: "", primaryDuty: "Venue Arrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 107, name: "Sebyachen", parish: "St.Sebastian", phone: "", role: "", primaryDuty: "Food Preparation", secondaryDuty: "", stages: [], greenRooms: [], foodItems: ["Kappa Biriyani & Chicken Curry"], notes: ""},
-            {id: 108, name: "Sojan Joseph", parish: "St.Joseph", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 109, name: "Tony Augustine", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Service", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 110, name: "Varghese K", parish: "St.Mary", phone: "", role: "", primaryDuty: "Venue Arrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 111, name: "Wilson Paul", parish: "St.Mary", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 112, name: "Xavier Varghese", parish: "St.Xavier", phone: "", role: "", primaryDuty: "Food Packing", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 113, name: "Yeldho Thomas", parish: "St.Thomas", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 114, name: "Zachariah P", parish: "St.Mary", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 115, name: "Alen Joseph", parish: "St.Jude", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "", stages: [1, 2], greenRooms: [], notes: ""},
-            {id: 116, name: "Bibin K", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Service", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 117, name: "Deepak Thomas", parish: "St.Thomas", phone: "", role: "", primaryDuty: "Venue Arrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 118, name: "Emmanuel Joseph", parish: "St.Mary", phone: "", role: "", primaryDuty: "Stage Squad", secondaryDuty: "", stages: [11, 12], greenRooms: [12], notes: ""},
-            {id: 119, name: "Febin Varghese", parish: "St.Joseph", phone: "", role: "", primaryDuty: "General Rearrangement", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 120, name: "Gokul Das", parish: "St.Mary", phone: "", role: "", primaryDuty: "Parking Team", secondaryDuty: "", stages: [], greenRooms: [], notes: ""},
-            {id: 121, name: "Hari Prasad", parish: "St.Mary", phone: "", role: "", primaryDuty: "Food Packing", secondaryDuty: "", stages: [], greenRooms: [], notes: ""}
+            {id: 1, name: "John Joseph", parish: "St.Sebastian", phone: "7701089837", role: "Food Preparation Leader", duties: ["Food Preparation", "30th Rearrangement"], foodItems: ["Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: "Food Committee Lead"},
+            {id: 2, name: "Shiju Thettayil Vakkachan", parish: "St.Mary", phone: "7918393444", role: "", duties: ["Food Preparation", "30th Rearrangement"], foodItems: ["Biriyani", "Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: ""},
+            {id: 3, name: "Jasmin Joseph", parish: "St.Jude", phone: "7909488384", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [1, 2], greenRooms: [12], notes: "Main Stage 1 & Stage 2 Lead"},
+            {id: 4, name: "Deepumon", parish: "St.Sebastian", phone: "7879728191", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [3, 4, 5], greenRooms: [], notes: "Stages 3, 4, 5 Lead"},
+            {id: 5, name: "Roshan Rapheal", parish: "St.Mary", phone: "7442903850", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [6, 7, 8], greenRooms: [], notes: "Stages 6, 7, 8 Lead"},
+            {id: 6, name: "Vargheese Scaria", parish: "St.Sebastian", phone: "7909723108", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Rearrangement", "Kitchen rearrangement"], foodItems: ["Kappa Biriyani", "Chicken Curry", "Biriyani"], stages: [], greenRooms: [], notes: "Kitchen rearrangement"},
+            {id: 7, name: "Femi Joseph", parish: "St.Thomas", phone: "7482237458", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [1, 2, 3], notes: "Bristol, Cardiff, Gloucester Green Rooms"},
+            {id: 8, name: "Shaji Varkey", parish: "St.Chavara", phone: "7532182639", role: "Category Leader", duties: ["Stage / Greenroom Squad", "30th Rearrangement", "Food Packing"], foodItems: [], stages: [], greenRooms: [6, 7, 8], notes: "Newport, Swansea, Exeter Green Rooms Lead"},
+            {id: 9, name: "Shiny Aljo", parish: "Sacred Heart", phone: "7551708905", role: "", duties: ["Stage / Greenroom Squad", "30th Rearrangement"], foodItems: [], stages: [], greenRooms: [9, 10, 11], notes: "Weston, Taunton, Hereford Green Rooms Lead"},
+            {id: 10, name: "Roy Mathew", parish: "St.Jude", phone: "7448727488", role: "Parking Leader", duties: ["Parking Team", "Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [], notes: "Parking Team Lead"},
+            {id: 11, name: "Shinu Jackson", parish: "St.Antony's", phone: "7577738490", role: "Food Service Leader", duties: ["Food Service", "Cash Counter"], foodItems: ["Cash Counter"], stages: [], greenRooms: [], notes: "Cash Counter Lead"},
+            {id: 12, name: "Rohith Shiju", parish: "St.Mary", phone: "7881144662", role: "", duties: ["Food Service", "30th Rearrangement"], foodItems: ["Cash Counter"], stages: [], greenRooms: [], notes: "Cash Counter Lead"},
+            {id: 13, name: "Anita Philip", parish: "St.Alphonsa", phone: "7809714895", role: "Category Leader", duties: ["Judges Support"], foodItems: [], stages: [], greenRooms: [], notes: "Judges Food & Hospitality Lead"},
+            {id: 14, name: "Jasmin George", parish: "St.Mary", phone: "7838904708", role: "Category Leader", duties: ["Safeguarding / Firstaid", "30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: "Safeguarding Lead"},
+            {id: 15, name: "Jomy John", parish: "St.Antony's", phone: "7753821192", role: "Category Leader", duties: ["Registration", "Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [6, 7, 8], notes: "Registration Lead"},
+            {id: 16, name: "Tom Loyied", parish: "St.Mary", phone: "7918393444", role: "Food Preparation Leader", duties: ["Food Preparation"], foodItems: ["Snacks"], stages: [], greenRooms: [], notes: "Snacks Lead"},
+            {id: 17, name: "Xavier Chakku", parish: "St.Mary", phone: "", role: "Food Preparation Leader", duties: ["Food Preparation", "Food Service"], foodItems: ["Biriyani"], stages: [], greenRooms: [], notes: "Biriyani Lead"},
+            {id: 18, name: "Rajumon Kuriakose", parish: "St.Sebastian", phone: "", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [3, 4, 5], greenRooms: [], notes: "Stage Squad 3, 4, 5"},
+            {id: 19, name: "Karol Thomas", parish: "St.Sebastian", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [3, 4, 5], greenRooms: [], notes: ""},
+            {id: 20, name: "Beenamol Thomas", parish: "Lourdes Matha", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [3, 4, 5], greenRooms: [], notes: ""},
+            {id: 21, name: "Roshan Raphel", parish: "St.Mary", phone: "", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [6, 7, 8], greenRooms: [], notes: ""},
+            {id: 22, name: "Shelton Mathew", parish: "St.Mary", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [6, 7, 8], greenRooms: [], notes: ""},
+            {id: 23, name: "Roy Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [6, 7, 8], greenRooms: [], notes: ""},
+            {id: 24, name: "George Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [6, 7, 8], greenRooms: [], notes: ""},
+            {id: 25, name: "Thomas Mathew", parish: "St.Mary", phone: "", role: "Green Room Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [9], greenRooms: [4, 5], notes: "Stage 9 & Bath, Bari Green Rooms Lead"},
+            {id: 26, name: "Lalamma Thomas", parish: "St.Mary", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [9], greenRooms: [4, 5], notes: ""},
+            {id: 27, name: "Bijo", parish: "St.Micheal", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [9], greenRooms: [4, 5], notes: ""},
+            {id: 28, name: "Joju George", parish: "St.Thomas", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [1, 2, 3], notes: ""},
+            {id: 29, name: "Neuby Varghese", parish: "St.Mary", phone: "", role: "", duties: ["Cleaning Supervision", "30th Rearrangement"], foodItems: [], stages: [], greenRooms: [1, 2, 3], notes: "Cleaning Lead"},
+            {id: 30, name: "Gimy Gracias", parish: "St.Thomas", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [1, 2, 3], notes: ""},
+            {id: 31, name: "Sinson George", parish: "St.Chavara", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [6, 7, 8], notes: ""},
+            {id: 32, name: "Prabhu Plappallil James", parish: "St.Chavara", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [6, 7, 8], notes: ""},
+            {id: 33, name: "Dijo George", parish: "St.Jude", phone: "", role: "", duties: ["Parking Team", "Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [9, 10, 11], notes: ""},
+            {id: 34, name: "Jijo Augustine", parish: "Sacred Heart", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [9, 10, 11], notes: ""},
+            {id: 35, name: "Shiju K Paul", parish: "Sacred Heart", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [9, 10, 11], notes: ""},
+            {id: 36, name: "Rojis George", parish: "St.Jude", phone: "", role: "", duties: ["Cleaning Supervision", "Stage / Greenroom Squad"], foodItems: [], stages: [1, 2], greenRooms: [12], notes: ""},
+            {id: 37, name: "Tijo Antony", parish: "St.Jude", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [1, 2], greenRooms: [12], notes: ""},
+            {id: 38, name: "Joshy", parish: "St.Jude", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [1, 2], greenRooms: [12], notes: ""},
+            {id: 39, name: "Tom George", parish: "St.Jude", phone: "", role: "Parking Leader", duties: ["Parking Team"], foodItems: [], stages: [], greenRooms: [], notes: "Parking Co-Lead"},
+            {id: 40, name: "Shibi Jose", parish: "St.Jude", phone: "", role: "", duties: ["Parking Team"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 41, name: "George Nikolovoas", parish: "St.Jude", phone: "", role: "", duties: ["Parking Team"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 42, name: "Rex Philip", parish: "St.Mary", phone: "", role: "Food Preparation Leader", duties: ["Food Preparation"], foodItems: ["Thattukada"], stages: [], greenRooms: [], notes: "Thattukada Lead"},
+            {id: 43, name: "Rex", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Thattukada"], stages: [], greenRooms: [], notes: ""},
+            {id: 44, name: "Jibin", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Thattukada"], stages: [], greenRooms: [], notes: ""},
+            {id: 45, name: "Linson", parish: "St.Mary", phone: "", role: "", duties: ["Food Packing"], foodItems: ["Thattukada"], stages: [], greenRooms: [], notes: ""},
+            {id: 46, name: "Chacko Varghese", parish: "St.Joseph", phone: "", role: "Food Preparation Leader", duties: ["Food Preparation", "Kitchen rearrangement"], foodItems: ["Coffee / Tea"], stages: [], greenRooms: [], notes: "Coffee / Tea Lead"},
+            {id: 47, name: "Aravind Mohanan", parish: "St.Patric", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Coffee / Tea"], stages: [], greenRooms: [], notes: ""},
+            {id: 48, name: "George Sebastian", parish: "St.Mary", phone: "", role: "Food Preparation Leader", duties: ["Food Preparation"], foodItems: ["Appam & Chicken Stew"], stages: [], greenRooms: [], notes: "Appam & Stew Lead"},
+            {id: 49, name: "Sebiyachan Poulo", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Appam & Chicken Stew"], stages: [], greenRooms: [], notes: ""},
+            {id: 50, name: "Shibu K Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation", "Safeguarding / Firstaid"], foodItems: ["Appam & Chicken Stew"], stages: [], greenRooms: [], notes: ""},
+            {id: 51, name: "Metty Thomas", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Appam & Chicken Stew"], stages: [], greenRooms: [], notes: ""},
+            {id: 52, name: "Binu Jacob", parish: "St.Mary", phone: "", role: "Food Preparation Leader", duties: ["Food Preparation"], foodItems: ["Pasta Tikka"], stages: [], greenRooms: [], notes: "Pasta Tikka Lead"},
+            {id: 53, name: "Saji Mathew", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Pasta Tikka"], stages: [], greenRooms: [], notes: ""},
+            {id: 54, name: "Jessica Vadhyanath", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: ["Drinks & Packed snacks"], stages: [], greenRooms: [], notes: ""},
+            {id: 55, name: "Jackson Joseph", parish: "St.Antony", phone: "", role: "Category Leader", duties: ["Cash Counter"], foodItems: ["Cash Counter"], stages: [], greenRooms: [], notes: "Cash Counter Lead"},
+            {id: 56, name: "Abin Manoj", parish: "St.Antony's", phone: "", role: "", duties: ["30th Rearrangement", "Food Service"], foodItems: ["Cash Counter"], stages: [], greenRooms: [], notes: ""},
+            {id: 57, name: "Roy Sebastian", parish: "St.Joseph", phone: "", role: "Judges Hospitality Lead", duties: ["30th Rearrangement", "Judges Support"], foodItems: [], stages: [], greenRooms: [], notes: "Judges Support Co-Lead"},
+            {id: 58, name: "Molly Roy", parish: "Devine Mercy", phone: "", role: "", duties: ["Food Packing", "Judges Support"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 59, name: "Jibin Thomas", parish: "St.Marys", phone: "", role: "Transportation Leader", duties: ["Transportation"], foodItems: [], stages: [], greenRooms: [], notes: "Transportation Lead"},
+            {id: 60, name: "Joel Arikkat", parish: "St.Vincent", phone: "", role: "", duties: ["Transportation", "Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 61, name: "Harry Arikkat", parish: "St.Vincent", phone: "", role: "", duties: ["Transportation", "Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 62, name: "Shiny Sebastian", parish: "St.Mary", phone: "", role: "", duties: ["Registration"], foodItems: [], stages: [], greenRooms: [], notes: "Registration Team"},
+            {id: 63, name: "Shinto Thomas", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation", "Safeguarding / Firstaid"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 64, name: "Albin Shibu", parish: "St.Theresa", phone: "", role: "", duties: ["Food Service", "30th Rearrangement"], foodItems: ["Appam & Chicken Stew", "Snacks"], stages: [], greenRooms: [], notes: ""},
+            {id: 65, name: "Aleena Vincent", parish: "Lourdes Matha", phone: "", role: "", duties: ["Food Service", "30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 66, name: "Anns Manuel", parish: "Lourdes Matha", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Appam & Chicken Stew"], stages: [], greenRooms: [], notes: ""},
+            {id: 67, name: "Bazil Kurian", parish: "St.Micheal", phone: "", role: "Category Leader", duties: ["Food Service", "30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 68, name: "Colins Jacob", parish: "St.Joseph", phone: "", role: "", duties: ["Food Service", "30th Rearrangement", "Kitchen rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: "Kitchen Re-arrangement"},
+            {id: 69, name: "Danny George", parish: "St.Mary", phone: "", role: "", duties: ["30th Venue Arrangement", "30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 70, name: "Gigy John", parish: "St.Sebastian", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: ""},
+            {id: 71, name: "Binu", parish: "St.Sebastian", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: ""},
+            {id: 72, name: "Jinto Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Snacks"], stages: [], greenRooms: [], notes: ""},
+            {id: 73, name: "Robin Varghese", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Snacks"], stages: [], greenRooms: [], notes: ""},
+            {id: 74, name: "Jojy Thomas", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Snacks"], stages: [], greenRooms: [], notes: ""},
+            {id: 75, name: "Jolly Saji", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Biriyani"], stages: [], greenRooms: [], notes: ""},
+            {id: 76, name: "George Tharakan", parish: "Devine Mercy", phone: "", role: "", duties: ["Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 77, name: "Siju", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Coffee / Tea", "Appam & Chicken Stew"], stages: [], greenRooms: [], notes: ""},
+            {id: 78, name: "SMYM Team", parish: "Youth Wing", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: "Prize Distribution Team"},
+            {id: 79, name: "Mathew Thomas", parish: "St.Alphonsa", phone: "", role: "Family Unit Leader", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: "Unit Lead St.Alphonsa"},
+            {id: 80, name: "Manoj", parish: "St.Augustin", phone: "", role: "Family Unit Leader", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: "Unit Lead St.Augustin"},
+            {id: 81, name: "Benni", parish: "St.Chavara", phone: "", role: "Family Unit Leader", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: "Unit Lead St.Chavara"},
+            {id: 82, name: "Mathews Manuel", parish: "St.Joseph", phone: "", role: "", duties: ["Kitchen rearrangement", "30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: "Kitchen Rearrangement"},
+            {id: 83, name: "Christy Francis", parish: "St.Joseph", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 84, name: "Santhosh Kachappilly", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 85, name: "Linta Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Food Service", "30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 86, name: "Sam Joy Junnel", parish: "St.Mary", phone: "", role: "", duties: ["Cash Counter"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 87, name: "Jolly Shaji", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 88, name: "Asha Varghese", parish: "St.Sebastian", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: ""},
+            {id: 89, name: "Augustin", parish: "St.Augustin", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 90, name: "Noychen Augustine", parish: "St.Mary", phone: "", role: "Food Service Leader", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 91, name: "Biju Varghese", parish: "St.Joseph", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 92, name: "Cyril Thomas", parish: "St.Thomas", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 93, name: "Dominic Savio", parish: "St.Mary", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 94, name: "Eldho Paul", parish: "St.Mary", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 95, name: "Francis Xavier", parish: "St.Xavier", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 96, name: "Georgekutty", parish: "St.Joseph", phone: "", role: "", duties: ["Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 97, name: "Haris K", parish: "St.Mary", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 98, name: "Jacob Varghese", parish: "St.Mary", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 99, name: "Joby John", parish: "St.Jude", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 100, name: "Justin Joseph", parish: "St.Joseph", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 101, name: "Kiran Jose", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 102, name: "Lijo Thomas", parish: "St.Thomas", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 103, name: "Martin P", parish: "St.Mary", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 104, name: "Nebu George", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 105, name: "Paulson K", parish: "St.Mary", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 106, name: "Rijosh Thomas", parish: "St.Thomas", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 107, name: "Sebyachen", parish: "St.Sebastian", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: ""},
+            {id: 108, name: "Sojan Joseph", parish: "St.Joseph", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 109, name: "Tony Augustine", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 110, name: "Varghese K", parish: "St.Mary", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 111, name: "Wilson Paul", parish: "St.Mary", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 112, name: "Xavier Varghese", parish: "St.Xavier", phone: "", role: "", duties: ["Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 113, name: "Yeldho Thomas", parish: "St.Thomas", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 114, name: "Zachariah P", parish: "St.Mary", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 115, name: "Alen Joseph", parish: "St.Jude", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [1, 2], greenRooms: [], notes: ""},
+            {id: 116, name: "Bibin K", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 117, name: "Deepak Thomas", parish: "St.Thomas", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 118, name: "Emmanuel Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [11, 12], greenRooms: [12], notes: ""},
+            {id: 119, name: "Febin Varghese", parish: "St.Joseph", phone: "", role: "", duties: ["30th Rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 120, name: "Gokul Das", parish: "St.Mary", phone: "", role: "", duties: ["Parking Team"], foodItems: [], stages: [], greenRooms: [], notes: ""},
+            {id: 121, name: "Hari Prasad", parish: "St.Mary", phone: "", role: "", duties: ["Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""}
         ];
 
         let volunteers = [];
         let isAdmin = false;
         let currentTab = 'roster';
-        let expandedMemberId = null;
         let selectedCategory = 'Food Preparation';
 
         function initSync() {
@@ -733,19 +545,19 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
                 syncBadge.textContent = "Live Cloud Synced";
                 syncBadge.className = "bg-emerald-500/30 border border-emerald-400 text-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full inline-block";
 
-                const docRef = doc(window.db, "kalotsavam_2026", "master_121_roster");
+                const docRef = doc(window.db, "kalotsavam_2026", "master_121_roster_v5");
                 
                 onSnapshot(docRef, async (docSnap) => {
                     if (docSnap.exists() && docSnap.data().volunteers) {
                         volunteers = docSnap.data().volunteers;
                         if (docSnap.data().categories) categoriesList = docSnap.data().categories;
-                        localStorage.setItem("kalotsavam_master_121", JSON.stringify(volunteers));
-                        localStorage.setItem("kalotsavam_categories_121", JSON.stringify(categoriesList));
+                        if (docSnap.data().foodItems) foodMenuItems = docSnap.data().foodItems;
+                        localStorage.setItem("kalotsavam_master_v5", JSON.stringify(volunteers));
                         populateFiltersAndDropdowns();
                         window.renderApp();
                     } else {
                         volunteers = [...DEFAULT_VOLUNTEERS];
-                        await setDoc(docRef, { volunteers: volunteers, categories: categoriesList });
+                        await setDoc(docRef, { volunteers: volunteers, categories: categoriesList, foodItems: foodMenuItems });
                         populateFiltersAndDropdowns();
                         window.renderApp();
                     }
@@ -760,21 +572,18 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
         }
 
         function loadLocalVolunteers() {
-            const savedVol = localStorage.getItem("kalotsavam_master_121");
-            const savedCat = localStorage.getItem("kalotsavam_categories_121");
+            const savedVol = localStorage.getItem("kalotsavam_master_v5");
             volunteers = savedVol ? JSON.parse(savedVol) : [...DEFAULT_VOLUNTEERS];
-            if (savedCat) categoriesList = JSON.parse(savedCat);
             populateFiltersAndDropdowns();
             window.renderApp();
         }
 
         async function saveVolunteers() {
-            localStorage.setItem("kalotsavam_master_121", JSON.stringify(volunteers));
-            localStorage.setItem("kalotsavam_categories_121", JSON.stringify(categoriesList));
+            localStorage.setItem("kalotsavam_master_v5", JSON.stringify(volunteers));
             if (window.db && window.isFirebaseConnected) {
                 try {
-                    const docRef = doc(window.db, "kalotsavam_2026", "master_121_roster");
-                    await setDoc(docRef, { volunteers: volunteers, categories: categoriesList });
+                    const docRef = doc(window.db, "kalotsavam_2026", "master_121_roster_v5");
+                    await setDoc(docRef, { volunteers: volunteers, categories: categoriesList, foodItems: foodMenuItems });
                 } catch(e) {}
             }
             populateFiltersAndDropdowns();
@@ -783,8 +592,7 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
 
         window.resetToDefaults = function() {
             if (confirm("Reset all 121 volunteer allocations back to original defaults?")) {
-                localStorage.removeItem("kalotsavam_master_121");
-                localStorage.removeItem("kalotsavam_categories_121");
+                localStorage.removeItem("kalotsavam_master_v5");
                 volunteers = [...DEFAULT_VOLUNTEERS];
                 saveVolunteers();
             }
@@ -873,24 +681,50 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
         };
 
         function populateFiltersAndDropdowns() {
+            // Main Duty Filter (Combines duties + food menu)
             const dutyFilter = document.getElementById("dutyFilter");
             if (dutyFilter) {
-                dutyFilter.innerHTML = `<option value="">All Duty Categories (${categoriesList.length})</option>` + 
-                    categoriesList.map(c => `<option value="${c}">${c}</option>`).join("");
+                const combined = [...categoriesList, ...foodMenuItems];
+                dutyFilter.innerHTML = `<option value="">All Duties & Food Items (${combined.length})</option>` + 
+                    combined.map(c => `<option value="${c}">${c}</option>`).join("");
             }
 
+            // Main Parish Filter
             const parishFilter = document.getElementById("parishFilter");
+            const parishes = [...new Set(volunteers.map(v => v.parish))].filter(p => p).sort();
             if (parishFilter) {
-                const parishes = [...new Set(volunteers.map(v => v.parish))].filter(p => p).sort();
                 parishFilter.innerHTML = `<option value="">All Parishes / Units (${parishes.length})</option>` +
                     parishes.map(p => `<option value="${p}">${p}</option>`).join("");
             }
 
+            // Category Tab Assign Dropdown
             const assignSelect = document.getElementById("assignVolunteerSelect");
             if (assignSelect) {
                 const sortedVols = [...volunteers].sort((a,b) => a.name.localeCompare(b.name));
                 assignSelect.innerHTML = `<option value="">-- Choose Volunteer --</option>` +
                     sortedVols.map(v => `<option value="${v.id}">${v.name} ${v.parish ? '(' + v.parish + ')' : ''}</option>`).join("");
+            }
+
+            // Modal: Name Dropdown
+            const nameSelect = document.getElementById("formNameDropdown");
+            if (nameSelect) {
+                const sortedVols = [...volunteers].sort((a,b) => a.name.localeCompare(b.name));
+                nameSelect.innerHTML = `<option value="NEW_CUSTOM">+ Add New Volunteer Custom Name</option>` +
+                    sortedVols.map(v => `<option value="${v.id}">${v.name} (${v.parish || 'No Unit'})</option>`).join("");
+            }
+
+            // Modal: Parish Dropdown
+            const parishSelect = document.getElementById("formParishDropdown");
+            if (parishSelect) {
+                parishSelect.innerHTML = `<option value="">-- Select Parish / Unit --</option>` +
+                    parishes.map(p => `<option value="${p}">${p}</option>`).join("") +
+                    `<option value="NEW_CUSTOM">+ Add Custom Unit / Parish Name</option>`;
+            }
+
+            // Modal: Role Dropdown
+            const roleSelect = document.getElementById("formRoleDropdown");
+            if (roleSelect) {
+                roleSelect.innerHTML = rolesList.map(r => `<option value="${r === 'Standard Volunteer' ? '' : r}">${r}</option>`).join("");
             }
         }
 
@@ -902,13 +736,12 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
             return volunteers.filter(v => {
                 const name = (v.name || "").toLowerCase();
                 const parishStr = (v.parish || "").toLowerCase();
-                const primary = (v.primaryDuty || "").toLowerCase();
-                const secondary = (v.secondaryDuty || "").toLowerCase();
-                const role = (v.role || "").toLowerCase();
+                const dutiesStr = (v.duties || []).join(" ").toLowerCase();
                 const foodStr = (v.foodItems || []).join(" ").toLowerCase();
+                const role = (v.role || "").toLowerCase();
 
-                const matchesSearch = !search || name.includes(search) || parishStr.includes(search) || primary.includes(search) || secondary.includes(search) || role.includes(search) || foodStr.includes(search);
-                const matchesDuty = !duty || primary.includes(duty) || secondary.includes(duty) || foodStr.includes(duty);
+                const matchesSearch = !search || name.includes(search) || parishStr.includes(search) || dutiesStr.includes(search) || foodStr.includes(search) || role.includes(search);
+                const matchesDuty = !duty || dutiesStr.includes(duty) || foodStr.includes(duty);
                 const matchesParish = !parish || parishStr.includes(parish);
 
                 return matchesSearch && matchesDuty && matchesParish;
@@ -942,16 +775,17 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
             empty.classList.add("hidden");
 
             grid.innerHTML = list.map(v => {
-                const isExpanded = expandedMemberId === v.id;
                 const unitBracket = v.parish ? `<span class="text-slate-500 font-semibold">(${v.parish})</span>` : '';
                 
                 const roleBadge = v.role 
                     ? `<span class="bg-amber-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded-full inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-crown text-[9px]"></i> ${v.role}</span>` 
                     : `<span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-full">Volunteer</span>`;
 
+                const dutyBadges = (v.duties || []).map(d => `<span class="bg-brand-50 text-brand-900 border border-brand-200 text-xs font-bold px-2.5 py-1 rounded-lg">${d}</span>`).join(" ");
+                const foodBadges = (v.foodItems || []).map(f => `<span class="bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold px-2.5 py-1 rounded-lg"><i class="fa-solid fa-utensils text-[10px] mr-1"></i>${f}</span>`).join(" ");
+
                 const stageBadges = (v.stages || []).map(s => `<span class="bg-blue-100 text-blue-800 text-[10px] font-extrabold px-2 py-0.5 rounded">Stage ${s}</span>`).join(" ");
                 const grBadges = (v.greenRooms || []).map(g => `<span class="bg-purple-100 text-purple-800 text-[10px] font-extrabold px-2 py-0.5 rounded">GR ${g}</span>`).join(" ");
-                const foodBadges = (v.foodItems || []).map(f => `<span class="bg-amber-100 text-amber-900 text-[10px] font-extrabold px-2 py-0.5 rounded">${f}</span>`).join(" ");
 
                 return `
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col justify-between space-y-3 transition hover:shadow-md">
@@ -965,16 +799,17 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
                             </div>
 
                             <div class="mt-3 space-y-1.5">
-                                <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Duty Allocations:</p>
+                                <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Assigned Duties & Menu:</p>
                                 <div class="flex flex-wrap gap-1.5">
-                                    <span class="bg-brand-50 text-brand-900 border border-brand-200 text-xs font-bold px-2.5 py-1 rounded-lg">${v.primaryDuty}</span>
-                                    ${v.secondaryDuty ? `<span class="bg-indigo-50 text-indigo-800 border border-indigo-200 text-xs font-bold px-2.5 py-1 rounded-lg">+ ${v.secondaryDuty}</span>` : ''}
+                                    ${dutyBadges || ''}
+                                    ${foodBadges || ''}
+                                    ${!dutyBadges && !foodBadges ? '<span class="text-xs text-slate-400 italic">No duties assigned yet</span>' : ''}
                                 </div>
                             </div>
 
-                            ${stageBadges || grBadges || foodBadges ? `
+                            ${stageBadges || grBadges ? `
                                 <div class="mt-2 flex flex-wrap gap-1">
-                                    ${stageBadges} ${grBadges} ${foodBadges}
+                                    ${stageBadges} ${grBadges}
                                 </div>
                             ` : ''}
 
@@ -1036,7 +871,7 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
                                     <div class="bg-slate-50 p-2 rounded-lg border border-slate-100 text-xs flex justify-between items-center">
                                         <div>
                                             <span class="font-extrabold text-slate-900">${v.name} <span class="text-slate-500 font-semibold">(${v.parish || 'No Unit'})</span></span>
-                                            <span class="text-[10px] text-slate-500 block">${v.primaryDuty}</span>
+                                            <span class="text-[10px] text-slate-500 block">${(v.duties || []).join(', ')}</span>
                                         </div>
                                     </div>
                                 `).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned to Stage ' + i + '.</p>'}
@@ -1090,7 +925,7 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
                                     <div class="bg-slate-50 p-2 rounded-lg border border-slate-100 text-xs flex justify-between items-center">
                                         <div>
                                             <span class="font-extrabold text-slate-900">${v.name} <span class="text-slate-500 font-semibold">(${v.parish || 'No Unit'})</span></span>
-                                            <span class="text-[10px] text-slate-500 block">${v.primaryDuty}</span>
+                                            <span class="text-[10px] text-slate-500 block">${(v.duties || []).join(', ')}</span>
                                         </div>
                                     </div>
                                 `).join("") || '<p class="text-slate-400 text-xs italic py-2">No volunteers assigned to Green Room ' + i + '.</p>'}
@@ -1111,13 +946,24 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
             const container = document.getElementById("categoryButtonsContainer");
             if (!container) return;
 
-            container.innerHTML = categoriesList.map(cat => {
-                const count = volunteers.filter(v => v.primaryDuty === cat || v.secondaryDuty === cat || (v.foodItems && v.foodItems.includes(cat))).length;
-                const isActive = selectedCategory === cat;
+            const combinedItems = [
+                ...categoriesList.map(c => ({ name: c, type: 'duty' })),
+                ...foodMenuItems.map(f => ({ name: f, type: 'food' }))
+            ];
+
+            container.innerHTML = combinedItems.map(item => {
+                const count = volunteers.filter(v => 
+                    (v.duties && v.duties.includes(item.name)) || 
+                    (v.foodItems && v.foodItems.includes(item.name))
+                ).length;
+
+                const isActive = selectedCategory === item.name;
+                const isFood = item.type === 'food';
 
                 return `
-                    <button onclick="selectCategory('${cat.replace(/'/g, "\\'")}')" class="px-3 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm border ${isActive ? 'bg-brand-700 text-white border-brand-800 shadow' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}">
-                        <span>${cat}</span>
+                    <button onclick="selectCategory('${item.name.replace(/'/g, "\\'")}')" class="px-3 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm border ${isActive ? 'bg-brand-700 text-white border-brand-800 shadow' : (isFood ? 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50')}">
+                        ${isFood ? '<i class="fa-solid fa-utensils text-[10px]"></i>' : ''}
+                        <span>${item.name}</span>
                         <span class="${isActive ? 'bg-amber-400 text-slate-900' : 'bg-slate-100 text-slate-600'} text-[10px] font-black px-1.5 py-0.5 rounded-full">${count}</span>
                     </button>
                 `;
@@ -1133,7 +979,10 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
         function renderSelectedCategoryDetails() {
             document.getElementById("selectedCategoryTitle").textContent = selectedCategory;
             
-            const assignedMembers = volunteers.filter(v => v.primaryDuty === selectedCategory || v.secondaryDuty === selectedCategory || (v.foodItems && v.foodItems.includes(selectedCategory)));
+            const assignedMembers = volunteers.filter(v => 
+                (v.duties && v.duties.includes(selectedCategory)) || 
+                (v.foodItems && v.foodItems.includes(selectedCategory))
+            );
             document.getElementById("selectedCategoryCount").textContent = `${assignedMembers.length} Volunteers`;
 
             const grid = document.getElementById("selectedCategoryMembersGrid");
@@ -1160,9 +1009,49 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
 
             const vol = volunteers.find(v => v.id === volId);
             if (vol) {
-                vol.primaryDuty = selectedCategory;
+                if (foodMenuItems.includes(selectedCategory)) {
+                    if (!vol.foodItems.includes(selectedCategory)) vol.foodItems.push(selectedCategory);
+                } else {
+                    if (!vol.duties.includes(selectedCategory)) vol.duties.push(selectedCategory);
+                }
                 saveVolunteers();
                 select.value = "";
+            }
+        };
+
+        window.handleNameDropdownChange = function(select) {
+            const val = select.value;
+            const customInput = document.getElementById("formNameCustom");
+            if (val === 'NEW_CUSTOM') {
+                customInput.classList.remove("hidden");
+                customInput.value = "";
+                customInput.focus();
+                document.getElementById("formVolId").value = "";
+            } else {
+                customInput.classList.add("hidden");
+                const volId = parseInt(val);
+                const v = volunteers.find(vol => vol.id === volId);
+                if (v) {
+                    document.getElementById("formVolId").value = v.id;
+                    document.getElementById("formParishDropdown").value = v.parish || "";
+                    document.getElementById("formPhone").value = v.phone || "";
+                    document.getElementById("formRoleDropdown").value = v.role || "";
+                    renderDutyCheckboxes(v.duties || []);
+                    renderFoodCheckboxes(v.foodItems || []);
+                    renderStageCheckboxes(v.stages || []);
+                    renderGRCheckboxes(v.greenRooms || []);
+                }
+            }
+        };
+
+        window.handleParishDropdownChange = function(select) {
+            const customInput = document.getElementById("formParishCustom");
+            if (select.value === 'NEW_CUSTOM') {
+                customInput.classList.remove("hidden");
+                customInput.value = "";
+                customInput.focus();
+            } else {
+                customInput.classList.add("hidden");
             }
         };
 
@@ -1199,15 +1088,21 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
 
         window.openAddModal = function() {
             if (!isAdmin) return;
-            document.getElementById("modalTitle").textContent = "Add New Volunteer";
+            document.getElementById("modalTitle").textContent = "Add / Manage Volunteer";
             document.getElementById("formVolId").value = "";
-            document.getElementById("formName").value = "";
-            document.getElementById("formParish").value = "";
-            document.getElementById("formPhone").value = "";
-            document.getElementById("formLeaderRole").value = "";
-            document.getElementById("formPrimaryDuty").value = "Food Preparation";
-            document.getElementById("formSecondaryDuty").value = "";
+            document.getElementById("formNameDropdown").value = "NEW_CUSTOM";
+            
+            const customNameInput = document.getElementById("formNameCustom");
+            customNameInput.classList.remove("hidden");
+            customNameInput.value = "";
 
+            document.getElementById("formParishDropdown").value = "";
+            document.getElementById("formParishCustom").classList.add("hidden");
+            document.getElementById("formPhone").value = "";
+            document.getElementById("formRoleDropdown").value = "";
+
+            renderDutyCheckboxes([]);
+            renderFoodCheckboxes([]);
             renderStageCheckboxes([]);
             renderGRCheckboxes([]);
             document.getElementById("volunteerModal").classList.remove("hidden");
@@ -1220,17 +1115,47 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
 
             document.getElementById("modalTitle").textContent = `Edit Volunteer: ${v.name}`;
             document.getElementById("formVolId").value = v.id;
-            document.getElementById("formName").value = v.name;
-            document.getElementById("formParish").value = v.parish || '';
-            document.getElementById("formPhone").value = v.phone || '';
-            document.getElementById("formLeaderRole").value = v.role || '';
-            document.getElementById("formPrimaryDuty").value = v.primaryDuty || '';
-            document.getElementById("formSecondaryDuty").value = v.secondaryDuty || '';
+            
+            const nameDropdown = document.getElementById("formNameDropdown");
+            nameDropdown.value = v.id;
+            document.getElementById("formNameCustom").classList.add("hidden");
 
+            const parishDropdown = document.getElementById("formParishDropdown");
+            if (Array.from(parishDropdown.options).some(o => o.value === v.parish)) {
+                parishDropdown.value = v.parish;
+                document.getElementById("formParishCustom").classList.add("hidden");
+            } else {
+                parishDropdown.value = "NEW_CUSTOM";
+                const customP = document.getElementById("formParishCustom");
+                customP.classList.remove("hidden");
+                customP.value = v.parish || "";
+            }
+
+            document.getElementById("formPhone").value = v.phone || '';
+            document.getElementById("formRoleDropdown").value = v.role || '';
+
+            renderDutyCheckboxes(v.duties || []);
+            renderFoodCheckboxes(v.foodItems || []);
             renderStageCheckboxes(v.stages || []);
             renderGRCheckboxes(v.greenRooms || []);
             document.getElementById("volunteerModal").classList.remove("hidden");
         };
+
+        function renderDutyCheckboxes(selectedDuties) {
+            const container = document.getElementById("modalDutyCheckboxes");
+            container.innerHTML = categoriesList.map(duty => {
+                const checked = selectedDuties.includes(duty) ? "checked" : "";
+                return `<label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded border border-slate-200 cursor-pointer font-semibold text-slate-800"><input type="checkbox" name="modalDuty" value="${duty.replace(/"/g, '&quot;')}" ${checked} class="rounded text-brand-600 focus:ring-brand-500"> ${duty}</label>`;
+            }).join("");
+        }
+
+        function renderFoodCheckboxes(selectedFood) {
+            const container = document.getElementById("modalFoodCheckboxes");
+            container.innerHTML = foodMenuItems.map(item => {
+                const checked = selectedFood.includes(item) ? "checked" : "";
+                return `<label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded border border-amber-300 cursor-pointer font-bold text-amber-950"><input type="checkbox" name="modalFood" value="${item.replace(/"/g, '&quot;')}" ${checked} class="rounded text-amber-600 focus:ring-amber-500"> ${item}</label>`;
+            }).join("");
+        }
 
         function renderStageCheckboxes(selectedStages) {
             const container = document.getElementById("modalStageCheckboxes");
@@ -1261,25 +1186,46 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
             if (!isAdmin) return;
 
             const id = document.getElementById("formVolId").value;
+            const nameDropdown = document.getElementById("formNameDropdown").value;
+            let finalName = "";
+
+            if (nameDropdown === 'NEW_CUSTOM') {
+                finalName = document.getElementById("formNameCustom").value.trim();
+            } else {
+                const selectedVol = volunteers.find(v => v.id === parseInt(nameDropdown));
+                finalName = selectedVol ? selectedVol.name : document.getElementById("formNameCustom").value.trim();
+            }
+
+            if (!finalName) {
+                alert("Please select or enter a volunteer name.");
+                return;
+            }
+
+            const parishDropdown = document.getElementById("formParishDropdown").value;
+            let finalParish = parishDropdown === 'NEW_CUSTOM' 
+                ? document.getElementById("formParishCustom").value.trim() 
+                : parishDropdown;
+
+            const selectedDuties = Array.from(document.querySelectorAll('input[name="modalDuty"]:checked')).map(cb => cb.value);
+            const selectedFood = Array.from(document.querySelectorAll('input[name="modalFood"]:checked')).map(cb => cb.value);
             const selectedStages = Array.from(document.querySelectorAll('input[name="modalStage"]:checked')).map(cb => parseInt(cb.value));
             const selectedGRs = Array.from(document.querySelectorAll('input[name="modalGR"]:checked')).map(cb => parseInt(cb.value));
 
             const volData = {
-                id: id ? parseInt(id) : Date.now(),
-                name: document.getElementById("formName").value.trim(),
-                parish: document.getElementById("formParish").value.trim(),
+                id: id ? parseInt(id) : (nameDropdown !== 'NEW_CUSTOM' ? parseInt(nameDropdown) : Date.now()),
+                name: finalName,
+                parish: finalParish,
                 phone: document.getElementById("formPhone").value.trim(),
-                role: document.getElementById("formLeaderRole").value.trim(),
-                primaryDuty: document.getElementById("formPrimaryDuty").value.trim(),
-                secondaryDuty: document.getElementById("formSecondaryDuty").value.trim(),
+                role: document.getElementById("formRoleDropdown").value,
+                duties: selectedDuties,
+                foodItems: selectedFood,
                 stages: selectedStages,
-                greenRooms: selectedGRs,
-                foodItems: []
+                greenRooms: selectedGRs
             };
 
-            if (id) {
-                const index = volunteers.findIndex(v => v.id === parseInt(id));
-                if (index !== -1) volunteers[index] = volData;
+            const index = volunteers.findIndex(v => v.id === volData.id);
+            if (index !== -1) {
+                volunteers[index] = volData;
             } else {
                 volunteers.push(volData);
             }
@@ -1289,11 +1235,13 @@ Based on a detailed analysis of **`Volunteer_Category_Lists_Deduplicated_3.xlsx`
         };
 
         window.exportCSV = function() {
-            let csv = "ID,Full Name,Parish/Unit,Phone,Role,Primary Duty,Secondary Duty,Stages Assigned,Green Rooms Assigned\n";
+            let csv = "ID,Full Name,Parish/Unit,Phone,Role,Assigned Duties,Food Menu Items,Stages Assigned,Green Rooms Assigned\n";
             volunteers.forEach(v => {
+                const duties = (v.duties || []).join("; ");
+                const food = (v.foodItems || []).join("; ");
                 const stages = (v.stages || []).join("; ");
                 const grs = (v.greenRooms || []).join("; ");
-                csv += `"${v.id}","${v.name}","(${v.parish || ''})","${v.phone || ''}","${v.role || 'Volunteer'}","${v.primaryDuty}","${v.secondaryDuty || ''}","${stages}","${grs}"\n`;
+                csv += `"${v.id}","${v.name}","(${v.parish || ''})","${v.phone || ''}","${v.role || 'Volunteer'}","${duties}","${food}","${stages}","${grs}"\n`;
             });
 
             const blob = new Blob([csv], { type: "text/csv" });
