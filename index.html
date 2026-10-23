@@ -72,7 +72,7 @@
         }
     </script>
 
-    <!-- HEADER -->
+    <!-- HEADER WITH TOTAL VOLUNTEER COUNT -->
     <header class="bg-gradient-to-r from-brand-900 via-brand-700 to-slate-900 text-white shadow-xl sticky top-0 z-30 border-b border-gold-500/40">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
@@ -89,9 +89,15 @@
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center space-x-3">
+                    <!-- HEADER TOTAL VOLUNTEERS BADGE -->
+                    <div class="bg-white/10 border border-gold-400/30 rounded-xl px-3 py-1.5 text-center shadow-inner">
+                        <span class="text-[9px] uppercase font-bold text-gold-300 block tracking-wider">Total Volunteers</span>
+                        <span id="headerTotalCount" class="text-base sm:text-lg font-black text-white leading-none">146</span>
+                    </div>
+
                     <div id="adminBadge" class="flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-900/80 text-amber-300 border border-amber-500/30">
-                        <i class="fa-solid fa-lock text-xs mr-1.5 text-amber-400"></i> <span class="hidden sm:inline">Read-Only View</span>
+                        <i class="fa-solid fa-lock text-xs mr-1.5 text-amber-400"></i> <span class="hidden sm:inline">Read-Only</span>
                     </div>
                     <button id="authBtn" onclick="handleAuthToggle()" class="bg-gold-500 hover:bg-gold-400 text-brand-900 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-extrabold transition flex items-center gap-1.5 shadow-md">
                         <i class="fa-solid fa-key text-brand-900"></i>
@@ -105,29 +111,33 @@
     <!-- MAIN CONTAINER -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 space-y-5">
 
-        <!-- BANNER -->
+        <!-- BANNER & SEARCH -->
         <div class="bg-gradient-to-r from-brand-900 via-brand-800 to-slate-900 text-white rounded-2xl p-5 shadow-xl relative overflow-hidden border border-gold-500/30">
             <div class="relative z-10">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <div class="flex flex-wrap items-center gap-2 mb-1.5">
                             <span class="bg-gold-500 text-brand-900 text-[11px] font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider">
-                                Bible Kalotsavam 2026
+                                Volunteer Roster & Duty Allocations
                             </span>
-                            <span class="text-xs text-gold-300 font-semibold"><i class="fa-solid fa-location-dot text-rose-400 mr-1"></i> Bristol Host Committee</span>
+                            <span class="text-xs text-gold-300 font-semibold"><i class="fa-solid fa-users text-gold-400 mr-1"></i> <span id="bannerTotalCount">146</span> Registered Volunteers</span>
                         </div>
-                        <h2 class="text-xl sm:text-2xl font-black text-white">Individual Duty Portals & Team Assignments</h2>
-                        <p class="text-rose-100 text-xs sm:text-sm mt-1">Each member's separate assigned duties, expandable team rosters, and admin controls.</p>
+                        <h2 class="text-xl sm:text-2xl font-black text-white">Find Allocation & Duty Assignments</h2>
+                        <p class="text-rose-100 text-xs sm:text-sm mt-1">Search any volunteer name to see where they are allocated, or browse by duty category.</p>
                     </div>
+
                     <div class="flex flex-wrap gap-2">
                         <button onclick="exportCSV()" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs px-3 py-2 rounded-lg font-semibold transition flex items-center gap-1.5 shadow-sm">
                             <i class="fa-solid fa-file-csv text-gold-400 text-sm"></i> Export CSV
                         </button>
-                        <button id="resetBtn" onclick="resetToDefaults()" class="hidden bg-rose-900/60 hover:bg-rose-900 text-rose-200 border border-rose-500/30 text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1">
-                            <i class="fa-solid fa-rotate-left text-xs"></i> Reset Data
+                        <button id="adminAddCatBtn" onclick="openAddCategoryModal()" class="hidden bg-amber-500 hover:bg-amber-400 text-slate-900 text-xs px-3 py-2 rounded-lg font-black transition flex items-center gap-1.5 shadow">
+                            <i class="fa-solid fa-folder-plus"></i> + Add Category
                         </button>
                         <button id="addVolunteerBtn" onclick="openAddModal()" class="hidden bg-gold-500 hover:bg-gold-400 text-brand-900 text-xs px-3 py-2 rounded-lg font-black transition flex items-center gap-1.5 shadow">
-                            <i class="fa-solid fa-user-plus"></i> Add Volunteer
+                            <i class="fa-solid fa-user-plus"></i> + Add Volunteer
+                        </button>
+                        <button id="resetBtn" onclick="resetToDefaults()" class="hidden bg-rose-900/60 hover:bg-rose-900 text-rose-200 border border-rose-500/30 text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1">
+                            <i class="fa-solid fa-rotate-left text-xs"></i> Reset
                         </button>
                     </div>
                 </div>
@@ -138,10 +148,10 @@
         <div class="border-b border-slate-200 bg-white rounded-xl shadow-sm px-2 pt-2">
             <nav class="flex space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar pb-2">
                 <button onclick="switchTab('members')" id="tab-members" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-bold rounded-lg whitespace-nowrap transition bg-brand-50 text-brand-700 border border-brand-200/60">
-                    <i class="fa-solid fa-address-card mr-1.5"></i> Individual Member Tables (<span id="count-members">146</span>)
+                    <i class="fa-solid fa-address-card mr-1.5"></i> All Volunteers Roster (<span id="count-members">146</span>)
                 </button>
                 <button onclick="switchTab('categories')" id="tab-categories" class="tab-btn px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg whitespace-nowrap transition">
-                    <i class="fa-solid fa-layer-group mr-1.5 text-amber-600"></i> Category Breakdown & Counts
+                    <i class="fa-solid fa-layer-group mr-1.5 text-amber-600"></i> Duty Categories & Details (<span id="count-categories">0</span>)
                 </button>
             </nav>
         </div>
@@ -151,21 +161,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 <div class="relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
-                    <input type="text" id="searchInput" oninput="renderApp()" placeholder="Search member name, parish, or duty..." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <input type="text" id="searchInput" oninput="renderApp()" placeholder="Search volunteer name, (unit), or duty..." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
                 </div>
 
                 <div>
                     <select id="dutyFilter" onchange="renderApp()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-700 font-medium">
-                        <option value="">All Duties Assigned</option>
-                        <option value="Food Preparation">Food Preparation</option>
-                        <option value="Food Packing">Food Packing</option>
-                        <option value="Food Service">Food Service</option>
-                        <option value="Cash Counter">Cash Counter</option>
-                        <option value="Stage Squad">Stage Squad</option>
-                        <option value="Parking Team">Parking Team</option>
-                        <option value="Transportation">Transportation</option>
-                        <option value="Registration">Registration</option>
-                        <option value="Safeguarding">Safeguarding</option>
+                        <option value="">All Duty Categories</option>
                     </select>
                 </div>
 
@@ -177,25 +178,54 @@
             </div>
         </div>
 
-        <!-- TAB CONTENT 1: INDIVIDUAL MEMBER TABLES -->
+        <!-- TAB CONTENT 1: ALL VOLUNTEERS ROSTER -->
         <div id="content-members" class="tab-content space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="memberCardsGrid"></div>
             <div id="emptyState" class="hidden p-8 text-center text-slate-500 bg-white rounded-xl border border-slate-200">
                 <i class="fa-solid fa-users-slash text-3xl mb-2 text-slate-300"></i>
-                <p class="font-semibold text-slate-600">No members found matching your search criteria.</p>
+                <p class="font-semibold text-slate-600">No volunteers found matching your search criteria.</p>
             </div>
         </div>
 
-        <!-- TAB CONTENT 2: CATEGORY BREAKDOWN WITH COUNTS -->
+        <!-- TAB CONTENT 2: ALL DUTY CATEGORIES & DETAILS -->
         <div id="content-categories" class="tab-content hidden space-y-6">
             <div class="bg-amber-50/80 border border-amber-200 p-4 rounded-xl text-xs sm:text-sm text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <p class="font-bold"><i class="fa-solid fa-layer-group mr-1.5 text-amber-600"></i> Duty Category Breakdown & Member Counts</p>
-                    <p class="text-amber-800 text-xs mt-0.5">Click any category below to view assigned members, leaders, and manage allocations.</p>
+                    <p class="font-bold"><i class="fa-solid fa-layer-group mr-1.5 text-amber-600"></i> Select Category to View Assigned Volunteers</p>
+                    <p class="text-amber-800 text-xs mt-0.5">Click any category button below to filter, view details, or assign volunteers from dropdown.</p>
                 </div>
+                <button id="adminAddCategoryBtn2" onclick="openAddCategoryModal()" class="hidden bg-amber-600 hover:bg-amber-700 text-white font-black text-xs px-3.5 py-2 rounded-lg shadow transition flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-plus"></i> Add New Category
+                </button>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="categoryBreakdownGrid"></div>
+            <!-- CATEGORY SELECTOR BUTTONS -->
+            <div class="flex flex-wrap gap-2" id="categoryButtonsContainer"></div>
+
+            <!-- SELECTED CATEGORY DETAIL VIEW -->
+            <div id="selectedCategoryView" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-slate-100 pb-3">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 id="selectedCategoryTitle" class="text-lg font-black text-slate-900">Food Preparation</h3>
+                            <span id="selectedCategoryCount" class="text-xs font-bold bg-amber-100 text-amber-900 px-3 py-0.5 rounded-full">0 Assigned</span>
+                        </div>
+                        <p class="text-xs text-slate-500 font-medium mt-0.5">List of volunteers allocated to this specific category.</p>
+                    </div>
+
+                    <!-- ADMIN: ASSIGN VOLUNTEER FROM DROPDOWN -->
+                    <div id="adminAssignDropdownContainer" class="hidden flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                        <select id="assignVolunteerSelect" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-800 focus:ring-2 focus:ring-brand-500">
+                            <option value="">-- Choose Volunteer to Add --</option>
+                        </select>
+                        <button onclick="assignSelectedVolunteerToCategory()" class="bg-brand-700 hover:bg-brand-800 text-white font-black text-xs px-3 py-1.5 rounded-lg shadow transition whitespace-nowrap">
+                            + Add to Category
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="selectedCategoryMembersGrid"></div>
+            </div>
         </div>
 
     </main>
@@ -214,7 +244,7 @@
                     <i class="fa-solid fa-lock"></i>
                 </div>
                 <h3 class="text-lg font-bold text-slate-900">Admin Authentication</h3>
-                <p class="text-xs text-slate-500 mt-1">Unlock job assignment and role editing rights.</p>
+                <p class="text-xs text-slate-500 mt-1">Unlock job assignment, adding categories, and volunteer management.</p>
             </div>
             <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
                 <div>
@@ -232,7 +262,27 @@
         </div>
     </div>
 
-    <!-- MODAL: ADD / EDIT MEMBER (ADMIN) -->
+    <!-- MODAL: ADD NEW CATEGORY (ADMIN) -->
+    <div id="addCategoryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                <h3 class="text-lg font-extrabold text-slate-900"><i class="fa-solid fa-folder-plus text-amber-600 mr-2"></i> Add New Duty Category</h3>
+                <button onclick="closeAddCategoryModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="handleAddCategorySubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">New Category Name</label>
+                    <input type="text" id="newCategoryInput" required placeholder="e.g. Refreshment Squad, Stage Security..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                    <button type="button" onclick="closeAddCategoryModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition shadow-md">Create Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT VOLUNTEER (ADMIN) -->
     <div id="volunteerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 max-h-[92vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
@@ -248,8 +298,8 @@
                         <input type="text" id="formName" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Parish / Unit</label>
-                        <input type="text" id="formParish" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Parish / Unit Name</label>
+                        <input type="text" id="formParish" placeholder="e.g. St.Mary, St.Sebastian" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
                 </div>
 
@@ -268,7 +318,7 @@
                 </div>
 
                 <div class="space-y-2 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                    <label class="block text-xs font-black text-slate-900">Assign Duties & Jobs (Check all applicable):</label>
+                    <label class="block text-xs font-black text-slate-900">Assign Categories & Duties (Check all applicable):</label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="modalDutiesCheckboxes"></div>
                 </div>
 
@@ -286,7 +336,7 @@
 
         const ADMIN_HASH_KEY = "a2Fsb3RzYXZhbTIwMjY=";
 
-        const ALL_DUTIES = [
+        let categoriesList = [
             "Food Preparation",
             "Food Packing",
             "Food Service",
@@ -310,44 +360,43 @@
             "Water & Drinks"
         ];
 
-        // Exact deduplicated dataset from Excel
         const DEFAULT_VOLUNTEERS = [
             {id: 1, name: "John Joseph", parish: "St.Sebastian", phone: "7701089837", role: "Category Leader", duties: ["Food Preparation", "General Rearrangement", "Kappa Biriyani & Chicken Curry", "Biriyani"]},
-            {id: 2, name: "Jasmin Joseph", parish: "St.Jude", phone: "7909488384", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement", "Main Stage 1", "Sports Room Stage 2"]},
-            {id: 3, name: "Deepumon", parish: "St.Sebastian", phone: "7879728191", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement", "Class Room 1 Stage 3"]},
-            {id: 4, name: "Roshan Rapheal", parish: "St.Mary", phone: "7442903850", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement", "Class Room 4 Stage 6"]},
-            {id: 5, name: "Femi Joseph", parish: "St.Thomas", phone: "7482237458", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement", "Bristol Green 1"]},
-            {id: 6, name: "Shaji Varkey", parish: "St.Chavara", phone: "7532182639", role: "Category Leader", duties: ["Stage Squad", "General Rearrangement", "Food packing", "Newport Green 6"]},
+            {id: 2, name: "Jasmin Joseph", parish: "St.Jude", phone: "7909488384", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement"]},
+            {id: 3, name: "Deepumon", parish: "St.Sebastian", phone: "7879728191", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement"]},
+            {id: 4, name: "Roshan Rapheal", parish: "St.Mary", phone: "7442903850", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement"]},
+            {id: 5, name: "Femi Joseph", parish: "St.Thomas", phone: "7482237458", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement"]},
+            {id: 6, name: "Shaji Varkey", parish: "St.Chavara", phone: "7532182639", role: "Category Leader", duties: ["Stage Squad", "General Rearrangement", "Food Packing"]},
             {id: 7, name: "Roy Mathew", parish: "St.Jude", phone: "7448727488", role: "Category Leader", duties: ["Parking Team", "Stage Squad"]},
-            {id: 8, name: "Shinu Jackson", parish: "St.Antony's", phone: "7577738490", role: "Category Leader", duties: ["Food Service", "Cash Counter & Sales"]},
-            {id: 9, name: "Anita Philip", parish: "St.Alphonsa", phone: "7809714895", role: "Category Leader", duties: ["Judges Support", "Food for judges"]},
+            {id: 8, name: "Shinu Jackson", parish: "St.Antony's", phone: "7577738490", role: "Category Leader", duties: ["Food Service", "Cash Counter"]},
+            {id: 9, name: "Anita Philip", parish: "St.Alphonsa", phone: "7809714895", role: "Category Leader", duties: ["Judges Support"]},
             {id: 10, name: "Jasmin George", parish: "St.Mary", phone: "7838904708", role: "Category Leader", duties: ["Safeguarding", "Venue Arrangement"]},
-            {id: 11, name: "Jomy John", parish: "St.Antony's", phone: "7753821192", role: "Category Leader", duties: ["Registration", "Stage Squad", "Registration & tag distribution"]},
-            {id: 12, name: "Tom Loyied", parish: "St.Mary", phone: "7918393444", role: "Category Leader", duties: ["Food Preparation", "Snacks", "Food transportation"]},
+            {id: 11, name: "Jomy John", parish: "St.Antony's", phone: "7753821192", role: "Category Leader", duties: ["Registration", "Stage Squad"]},
+            {id: 12, name: "Tom Loyied", parish: "St.Mary", phone: "7918393444", role: "Category Leader", duties: ["Food Preparation", "Snacks", "Transportation"]},
             {id: 13, name: "Xavier Chakku", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Food Preparation", "Food Service", "Biriyani"]},
             {id: 14, name: "Rajumon Kuriakose", parish: "St.Sebastian", phone: "", role: "Category Leader", duties: ["Stage Squad", "Venue Arrangement"]},
-            {id: 15, name: "Thomas Mathew", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Stage Squad", "Green-room coordination", "Class Room 7 Stage 9"]},
-            {id: 16, name: "Shiny Aljo", parish: "Sacred Heart", phone: "7551708905", role: "Category Leader", duties: ["Stage Squad", "General Rearrangement", "Western Supermaer Green 9"]},
+            {id: 15, name: "Thomas Mathew", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Stage Squad"]},
+            {id: 16, name: "Shiny Aljo", parish: "Sacred Heart", phone: "7551708905", role: "Category Leader", duties: ["Stage Squad", "General Rearrangement"]},
             {id: 17, name: "Roy Sebastian", parish: "St.Joseph", phone: "", role: "Category Leader", duties: ["Judges Support", "General Rearrangement"]},
-            {id: 18, name: "Jackson Joseph", parish: "St.Antony", phone: "", role: "Category Leader", duties: ["Cash Counter", "Family unit leaders"]},
+            {id: 18, name: "Jackson Joseph", parish: "St.Antony", phone: "", role: "Category Leader", duties: ["Cash Counter"]},
             {id: 19, name: "George Sebastian", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Food Preparation", "Appam & Chicken Stew"]},
-            {id: 20, name: "Neuby Varghese", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["General Rearrangement", "Cleaning Supervision", "Bristol Green 1"]},
-            {id: 21, name: "Rex Philip", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Food Sale", "Thattukada"]},
-            {id: 22, name: "Chacko Varghese", parish: "St.Joseph", phone: "", role: "Category Leader", duties: ["Food Preparation", "Coffee / Tea", "Kitchen Rearrangement"]},
+            {id: 20, name: "Neuby Varghese", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["General Rearrangement", "Cleaning Supervision"]},
+            {id: 21, name: "Rex Philip", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Thattukada"]},
+            {id: 22, name: "Chacko Varghese", parish: "St.Joseph", phone: "", role: "Category Leader", duties: ["Food Preparation", "Coffee / Tea"]},
             {id: 23, name: "Binu Jacob", parish: "St.Mary", phone: "", role: "Category Leader", duties: ["Food Preparation", "Pasta Tikka"]},
-            {id: 24, name: "Abin Manoj", parish: "St.Antony's", phone: "", role: "", duties: ["Cash Counter", "Food packing", "Food service", "General rearrangement"]},
-            {id: 25, name: "Albin Shibu", parish: "St.Theresa", phone: "", role: "", duties: ["Appam & Chicken Stew", "Snacks", "Food packing", "Food service", "General rearrangement"]},
-            {id: 26, name: "Aleena Vincent", parish: "Lourdes Matha", phone: "", role: "", duties: ["Food packing", "Food service", "General rearrangement"]},
+            {id: 24, name: "Abin Manoj", parish: "St.Antony's", phone: "", role: "", duties: ["Cash Counter", "Food Packing", "Food Service", "Transportation", "General Rearrangement"]},
+            {id: 25, name: "Albin Shibu", parish: "St.Theresa", phone: "", role: "", duties: ["Appam & Chicken Stew", "Snacks", "Food Packing", "Food Service", "General Rearrangement"]},
+            {id: 26, name: "Aleena Vincent", parish: "Lourdes Matha", phone: "", role: "", duties: ["Food Packing", "Food Service", "General Rearrangement"]},
             {id: 27, name: "Anns Manuel", parish: "Lourdes Matha", phone: "", role: "", duties: ["Appam & Chicken Stew", "Food Preparation"]},
             {id: 28, name: "Aravind Mohanan", parish: "St.Patric", phone: "", role: "", duties: ["Coffee / Tea", "Food Preparation"]},
-            {id: 29, name: "Bazil Kurian", parish: "St.Micheal", phone: "", role: "Category Leader", duties: ["Food Service", "Food packing", "General rearrangement", "Family unit leaders"]},
-            {id: 30, name: "Beenamol Thomas", parish: "Lourdes Matha", phone: "", role: "", duties: ["Stage Squad", "Venue Arrangement", "Class Room 1 Stage 3"]},
-            {id: 31, name: "Bijo", parish: "St.Micheal", phone: "", role: "", duties: ["Stage Squad", "Venue Arrangement", "Class Room 7 Stage 9"]},
-            {id: 32, name: "Colins Jacob", parish: "St.Joseph", phone: "", role: "", duties: ["Food Service", "Food packing", "General rearrangement", "Kitchen rearrangement"]},
-            {id: 33, name: "Danny George", parish: "St.Mary", phone: "", role: "", duties: ["Venue Arrangement", "General rearrangement"]},
-            {id: 34, name: "Dijo George", parish: "St.Jude", phone: "", role: "", duties: ["Parking Team", "Stage Squad", "Herefold Green 11"]},
+            {id: 29, name: "Bazil Kurian", parish: "St.Micheal", phone: "", role: "Category Leader", duties: ["Food Service", "Food Packing", "General Rearrangement"]},
+            {id: 30, name: "Beenamol Thomas", parish: "Lourdes Matha", phone: "", role: "", duties: ["Stage Squad", "Venue Arrangement"]},
+            {id: 31, name: "Bijo", parish: "St.Micheal", phone: "", role: "", duties: ["Stage Squad", "Venue Arrangement"]},
+            {id: 32, name: "Colins Jacob", parish: "St.Joseph", phone: "", role: "", duties: ["Food Service", "Food Packing", "General Rearrangement"]},
+            {id: 33, name: "Danny George", parish: "St.Mary", phone: "", role: "", duties: ["Venue Arrangement", "General Rearrangement"]},
+            {id: 34, name: "Dijo George", parish: "St.Jude", phone: "", role: "", duties: ["Parking Team", "Stage Squad"]},
             {id: 35, name: "Jibin Thomas", parish: "St.Marys", phone: "", role: "Category Leader", duties: ["Transportation"]},
-            {id: 36, name: "Molly Roy", parish: "Devine Mercy", phone: "", role: "", duties: ["Food packing", "Judges Support"]},
+            {id: 36, name: "Molly Roy", parish: "Devine Mercy", phone: "", role: "", duties: ["Food Packing", "Judges Support"]},
             {id: 37, name: "Shinto Thomas", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation", "Safeguarding"]}
         ];
 
@@ -355,6 +404,7 @@
         let isAdmin = false;
         let currentTab = 'members';
         let expandedMemberId = null;
+        let selectedCategory = 'Food Preparation';
 
         function initSync() {
             const syncBadge = document.getElementById("syncStatusBadge");
@@ -362,18 +412,20 @@
                 syncBadge.textContent = "Live Remote Cloud Synced";
                 syncBadge.className = "bg-emerald-500/30 border border-emerald-400 text-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full inline-block";
 
-                const docRef = doc(window.db, "kalotsavam_2026", "members_v2");
+                const docRef = doc(window.db, "kalotsavam_2026", "members_v3");
                 
                 onSnapshot(docRef, async (docSnap) => {
                     if (docSnap.exists() && docSnap.data().volunteers) {
                         volunteers = docSnap.data().volunteers;
-                        localStorage.setItem("kalotsavam_members_2026_v2", JSON.stringify(volunteers));
-                        populateParishFilter();
+                        if (docSnap.data().categories) categoriesList = docSnap.data().categories;
+                        localStorage.setItem("kalotsavam_members_2026_v3", JSON.stringify(volunteers));
+                        localStorage.setItem("kalotsavam_categories_2026_v3", JSON.stringify(categoriesList));
+                        populateFiltersAndDropdowns();
                         window.renderApp();
                     } else {
                         volunteers = [...DEFAULT_VOLUNTEERS];
-                        await setDoc(docRef, { volunteers: volunteers });
-                        populateParishFilter();
+                        await setDoc(docRef, { volunteers: volunteers, categories: categoriesList });
+                        populateFiltersAndDropdowns();
                         window.renderApp();
                     }
                 }, (error) => {
@@ -381,37 +433,44 @@
                     loadLocalVolunteers();
                 });
             } else {
-                syncBadge.textContent = "Offline / Local Storage Mode";
+                syncBadge.textContent = "Offline / Local Mode";
                 syncBadge.className = "bg-amber-500/20 border border-amber-400/40 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full inline-block";
                 loadLocalVolunteers();
             }
         }
 
         function loadLocalVolunteers() {
-            const saved = localStorage.getItem("kalotsavam_members_2026_v2");
-            if (saved) {
-                try { volunteers = JSON.parse(saved); } catch(e) { volunteers = [...DEFAULT_VOLUNTEERS]; }
+            const savedVol = localStorage.getItem("kalotsavam_members_2026_v3");
+            const savedCat = localStorage.getItem("kalotsavam_categories_2026_v3");
+            if (savedVol) {
+                try { volunteers = JSON.parse(savedVol); } catch(e) { volunteers = [...DEFAULT_VOLUNTEERS]; }
             } else {
                 volunteers = [...DEFAULT_VOLUNTEERS];
             }
-            populateParishFilter();
+            if (savedCat) {
+                try { categoriesList = JSON.parse(savedCat); } catch(e) {}
+            }
+            populateFiltersAndDropdowns();
             window.renderApp();
         }
 
         async function saveVolunteers() {
-            localStorage.setItem("kalotsavam_members_2026_v2", JSON.stringify(volunteers));
+            localStorage.setItem("kalotsavam_members_2026_v3", JSON.stringify(volunteers));
+            localStorage.setItem("kalotsavam_categories_2026_v3", JSON.stringify(categoriesList));
             if (window.db && window.isFirebaseConnected) {
                 try {
-                    const docRef = doc(window.db, "kalotsavam_2026", "members_v2");
-                    await setDoc(docRef, { volunteers: volunteers });
+                    const docRef = doc(window.db, "kalotsavam_2026", "members_v3");
+                    await setDoc(docRef, { volunteers: volunteers, categories: categoriesList });
                 } catch(e) { console.error("Firestore save error:", e); }
             }
+            populateFiltersAndDropdowns();
             window.renderApp();
         }
 
         window.resetToDefaults = function() {
-            if (confirm("Reset all member data and assignments back to original defaults?")) {
-                localStorage.removeItem("kalotsavam_members_2026_v2");
+            if (confirm("Reset all volunteer data and categories back to original defaults?")) {
+                localStorage.removeItem("kalotsavam_members_2026_v3");
+                localStorage.removeItem("kalotsavam_categories_2026_v3");
                 volunteers = [...DEFAULT_VOLUNTEERS];
                 saveVolunteers();
             }
@@ -454,6 +513,9 @@
             const btnText = document.getElementById("authBtnText");
             const resetBtn = document.getElementById("resetBtn");
             const addBtn = document.getElementById("addVolunteerBtn");
+            const addCatBtn = document.getElementById("adminAddCatBtn");
+            const addCatBtn2 = document.getElementById("adminAddCategoryBtn2");
+            const assignDropdown = document.getElementById("adminAssignDropdownContainer");
 
             if (isAdmin) {
                 badge.innerHTML = `<i class="fa-solid fa-lock-open text-xs mr-1.5 text-emerald-400"></i> Admin Unlocked`;
@@ -461,12 +523,18 @@
                 btnText.textContent = "Lock Admin";
                 resetBtn.classList.remove("hidden");
                 addBtn.classList.remove("hidden");
+                addCatBtn.classList.remove("hidden");
+                if (addCatBtn2) addCatBtn2.classList.remove("hidden");
+                if (assignDropdown) assignDropdown.classList.remove("hidden");
             } else {
-                badge.innerHTML = `<i class="fa-solid fa-lock text-xs mr-1.5 text-amber-400"></i> Read-Only View`;
+                badge.innerHTML = `<i class="fa-solid fa-lock text-xs mr-1.5 text-amber-400"></i> Read-Only`;
                 badge.className = "flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-900/80 text-amber-300 border border-amber-500/30";
                 btnText.textContent = "Admin Login";
                 resetBtn.classList.add("hidden");
                 addBtn.classList.add("hidden");
+                addCatBtn.classList.add("hidden");
+                if (addCatBtn2) addCatBtn2.classList.add("hidden");
+                if (assignDropdown) assignDropdown.classList.add("hidden");
             }
             window.renderApp();
         }
@@ -493,12 +561,29 @@
             window.renderApp();
         };
 
-        function populateParishFilter() {
-            const select = document.getElementById("parishFilter");
-            if (!select) return;
-            const parishes = [...new Set(volunteers.map(v => v.parish))].filter(p => p).sort();
-            select.innerHTML = `<option value="">All Parishes / Units (${parishes.length})</option>`;
-            parishes.forEach(p => { select.innerHTML += `<option value="${p}">${p}</option>`; });
+        function populateFiltersAndDropdowns() {
+            // Duty Filter
+            const dutyFilter = document.getElementById("dutyFilter");
+            if (dutyFilter) {
+                dutyFilter.innerHTML = `<option value="">All Duty Categories (${categoriesList.length})</option>` + 
+                    categoriesList.map(c => `<option value="${c}">${c}</option>`).join("");
+            }
+
+            // Parish Filter
+            const parishFilter = document.getElementById("parishFilter");
+            if (parishFilter) {
+                const parishes = [...new Set(volunteers.map(v => v.parish))].filter(p => p).sort();
+                parishFilter.innerHTML = `<option value="">All Parishes / Units (${parishes.length})</option>` +
+                    parishes.map(p => `<option value="${p}">${p}</option>`).join("");
+            }
+
+            // Admin Assign Dropdown
+            const assignSelect = document.getElementById("assignVolunteerSelect");
+            if (assignSelect) {
+                const sortedVols = [...volunteers].sort((a,b) => a.name.localeCompare(b.name));
+                assignSelect.innerHTML = `<option value="">-- Choose Volunteer to Add --</option>` +
+                    sortedVols.map(v => `<option value="${v.id}">${v.name} ${v.parish ? '(' + v.parish + ')' : ''}</option>`).join("");
+            }
         }
 
         window.getFilteredVolunteers = function() {
@@ -508,23 +593,27 @@
 
             return volunteers.filter(v => {
                 const name = (v.name || "").toLowerCase();
-                const phone = (v.phone || "").toString();
-                const vParish = (v.parish || "").toLowerCase();
+                const parishStr = (v.parish || "").toLowerCase();
                 const dutiesStr = (v.duties || []).join(" ").toLowerCase();
 
-                const matchesSearch = !search || name.includes(search) || phone.includes(search) || vParish.includes(search) || dutiesStr.includes(search);
+                const matchesSearch = !search || name.includes(search) || parishStr.includes(search) || dutiesStr.includes(search);
                 const matchesDuty = !duty || dutiesStr.includes(duty);
-                const matchesParish = !parish || vParish.includes(parish);
+                const matchesParish = !parish || parishStr.includes(parish);
 
                 return matchesSearch && matchesDuty && matchesParish;
             });
         };
 
         window.renderApp = function() {
-            document.getElementById("count-members").textContent = volunteers.length;
+            // Update Total Volunteer Counters
+            const total = volunteers.length;
+            document.getElementById("headerTotalCount").textContent = total;
+            document.getElementById("bannerTotalCount").textContent = total;
+            document.getElementById("count-members").textContent = total;
+            document.getElementById("count-categories").textContent = categoriesList.length;
 
             if (currentTab === 'members') renderMemberCards();
-            else if (currentTab === 'categories') renderCategoryBreakdown();
+            else if (currentTab === 'categories') renderCategoriesTab();
         };
 
         function renderMemberCards() {
@@ -543,13 +632,15 @@
 
             grid.innerHTML = list.map(v => {
                 const isExpanded = expandedMemberId === v.id;
+                const unitBracket = v.parish ? `<span class="text-slate-500 font-semibold">(${v.parish})</span>` : '';
+                
                 const roleBadge = v.role === "Category Leader" 
                     ? `<span class="bg-amber-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded-full inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-crown text-[9px]"></i> Category Leader</span>` 
-                    : `<span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-full">Standard Volunteer</span>`;
+                    : `<span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-full">Volunteer</span>`;
 
                 const dutiesBadges = (v.duties || []).map(d => `<span class="bg-brand-50 text-brand-900 border border-brand-200 text-xs font-bold px-2.5 py-1 rounded-lg">${d}</span>`).join(" ");
 
-                // Find teammates working in any of the same duties
+                // Find teammates sharing duties
                 let teammateHtml = "";
                 if (isExpanded) {
                     const teammates = volunteers.filter(m => m.id !== v.id && m.duties.some(d => v.duties.includes(d)));
@@ -563,13 +654,13 @@
                                     <div class="bg-white p-2 rounded border border-slate-200 text-xs flex justify-between items-center">
                                         <div>
                                             <span class="font-extrabold text-slate-900">${m.name}</span>
-                                            <span class="text-[10px] text-slate-500 block">${m.parish || 'No Parish'} • ${m.role || 'Volunteer'}</span>
+                                            <span class="text-[10px] text-slate-500 ml-1 font-semibold">(${m.parish || 'No Unit'})</span>
                                         </div>
-                                        <div class="flex flex-wrap gap-1 max-w-[150px] justify-end">
+                                        <div class="flex flex-wrap gap-1 max-w-[140px] justify-end">
                                             ${m.duties.filter(d => v.duties.includes(d)).map(d => `<span class="bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded">${d}</span>`).join("")}
                                         </div>
                                     </div>
-                                `).join("") || '<p class="text-slate-400 text-xs italic">No other teammates found for these duties.</p>'}
+                                `).join("") || '<p class="text-slate-400 text-xs italic">No other teammates found.</p>'}
                             </div>
                         </div>
                     `;
@@ -580,14 +671,14 @@
                         <div>
                             <div class="flex justify-between items-start gap-2">
                                 <div>
-                                    <h3 class="font-extrabold text-slate-900 text-base">${v.name}</h3>
-                                    <p class="text-xs text-slate-500 font-semibold mt-0.5"><i class="fa-solid fa-church text-brand-700 mr-1"></i> ${v.parish || 'Parish N/A'} • <i class="fa-solid fa-phone text-slate-400 mr-1"></i> ${v.phone || 'Phone N/A'}</p>
+                                    <h3 class="font-extrabold text-slate-900 text-base">${v.name} ${unitBracket}</h3>
+                                    ${v.phone ? `<p class="text-xs text-slate-400 font-medium mt-0.5"><i class="fa-solid fa-phone text-slate-300 mr-1"></i> ${v.phone}</p>` : ''}
                                 </div>
                                 <div>${roleBadge}</div>
                             </div>
 
                             <div class="mt-3 space-y-1.5">
-                                <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Assigned Duties & Jobs:</p>
+                                <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Allocated Duties & Jobs:</p>
                                 <div class="flex flex-wrap gap-1.5">
                                     ${dutiesBadges || '<span class="text-xs text-slate-400 italic">No duties assigned</span>'}
                                 </div>
@@ -598,12 +689,12 @@
 
                         <div class="pt-2 border-t border-slate-100 flex justify-between items-center">
                             <button onclick="toggleExpandMember(${v.id})" class="text-xs font-bold text-brand-700 hover:text-brand-900 flex items-center gap-1">
-                                <i class="fa-solid ${isExpanded ? 'fa-chevron-up' : 'fa-chevron-down'}"></i> ${isExpanded ? 'Hide Teammates' : 'Expand Teammates'}
+                                <i class="fa-solid ${isExpanded ? 'fa-chevron-up' : 'fa-chevron-down'}"></i> ${isExpanded ? 'Hide Teammates' : 'View Teammates'}
                             </button>
                             ${isAdmin ? `
                                 <div class="flex items-center gap-1">
-                                    <button onclick="openEditModal(${v.id})" class="p-1.5 bg-brand-50 text-brand-700 hover:bg-brand-100 rounded-lg transition" title="Edit Job / Role"><i class="fa-solid fa-pen-to-square"></i></button>
-                                    <button onclick="deleteVolunteer(${v.id})" class="p-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg transition" title="Delete Member"><i class="fa-solid fa-trash"></i></button>
+                                    <button onclick="openEditModal(${v.id})" class="p-1.5 bg-brand-50 text-brand-700 hover:bg-brand-100 rounded-lg transition" title="Edit Volunteer"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button onclick="deleteVolunteer(${v.id})" class="p-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg transition" title="Delete Volunteer"><i class="fa-solid fa-trash"></i></button>
                                 </div>
                             ` : ''}
                         </div>
@@ -617,86 +708,137 @@
             renderMemberCards();
         };
 
-        function renderCategoryBreakdown() {
-            const grid = document.getElementById("categoryBreakdownGrid");
-            if (!grid) return;
+        function renderCategoriesTab() {
+            renderCategoryButtons();
+            renderSelectedCategoryDetails();
+        }
 
-            grid.innerHTML = ALL_DUTIES.map(duty => {
-                const assignedMembers = volunteers.filter(v => v.duties && v.duties.includes(duty));
-                const leaders = assignedMembers.filter(v => v.role === "Category Leader");
+        function renderCategoryButtons() {
+            const container = document.getElementById("categoryButtonsContainer");
+            if (!container) return;
+
+            container.innerHTML = categoriesList.map(cat => {
+                const count = volunteers.filter(v => v.duties && v.duties.includes(cat)).length;
+                const isActive = selectedCategory === cat;
 
                 return `
-                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col justify-between space-y-3">
-                        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                            <h3 class="font-black text-slate-900 text-sm flex items-center gap-2">
-                                <i class="fa-solid fa-layer-group text-amber-600"></i> ${duty}
-                            </h3>
-                            <span class="text-xs bg-amber-100 text-amber-900 font-extrabold px-2.5 py-0.5 rounded-full">${assignedMembers.length} Members</span>
-                        </div>
-
-                        <div class="space-y-2 flex-1">
-                            ${leaders.length > 0 ? `
-                                <div class="bg-amber-50 border border-amber-200 p-2 rounded-xl text-xs space-y-1">
-                                    <span class="font-black text-amber-900 block flex items-center gap-1"><i class="fa-solid fa-crown text-amber-600"></i> Leaders / Coordinators:</span>
-                                    <div class="flex flex-wrap gap-1">
-                                        ${leaders.map(l => `<span class="bg-white border border-amber-300 text-slate-900 font-bold px-2 py-0.5 rounded">${l.name} (${l.parish})</span>`).join("")}
-                                    </div>
-                                </div>
-                            ` : ''}
-
-                            <div class="space-y-1 max-h-44 overflow-y-auto pr-1">
-                                ${assignedMembers.map(m => `
-                                    <div class="bg-slate-50 p-2 rounded-lg border border-slate-100 text-xs flex justify-between items-center">
-                                        <div>
-                                            <span class="font-extrabold text-slate-900">${m.name}</span>
-                                            <span class="text-[10px] text-slate-500 block">${m.parish || 'No Parish'} ${m.role ? '• ' + m.role : ''}</span>
-                                        </div>
-                                        ${isAdmin ? `
-                                            <button onclick="openEditModal(${m.id})" class="text-brand-700 hover:text-brand-900 p-1"><i class="fa-solid fa-pen text-[11px]"></i></button>
-                                        ` : ''}
-                                    </div>
-                                `).join("") || '<p class="text-slate-400 text-xs italic py-2">No members assigned to this category.</p>'}
-                            </div>
-                        </div>
-
-                        ${isAdmin ? `
-                            <div class="pt-2 border-t border-slate-100 text-right">
-                                <button onclick="openAddModalForDuty('${duty.replace(/'/g, "\\'")}')" class="text-xs bg-brand-700 hover:bg-brand-800 text-white font-bold px-3 py-1.5 rounded-lg shadow transition">
-                                    <i class="fa-solid fa-plus mr-1"></i> Add Member to ${duty}
-                                </button>
-                            </div>
-                        ` : ''}
-                    </div>
+                    <button onclick="selectCategory('${cat.replace(/'/g, "\\'")}')" class="px-3 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm border ${isActive ? 'bg-brand-700 text-white border-brand-800 shadow' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}">
+                        <span>${cat}</span>
+                        <span class="${isActive ? 'bg-amber-400 text-slate-900' : 'bg-slate-100 text-slate-600'} text-[10px] font-black px-1.5 py-0.5 rounded-full">${count}</span>
+                    </button>
                 `;
             }).join("");
         }
 
+        window.selectCategory = function(cat) {
+            selectedCategory = cat;
+            renderCategoryButtons();
+            renderSelectedCategoryDetails();
+        };
+
+        function renderSelectedCategoryDetails() {
+            document.getElementById("selectedCategoryTitle").textContent = selectedCategory;
+            
+            const assignedMembers = volunteers.filter(v => v.duties && v.duties.includes(selectedCategory));
+            document.getElementById("selectedCategoryCount").textContent = `${assignedMembers.length} Volunteers`;
+
+            const grid = document.getElementById("selectedCategoryMembersGrid");
+            grid.innerHTML = assignedMembers.map(v => `
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center text-xs">
+                    <div>
+                        <span class="font-extrabold text-slate-900">${v.name} <span class="text-slate-500 font-semibold">(${v.parish || 'No Unit'})</span></span>
+                        ${v.role ? `<span class="block text-[10px] font-extrabold text-amber-700 mt-0.5"><i class="fa-solid fa-crown text-amber-500 mr-0.5"></i> ${v.role}</span>` : ''}
+                    </div>
+                    ${isAdmin ? `
+                        <div class="flex items-center gap-1">
+                            <button onclick="removeVolunteerFromCategory(${v.id}, '${selectedCategory.replace(/'/g, "\\'")}')" class="text-rose-500 hover:text-rose-700 p-1" title="Remove from Category"><i class="fa-solid fa-xmark text-sm"></i></button>
+                            <button onclick="openEditModal(${v.id})" class="text-brand-700 hover:text-brand-900 p-1" title="Edit Duties"><i class="fa-solid fa-pen-to-square"></i></button>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join("") || `<p class="text-slate-400 text-xs italic col-span-3 py-4 text-center">No volunteers assigned to ${selectedCategory} yet.</p>`;
+        }
+
+        window.assignSelectedVolunteerToCategory = function() {
+            if (!isAdmin) return;
+            const select = document.getElementById("assignVolunteerSelect");
+            const volId = parseInt(select.value);
+            if (!volId) {
+                alert("Please select a volunteer from the dropdown list first.");
+                return;
+            }
+
+            const vol = volunteers.find(v => v.id === volId);
+            if (vol) {
+                if (!vol.duties.includes(selectedCategory)) {
+                    vol.duties.push(selectedCategory);
+                    saveVolunteers();
+                    select.value = "";
+                } else {
+                    alert(`${vol.name} is already assigned to ${selectedCategory}.`);
+                }
+            }
+        };
+
+        window.removeVolunteerFromCategory = function(volId, category) {
+            if (!isAdmin) return;
+            const vol = volunteers.find(v => v.id === volId);
+            if (vol && vol.duties) {
+                vol.duties = vol.duties.filter(d => d !== category);
+                saveVolunteers();
+            }
+        };
+
+        window.openAddCategoryModal = function() {
+            if (!isAdmin) {
+                alert("Please click 'Admin Login' at top right to unlock editing rights.");
+                return;
+            }
+            document.getElementById("newCategoryInput").value = "";
+            document.getElementById("addCategoryModal").classList.remove("hidden");
+        };
+
+        window.closeAddCategoryModal = function() {
+            document.getElementById("addCategoryModal").classList.add("hidden");
+        };
+
+        window.handleAddCategorySubmit = function(e) {
+            e.preventDefault();
+            if (!isAdmin) return;
+
+            const newCat = document.getElementById("newCategoryInput").value.trim();
+            if (newCat && !categoriesList.includes(newCat)) {
+                categoriesList.push(newCat);
+                selectedCategory = newCat;
+                saveVolunteers();
+                closeAddCategoryModal();
+            } else if (categoriesList.includes(newCat)) {
+                alert("This category already exists!");
+            }
+        };
+
         window.deleteVolunteer = function(id) {
             if (!isAdmin) return;
-            if (confirm("Are you sure you want to delete this member?")) {
+            if (confirm("Are you sure you want to delete this volunteer?")) {
                 volunteers = volunteers.filter(v => v.id !== id);
                 saveVolunteers();
             }
         };
 
-        window.openAddModal = function(dutyPreset = null) {
+        window.openAddModal = function() {
             if (!isAdmin) {
-                alert("Please click 'Admin Login' at the top right to unlock editing rights.");
+                alert("Please click 'Admin Login' at top right to unlock editing rights.");
                 return;
             }
-            document.getElementById("modalTitle").textContent = dutyPreset ? `Add Member to: ${dutyPreset}` : "Add New Member";
+            document.getElementById("modalTitle").textContent = "Add New Volunteer";
             document.getElementById("formVolId").value = "";
             document.getElementById("formName").value = "";
             document.getElementById("formParish").value = "";
             document.getElementById("formPhone").value = "";
             document.getElementById("formLeaderRole").value = "";
 
-            renderDutiesCheckboxes(dutyPreset ? [dutyPreset] : []);
+            renderDutiesCheckboxes([]);
             document.getElementById("volunteerModal").classList.remove("hidden");
-        };
-
-        window.openAddModalForDuty = function(duty) {
-            openAddModal(duty);
         };
 
         window.openEditModal = function(id) {
@@ -704,10 +846,10 @@
             const v = volunteers.find(vol => vol.id === id);
             if (!v) return;
 
-            document.getElementById("modalTitle").textContent = `Edit Member: ${v.name}`;
+            document.getElementById("modalTitle").textContent = `Edit Volunteer: ${v.name}`;
             document.getElementById("formVolId").value = v.id;
             document.getElementById("formName").value = v.name;
-            document.getElementById("formParish").value = v.parish;
+            document.getElementById("formParish").value = v.parish || '';
             document.getElementById("formPhone").value = v.phone || '';
             document.getElementById("formLeaderRole").value = v.role || '';
 
@@ -718,9 +860,9 @@
         function renderDutiesCheckboxes(selectedDuties) {
             const container = document.getElementById("modalDutiesCheckboxes");
             if (!container) return;
-            container.innerHTML = ALL_DUTIES.map(duty => {
+            container.innerHTML = categoriesList.map(duty => {
                 const checked = selectedDuties.includes(duty) ? "checked" : "";
-                return `<label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded border border-slate-200 cursor-pointer font-semibold text-slate-800"><input type="checkbox" name="modalDuty" value="${duty}" ${checked} class="rounded text-brand-600 focus:ring-brand-500"> ${duty}</label>`;
+                return `<label class="flex items-center gap-1.5 bg-white px-2 py-1.5 rounded border border-slate-200 cursor-pointer font-semibold text-slate-800"><input type="checkbox" name="modalDuty" value="${duty.replace(/"/g, '&quot;')}" ${checked} class="rounded text-brand-600 focus:ring-brand-500"> ${duty}</label>`;
             }).join("");
         }
 
@@ -752,22 +894,21 @@
             }
 
             saveVolunteers();
-            populateParishFilter();
             closeVolunteerModal();
         };
 
         window.exportCSV = function() {
-            let csv = "ID,Full Name,Parish,Phone,Role,Assigned Duties\n";
+            let csv = "ID,Full Name,Parish/Unit,Phone,Role,Allocated Duties\n";
             volunteers.forEach(v => {
                 const dutiesStr = (v.duties || []).join("; ");
-                csv += `"${v.id}","${v.name}","${v.parish}","${v.phone || ''}","${v.role || 'Standard Volunteer'}","${dutiesStr}"\n`;
+                csv += `"${v.id}","${v.name}","(${v.parish || ''})","${v.phone || ''}","${v.role || 'Volunteer'}","${dutiesStr}"\n`;
             });
 
             const blob = new Blob([csv], { type: "text/csv" });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.setAttribute("href", url);
-            a.setAttribute("download", `CSMEGB_Kalotsavam_Members_2026.csv`);
+            a.setAttribute("download", `CSMEGB_Kalotsavam_Volunteers_2026.csv`);
             a.click();
         };
 
