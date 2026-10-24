@@ -283,7 +283,7 @@
         </div>
     </div>
 
-    <!-- MODAL: MANAGE VOLUNTEER (WITH EXACT FOOD & OPERATIONAL CHECKBOXES) -->
+    <!-- MODAL: MANAGE VOLUNTEER -->
     <div id="volunteerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[92vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
@@ -369,7 +369,7 @@
 
         const ADMIN_HASH_KEY = "a2Fsb3RzYXZhbTIwMjY=";
 
-        // EXACT OPERATIONAL DUTIES LIST
+        // OPERATIONAL DUTIES LIST
         let categoriesList = [
             "Food Preparation",
             "Food Packing",
@@ -379,16 +379,18 @@
             "Parking Team",
             "Transportation",
             "Registration",
-            "Safeguarding/ Firstaid/Health & Safety",
+            "Safeguarding / Firstaid",
+            "30th Rearrangement",
             "31st Rearrangement",
-            "30thKitchen rearrangement",
+            "Kitchen rearrangement",
             "30th Venue Arrangement",
+            "31st Venue Arrangement",
             "Cleaning Supervision",
             "Judges Support",
             "Priest Support"
         ];
 
-        // EXACT FOOD MENU ITEMS LIST
+        // FOOD MENU ITEMS LIST
         let foodMenuItems = [
             "Kappa Biriyani",
             "Chicken Curry",
@@ -409,129 +411,20 @@
             "Parking Leader", "Judges Hospitality Lead", "Transportation Leader", "Family Unit Leader"
         ];
 
-        // Master Roster of ALL 121 Volunteers
+        // Master Roster Default Backup
         const DEFAULT_VOLUNTEERS = [
-            {id: 1, name: "John Joseph", parish: "St.Sebastian", phone: "7701089837", role: "Food Preparation Leader", duties: ["Food Preparation", "31st Rearrangement"], foodItems: ["Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: "Food Committee Lead"},
-            {id: 2, name: "Shiju Thettayil Vakkachan", parish: "St.Mary", phone: "7918393444", role: "", duties: ["Food Preparation", "3st Rearrangemnt "], foodItems: ["Biriyani", "Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: ""},
+            {id: 1, name: "John Joseph", parish: "St.Sebastian", phone: "7701089837", role: "Food Preparation Leader", duties: ["Food Preparation", "30th Rearrangement", "31st Rearrangement"], foodItems: ["Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: "Food Committee Lead"},
+            {id: 2, name: "Shiju Thettayil Vakkachan", parish: "St.Mary", phone: "7918393444", role: "", duties: ["Food Preparation", "30th Rearrangement", "31st Rearrangement"], foodItems: ["Biriyani", "Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: ""},
             {id: 3, name: "Jasmin Joseph", parish: "St.Jude", phone: "7909488384", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [1, 2], greenRooms: [12], notes: "Main Stage 1 & Stage 2 Lead"},
             {id: 4, name: "Deepumon", parish: "St.Sebastian", phone: "7879728191", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [3, 4, 5], greenRooms: [], notes: "Stages 3, 4, 5 Lead"},
             {id: 5, name: "Roshan Rapheal", parish: "St.Mary", phone: "7442903850", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [6, 7, 8], greenRooms: [], notes: "Stages 6, 7, 8 Lead"},
-            {id: 6, name: "Vargheese Scaria", parish: "St.Sebastian", phone: "7909723108", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "3st Rearrangemnt ", "Kitchen rearrangement"], foodItems: ["Kappa Biriyani", "Chicken Curry", "Biriyani"], stages: [], greenRooms: [], notes: "Kitchen rearrangement"},
+            {id: 6, name: "Vargheese Scaria", parish: "St.Sebastian", phone: "7909723108", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Rearrangement", "31st Rearrangement", "Kitchen rearrangement"], foodItems: ["Kappa Biriyani", "Chicken Curry", "Biriyani"], stages: [], greenRooms: [], notes: "Kitchen rearrangement"},
             {id: 7, name: "Femi Joseph", parish: "St.Thomas", phone: "7482237458", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [1, 2, 3], notes: "Bristol, Cardiff, Gloucester Green Rooms"},
-            {id: 8, name: "Shaji Varkey", parish: "St.Chavara", phone: "7532182639", role: "Category Leader", duties: ["Stage / Greenroom Squad", "3st Rearrangemnt ", "Food Packing"], foodItems: [], stages: [], greenRooms: [6, 7, 8], notes: "Newport, Swansea, Exeter Green Rooms Lead"},
-            {id: 9, name: "Shiny Aljo", parish: "Sacred Heart", phone: "7551708905", role: "", duties: ["Stage / Greenroom Squad", "3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [9, 10, 11], notes: "Weston, Taunton, Hereford Green Rooms Lead"},
+            {id: 8, name: "Shaji Varkey", parish: "St.Chavara", phone: "7532182639", role: "Category Leader", duties: ["Stage / Greenroom Squad", "30th Rearrangement", "31st Rearrangement", "Food Packing"], foodItems: [], stages: [], greenRooms: [6, 7, 8], notes: "Newport, Swansea, Exeter Green Rooms Lead"},
+            {id: 9, name: "Shiny Aljo", parish: "Sacred Heart", phone: "7551708905", role: "", duties: ["Stage / Greenroom Squad", "30th Rearrangement", "31st Rearrangement"], foodItems: [], stages: [], greenRooms: [9, 10, 11], notes: "Weston, Taunton, Hereford Green Rooms Lead"},
             {id: 10, name: "Roy Mathew", parish: "St.Jude", phone: "7448727488", role: "Parking Leader", duties: ["Parking Team", "Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [], notes: "Parking Team Lead"},
             {id: 11, name: "Shinu Jackson", parish: "St.Antony's", phone: "7577738490", role: "Food Service Leader", duties: ["Food Service", "Cash Counter"], foodItems: ["Cash Counter"], stages: [], greenRooms: [], notes: "Cash Counter Lead"},
-            {id: 12, name: "Rohith Shiju", parish: "St.Mary", phone: "7881144662", role: "", duties: ["Food Service", "3st Rearrangemnt "], foodItems: ["Cash Counter"], stages: [], greenRooms: [], notes: "Cash Counter Lead"},
-            {id: 13, name: "Anita Philip", parish: "St.Alphonsa", phone: "7809714895", role: "Category Leader", duties: ["Judges Support"], foodItems: [], stages: [], greenRooms: [], notes: "Judges Food & Hospitality Lead"},
-            {id: 14, name: "Jasmin George", parish: "St.Mary", phone: "7838904708", role: "Category Leader", duties: ["Safeguarding / Firstaid", "30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: "Safeguarding Lead"},
-            {id: 15, name: "Jomy John", parish: "St.Antony's", phone: "7753821192", role: "Category Leader", duties: ["Registration", "Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [6, 7, 8], notes: "Registration Lead"},
-            {id: 16, name: "Tom Loyied", parish: "St.Mary", phone: "7918393444", role: "Food Preparation Leader", duties: ["Food Preparation"], foodItems: ["Snacks"], stages: [], greenRooms: [], notes: "Snacks Lead"},
-            {id: 17, name: "Xavier Chakku", parish: "St.Mary", phone: "", role: "Food Preparation Leader", duties: ["Food Preparation", "Food Service"], foodItems: ["Biriyani"], stages: [], greenRooms: [], notes: "Biriyani Lead"},
-            {id: 18, name: "Rajumon Kuriakose", parish: "St.Sebastian", phone: "", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [3, 4, 5], greenRooms: [], notes: "Stage Squad 3, 4, 5"},
-            {id: 19, name: "Karol Thomas", parish: "St.Sebastian", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [3, 4, 5], greenRooms: [], notes: ""},
-            {id: 20, name: "Beenamol Thomas", parish: "Lourdes Matha", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [3, 4, 5], greenRooms: [], notes: ""},
-            {id: 21, name: "Roshan Raphel", parish: "St.Mary", phone: "", role: "Stage Arrangement Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [6, 7, 8], greenRooms: [], notes: ""},
-            {id: 22, name: "Shelton Mathew", parish: "St.Mary", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [6, 7, 8], greenRooms: [], notes: ""},
-            {id: 23, name: "Roy Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [6, 7, 8], greenRooms: [], notes: ""},
-            {id: 24, name: "George Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [6, 7, 8], greenRooms: [], notes: ""},
-            {id: 25, name: "Thomas Mathew", parish: "St.Mary", phone: "", role: "Green Room Leader", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [9], greenRooms: [4, 5], notes: "Stage 9 & Bath, Bari Green Rooms Lead"},
-            {id: 26, name: "Lalamma Thomas", parish: "St.Mary", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [9], greenRooms: [4, 5], notes: ""},
-            {id: 27, name: "Bijo", parish: "St.Micheal", phone: "", role: "", duties: ["Stage / Greenroom Squad", "30th Venue Arrangement"], foodItems: [], stages: [9], greenRooms: [4, 5], notes: ""},
-            {id: 28, name: "Joju George", parish: "St.Thomas", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [1, 2, 3], notes: ""},
-            {id: 29, name: "Neuby Varghese", parish: "St.Mary", phone: "", role: "", duties: ["Cleaning Supervision", "3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [1, 2, 3], notes: "Cleaning Lead"},
-            {id: 30, name: "Gimy Gracias", parish: "St.Thomas", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [1, 2, 3], notes: ""},
-            {id: 31, name: "Sinson George", parish: "St.Chavara", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [6, 7, 8], notes: ""},
-            {id: 32, name: "Prabhu Plappallil James", parish: "St.Chavara", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [6, 7, 8], notes: ""},
-            {id: 33, name: "Dijo George", parish: "St.Jude", phone: "", role: "", duties: ["Parking Team", "Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [9, 10, 11], notes: ""},
-            {id: 34, name: "Jijo Augustine", parish: "Sacred Heart", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [9, 10, 11], notes: ""},
-            {id: 35, name: "Shiju K Paul", parish: "Sacred Heart", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [], greenRooms: [9, 10, 11], notes: ""},
-            {id: 36, name: "Rojis George", parish: "St.Jude", phone: "", role: "", duties: ["Cleaning Supervision", "Stage / Greenroom Squad"], foodItems: [], stages: [1, 2], greenRooms: [12], notes: ""},
-            {id: 37, name: "Tijo Antony", parish: "St.Jude", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [1, 2], greenRooms: [12], notes: ""},
-            {id: 38, name: "Joshy", parish: "St.Jude", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [1, 2], greenRooms: [12], notes: ""},
-            {id: 39, name: "Tom George", parish: "St.Jude", phone: "", role: "Parking Leader", duties: ["Parking Team"], foodItems: [], stages: [], greenRooms: [], notes: "Parking Co-Lead"},
-            {id: 40, name: "Shibi Jose", parish: "St.Jude", phone: "", role: "", duties: ["Parking Team"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 41, name: "George Nikolovoas", parish: "St.Jude", phone: "", role: "", duties: ["Parking Team"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 42, name: "Rex Philip", parish: "St.Mary", phone: "", role: "Food Preparation Leader", duties: ["Food Preparation"], foodItems: ["Thattukada"], stages: [], greenRooms: [], notes: "Thattukada Lead"},
-            {id: 43, name: "Rex", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Thattukada"], stages: [], greenRooms: [], notes: ""},
-            {id: 44, name: "Jibin", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Thattukada"], stages: [], greenRooms: [], notes: ""},
-            {id: 45, name: "Linson", parish: "St.Mary", phone: "", role: "", duties: ["Food Packing"], foodItems: ["Thattukada"], stages: [], greenRooms: [], notes: ""},
-            {id: 46, name: "Chacko Varghese", parish: "St.Joseph", phone: "", role: "Food Preparation Leader", duties: ["Food Preparation", "Kitchen rearrangement"], foodItems: ["Coffee / Tea"], stages: [], greenRooms: [], notes: "Coffee / Tea Lead"},
-            {id: 47, name: "Aravind Mohanan", parish: "St.Patric", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Coffee / Tea"], stages: [], greenRooms: [], notes: ""},
-            {id: 48, name: "George Sebastian", parish: "St.Mary", phone: "", role: "Food Preparation Leader", duties: ["Food Preparation"], foodItems: ["Appam & Chicken Stew"], stages: [], greenRooms: [], notes: "Appam & Stew Lead"},
-            {id: 49, name: "Sebiyachan Poulo", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Appam & Chicken Stew"], stages: [], greenRooms: [], notes: ""},
-            {id: 50, name: "Shibu K Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation", "Safeguarding / Firstaid"], foodItems: ["Appam & Chicken Stew"], stages: [], greenRooms: [], notes: ""},
-            {id: 51, name: "Metty Thomas", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Appam & Chicken Stew"], stages: [], greenRooms: [], notes: ""},
-            {id: 52, name: "Binu Jacob", parish: "St.Mary", phone: "", role: "Food Preparation Leader", duties: ["Food Preparation"], foodItems: ["Pasta Tikka"], stages: [], greenRooms: [], notes: "Pasta Tikka Lead"},
-            {id: 53, name: "Saji Mathew", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Pasta Tikka"], stages: [], greenRooms: [], notes: ""},
-            {id: 54, name: "Jessica Vadhyanath", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: ["Drinks & Packed snacks"], stages: [], greenRooms: [], notes: ""},
-            {id: 55, name: "Jackson Joseph", parish: "St.Antony", phone: "", role: "Category Leader", duties: ["Cash Counter"], foodItems: ["Cash Counter"], stages: [], greenRooms: [], notes: "Cash Counter Lead"},
-            {id: 56, name: "Abin Manoj", parish: "St.Antony's", phone: "", role: "", duties: ["3st Rearrangemnt ", "Food Service"], foodItems: ["Cash Counter"], stages: [], greenRooms: [], notes: ""},
-            {id: 57, name: "Roy Sebastian", parish: "St.Joseph", phone: "", role: "Judges Hospitality Lead", duties: ["3st Rearrangemnt ", "Judges Support"], foodItems: [], stages: [], greenRooms: [], notes: "Judges Support Co-Lead"},
-            {id: 58, name: "Molly Roy", parish: "Divine Mercy", phone: "", role: "", duties: ["Food Packing", "Judges Support"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 59, name: "Jibin Thomas", parish: "St.Marys", phone: "", role: "Transportation Leader", duties: ["Transportation"], foodItems: [], stages: [], greenRooms: [], notes: "Transportation Lead"},
-            {id: 60, name: "Joel Arikkat", parish: "St.Vincent", phone: "", role: "", duties: ["Transportation", "Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 61, name: "Harry Arikkat", parish: "St.Vincent", phone: "", role: "", duties: ["Transportation", "Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 62, name: "Shiny Sebastian", parish: "St.Mary", phone: "", role: "", duties: ["Registration"], foodItems: [], stages: [], greenRooms: [], notes: "Registration Team"},
-            {id: 63, name: "Shinto Thomas", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation", "Safeguarding / Firstaid"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 64, name: "Albin Shibu", parish: "St.Theresa", phone: "", role: "", duties: ["Food Service", "3st Rearrangemnt "], foodItems: ["Appam & Chicken Stew", "Snacks"], stages: [], greenRooms: [], notes: ""},
-            {id: 65, name: "Aleena Vincent", parish: "Lourdes Matha", phone: "", role: "", duties: ["Food Service", "3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 66, name: "Anns Manuel", parish: "Lourdes Matha", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Appam & Chicken Stew"], stages: [], greenRooms: [], notes: ""},
-            {id: 67, name: "Bazil Kurian", parish: "St.Micheal", phone: "", role: "Category Leader", duties: ["Food Service", "3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 68, name: "Colins Jacob", parish: "St.Joseph", phone: "", role: "", duties: ["Food Service", "3st Rearrangemnt ", "Kitchen rearrangement"], foodItems: [], stages: [], greenRooms: [], notes: "Kitchen Re-arrangement"},
-            {id: 69, name: "Danny George", parish: "St.Mary", phone: "", role: "", duties: ["30th Venue Arrangement", "3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 70, name: "Gigy John", parish: "St.Sebastian", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: ""},
-            {id: 71, name: "Binu", parish: "St.Sebastian", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: ""},
-            {id: 72, name: "Jinto Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Snacks"], stages: [], greenRooms: [], notes: ""},
-            {id: 73, name: "Robin Varghese", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Snacks"], stages: [], greenRooms: [], notes: ""},
-            {id: 74, name: "Jojy Thomas", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Snacks"], stages: [], greenRooms: [], notes: ""},
-            {id: 75, name: "Jolly Saji", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Biriyani"], stages: [], greenRooms: [], notes: ""},
-            {id: 76, name: "George Tharakan", parish: "Divine Mercy", phone: "", role: "", duties: ["Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 77, name: "Siju", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Coffee / Tea", "Appam & Chicken Stew"], stages: [], greenRooms: [], notes: ""},
-            {id: 78, name: "SMYM Team", parish: "Youth Wing", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: "Prize Distribution Team"},
-            {id: 79, name: "Mathew Thomas", parish: "St.Alphonsa", phone: "", role: "Family Unit Leader", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: "Unit Lead St.Alphonsa"},
-            {id: 80, name: "Manoj", parish: "St.Augustin", phone: "", role: "Family Unit Leader", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: "Unit Lead St.Augustin"},
-            {id: 81, name: "Benni", parish: "St.Chavara", phone: "", role: "Family Unit Leader", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: "Unit Lead St.Chavara"},
-            {id: 82, name: "Mathews Manuel", parish: "St.Joseph", phone: "", role: "", duties: ["Kitchen rearrangement", "3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: "Kitchen Rearrangement"},
-            {id: 83, name: "Christy Francis", parish: "St.Joseph", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 84, name: "Santhosh Kachappilly", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 85, name: "Linta Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Food Service", "3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 86, name: "Sam Joy Junnel", parish: "St.Mary", phone: "", role: "", duties: ["Cash Counter"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 87, name: "Jolly Shaji", parish: "St.Mary", phone: "", role: "", duties: ["Food Preparation"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 88, name: "Asha Varghese", parish: "St.Sebastian", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: ""},
-            {id: 89, name: "Augustin", parish: "St.Augustin", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 90, name: "Noychen Augustine", parish: "St.Mary", phone: "", role: "Food Service Leader", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 91, name: "Biju Varghese", parish: "St.Joseph", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 92, name: "Cyril Thomas", parish: "St.Thomas", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 93, name: "Dominic Savio", parish: "St.Mary", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 94, name: "Eldho Paul", parish: "St.Mary", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 95, name: "Francis Xavier", parish: "St.Xavier", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 96, name: "Georgekutty", parish: "St.Joseph", phone: "", role: "", duties: ["Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 97, name: "Haris K", parish: "St.Mary", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 98, name: "Jacob Varghese", parish: "St.Mary", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 99, name: "Joby John", parish: "St.Jude", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 100, name: "Justin Joseph", parish: "St.Joseph", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 101, name: "Kiran Jose", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 102, name: "Lijo Thomas", parish: "St.Thomas", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 103, name: "Martin P", parish: "St.Mary", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 104, name: "Nebu George", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 105, name: "Paulson K", parish: "St.Mary", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 106, name: "Rijosh Thomas", parish: "St.Thomas", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 107, name: "Sebyachen", parish: "St.Sebastian", phone: "", role: "", duties: ["Food Preparation"], foodItems: ["Kappa Biriyani", "Chicken Curry"], stages: [], greenRooms: [], notes: ""},
-            {id: 108, name: "Sojan Joseph", parish: "St.Joseph", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 109, name: "Tony Augustine", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 110, name: "Varghese K", parish: "St.Mary", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 111, name: "Wilson Paul", parish: "St.Mary", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 112, name: "Xavier Varghese", parish: "St.Xavier", phone: "", role: "", duties: ["Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 113, name: "Yeldho Thomas", parish: "St.Thomas", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 114, name: "Zachariah P", parish: "St.Mary", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 115, name: "Alen Joseph", parish: "St.Jude", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [1, 2], greenRooms: [], notes: ""},
-            {id: 116, name: "Bibin K", parish: "St.Mary", phone: "", role: "", duties: ["Food Service"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 117, name: "Deepak Thomas", parish: "St.Thomas", phone: "", role: "", duties: ["30th Venue Arrangement"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 118, name: "Emmanuel Joseph", parish: "St.Mary", phone: "", role: "", duties: ["Stage / Greenroom Squad"], foodItems: [], stages: [11, 12], greenRooms: [12], notes: ""},
-            {id: 119, name: "Febin Varghese", parish: "St.Joseph", phone: "", role: "", duties: ["3st Rearrangemnt "], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 120, name: "Gokul Das", parish: "St.Mary", phone: "", role: "", duties: ["Parking Team"], foodItems: [], stages: [], greenRooms: [], notes: ""},
-            {id: 121, name: "Hari Prasad", parish: "St.Mary", phone: "", role: "", duties: ["Food Packing"], foodItems: [], stages: [], greenRooms: [], notes: ""}
+            {id: 12, name: "Rohith Shiju", parish: "St.Mary", phone: "7881144662", role: "", duties: ["Food Service", "30th Rearrangement", "31st Rearrangement"], foodItems: ["Cash Counter"], stages: [], greenRooms: [], notes: "Cash Counter Lead"}
         ];
 
         let volunteers = [];
@@ -545,6 +438,7 @@
                 syncBadge.textContent = "Live Cloud Synced";
                 syncBadge.className = "bg-emerald-500/30 border border-emerald-400 text-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full inline-block";
 
+                // Pointed back strictly to master_121_roster_v5
                 const docRef = doc(window.db, "kalotsavam_2026", "master_121_roster_v5");
                 
                 onSnapshot(docRef, async (docSnap) => {
@@ -552,6 +446,14 @@
                         volunteers = docSnap.data().volunteers;
                         if (docSnap.data().categories) categoriesList = docSnap.data().categories;
                         if (docSnap.data().foodItems) foodMenuItems = docSnap.data().foodItems;
+                        
+                        // Automatically migrate 30th -> 31st Rearrangement safely if needed
+                        volunteers.forEach(v => {
+                            if (v.duties && v.duties.includes("30th Rearrangement") && !v.duties.includes("31st Rearrangement")) {
+                                v.duties.push("31st Rearrangement");
+                            }
+                        });
+
                         localStorage.setItem("kalotsavam_master_v5", JSON.stringify(volunteers));
                         populateFiltersAndDropdowns();
                         window.renderApp();
@@ -591,7 +493,7 @@
         }
 
         window.resetToDefaults = function() {
-            if (confirm("Reset all 121 volunteer allocations back to original defaults?")) {
+            if (confirm("Reset all volunteer allocations back to original defaults?")) {
                 localStorage.removeItem("kalotsavam_master_v5");
                 volunteers = [...DEFAULT_VOLUNTEERS];
                 saveVolunteers();
@@ -681,7 +583,6 @@
         };
 
         function populateFiltersAndDropdowns() {
-            // Main Duty Filter (Combines duties + food menu)
             const dutyFilter = document.getElementById("dutyFilter");
             if (dutyFilter) {
                 const combined = [...categoriesList, ...foodMenuItems];
@@ -689,7 +590,6 @@
                     combined.map(c => `<option value="${c}">${c}</option>`).join("");
             }
 
-            // Main Parish Filter
             const parishFilter = document.getElementById("parishFilter");
             const parishes = [...new Set(volunteers.map(v => v.parish))].filter(p => p).sort();
             if (parishFilter) {
@@ -697,7 +597,6 @@
                     parishes.map(p => `<option value="${p}">${p}</option>`).join("");
             }
 
-            // Category Tab Assign Dropdown
             const assignSelect = document.getElementById("assignVolunteerSelect");
             if (assignSelect) {
                 const sortedVols = [...volunteers].sort((a,b) => a.name.localeCompare(b.name));
@@ -705,7 +604,6 @@
                     sortedVols.map(v => `<option value="${v.id}">${v.name} ${v.parish ? '(' + v.parish + ')' : ''}</option>`).join("");
             }
 
-            // Modal: Name Dropdown
             const nameSelect = document.getElementById("formNameDropdown");
             if (nameSelect) {
                 const sortedVols = [...volunteers].sort((a,b) => a.name.localeCompare(b.name));
@@ -713,7 +611,6 @@
                     sortedVols.map(v => `<option value="${v.id}">${v.name} (${v.parish || 'No Unit'})</option>`).join("");
             }
 
-            // Modal: Parish Dropdown
             const parishSelect = document.getElementById("formParishDropdown");
             if (parishSelect) {
                 parishSelect.innerHTML = `<option value="">-- Select Parish / Unit --</option>` +
@@ -721,7 +618,6 @@
                     `<option value="NEW_CUSTOM">+ Add Custom Unit / Parish Name</option>`;
             }
 
-            // Modal: Role Dropdown
             const roleSelect = document.getElementById("formRoleDropdown");
             if (roleSelect) {
                 roleSelect.innerHTML = rolesList.map(r => `<option value="${r === 'Standard Volunteer' ? '' : r}">${r}</option>`).join("");
@@ -1258,5 +1154,3 @@
     </script>
 </body>
 </html>
-
-```
