@@ -509,7 +509,7 @@
                 syncBadge.textContent = "Live Cloud Synced";
                 syncBadge.className = "bg-emerald-500/30 border border-emerald-400 text-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full inline-block";
 
-                const docRef = doc(window.db, "kalotsavam_2026", "master_164_roster_v1");
+                const docRef = doc(window.db, "kalotsavam_2026", "master_164_roster_final");
                 
                 onSnapshot(docRef, async (docSnap) => {
                     if (docSnap.exists() && docSnap.data().volunteers) {
@@ -546,7 +546,7 @@
             localStorage.setItem("kalotsavam_master_164_v1", JSON.stringify(volunteers));
             if (window.db && window.isFirebaseConnected) {
                 try {
-                    const docRef = doc(window.db, "kalotsavam_2026", "master_164_roster_v1");
+                    const docRef = doc(window.db, "kalotsavam_2026", "master_164_roster_final");
                     await setDoc(docRef, { volunteers: volunteers, categories: categoriesList, foodItems: foodMenuItems });
                 } catch(e) {}
             }
