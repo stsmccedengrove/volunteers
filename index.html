@@ -650,7 +650,6 @@
 
         async function initSync() {
   try {
-    // Query Firestore to get the most recent roster document sorted by timestamp
     const q = query(
       collection(db, "kalotsavam_2026"), 
       orderBy("timestamp", "desc"), 
@@ -661,16 +660,28 @@
     
     querySnapshot.forEach((doc) => {
       const rosterData = doc.data();
-      console.log("Loaded latest roster dynamically:", doc.id);
+      console.log("Loaded Firestore Document:", doc.id, rosterData);
       
-      // Load the volunteers data into your app's array/state
-      if (rosterData && rosterData.volunteers) {
-        volunteers = rosterData.volunteers;
-      } else if (Array.isArray(rosterData)) {
+      // Try all possible ways the volunteer data could be stored in Firebase
+      if (Array.isArray(rosterData)) {
         volunteers = rosterData;
+      } else if (rosterData.volunteers && Array.isArray(rosterData.volunteers)) {
+        volunteers = rosterData.volunteers;
+      } else if (rosterData.data && Array.isArray(rosterData.data)) {
+        volunteers = rosterData.data;
+      } else {
+        // If it's stored as an object/map, convert it to an array
+        const foundArray = Object.values(rosterData).find(val => Array.isArray(val));
+        if (foundArray) {
+          volunteers = foundArray;
+        } else {
+          volunteers = [];
+        }
       }
       
-      // Refresh your UI and badge counts to show all 174 volunteers
+      console.log("Successfully loaded volunteers count:", volunteers.length);
+      
+      // Refresh the UI cards and stats badge
       if (typeof renderVolunteers === "function") {
         renderVolunteers();
       }
@@ -682,7 +693,6 @@
     console.error("Error fetching latest roster:", error);
   }
 }
-
         function loadLocalVolunteers() {
             const savedVol = localStorage.getItem("kalotsavam_master_164_cache_prod_v4");
             volunteers = savedVol ? JSON.parse(savedVol) : [...DEFAULT_VOLUNTEERS];
