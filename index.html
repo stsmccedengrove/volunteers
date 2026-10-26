@@ -648,7 +648,7 @@
         let selectedCategory = 'Food Preparation';
         let activeUnitPinSession = null;
 
-        async function initSync() {
+    async function initSync() {
   try {
     const q = query(
       collection(db, "kalotsavam_2026"), 
@@ -662,26 +662,19 @@
       const rosterData = doc.data();
       console.log("Loaded Firestore Document:", doc.id, rosterData);
       
-      // Try all possible ways the volunteer data could be stored in Firebase
+      // Handle different ways data might be structured
       if (Array.isArray(rosterData)) {
         volunteers = rosterData;
       } else if (rosterData.volunteers && Array.isArray(rosterData.volunteers)) {
         volunteers = rosterData.volunteers;
-      } else if (rosterData.data && Array.isArray(rosterData.data)) {
-        volunteers = rosterData.data;
       } else {
-        // If it's stored as an object/map, convert it to an array
         const foundArray = Object.values(rosterData).find(val => Array.isArray(val));
-        if (foundArray) {
-          volunteers = foundArray;
-        } else {
-          volunteers = [];
-        }
+        volunteers = foundArray || [];
       }
       
       console.log("Successfully loaded volunteers count:", volunteers.length);
       
-      // Refresh the UI cards and stats badge
+      // Refresh your website UI and stats
       if (typeof renderVolunteers === "function") {
         renderVolunteers();
       }
