@@ -650,40 +650,45 @@
 
     async function initSync() {
   try {
+    // Import or reference collection, query, orderBy, limit, onSnapshot from firestore
     const q = query(
       collection(db, "kalotsavam_2026"), 
       orderBy("timestamp", "desc"), 
       limit(1)
     );
     
-    const querySnapshot = await getDocs(q);
-    
-    querySnapshot.forEach((doc) => {
-      const rosterData = doc.data();
-      console.log("Loaded Firestore Document:", doc.id, rosterData);
-      
-      // Handle different ways data might be structured
-      if (Array.isArray(rosterData)) {
-        volunteers = rosterData;
-      } else if (rosterData.volunteers && Array.isArray(rosterData.volunteers)) {
-        volunteers = rosterData.volunteers;
-      } else {
-        const foundArray = Object.values(rosterData).find(val => Array.isArray(val));
-        volunteers = foundArray || [];
-      }
-      
-      console.log("Successfully loaded volunteers count:", volunteers.length);
-      
-      // Refresh your website UI and stats
-      if (typeof renderVolunteers === "function") {
-        renderVolunteers();
-      }
-      if (typeof updateStats === "function") {
-        updateStats();
-      }
+    // onSnapshot listens in REAL-TIME across all devices simultaneously!
+    onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const rosterData = doc.data();
+        console.log("Real-time Firestore Update Received:", doc.id);
+        
+        // Handle different data structures safely
+        if (Array.isArray(rosterData)) {
+          volunteers = rosterData;
+        } else if (rosterData.volunteers && Array.isArray(rosterData.volunteers)) {
+          volunteers = rosterData.volunteers;
+        } else {
+          const foundArray = Object.values(rosterData).find(val => Array.isArray(val));
+          volunteers = foundArray || [];
+        }
+        
+        console.log("Active synchronized volunteer count:", volunteers.length);
+        
+        // Refresh UI components instantly without losing any style or features
+        if (typeof renderVolunteers === "function") {
+          renderVolunteers();
+        }
+        if (typeof updateStats === "function") {
+          updateStats();
+        }
+      });
+    }, (error) => {
+      console.error("Real-time sync error:", error);
     });
+
   } catch (error) {
-    console.error("Error fetching latest roster:", error);
+    console.error("Error setting up real-time sync:", error);
   }
 }
         function loadLocalVolunteers() {
